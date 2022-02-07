@@ -12,6 +12,8 @@ As the code corresponds to specific episodes of the series, pull requests will n
 
 The QuantitativeBytes YouTube channel can be found here: www.youtube.com/c/QuantitativeBytes
 
+The repository for the first 10 episodes can be found here: https://github.com/QuantitativeBytes/qbRayTrace
+
 ## Episode 11
 ### Fixing the normals
 Made some changes to the way normals are handled when geometric transforms are applied. Previously this was not implemented correctly, leading to minor errors with reflections.
