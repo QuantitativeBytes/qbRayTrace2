@@ -199,7 +199,32 @@ void qbRT::MaterialBase::AssignTexture(const std::shared_ptr<qbRT::Texture::Text
 	m_hasTexture = true;
 }
 
+// Function to return the color due to textures at the given (u,v) coordinate.
+qbVector<double> qbRT::MaterialBase::GetTextureColor(const qbVector<double> &uvCoords)
+{
+	qbVector<double> outputColor (4);
+	
+	if (m_textureList.size() > 1)
+	{
+		outputColor = m_textureList.at(0)->GetColor(uvCoords);
+		for (int i=1; i<m_textureList.size(); ++i)
+		{
+			BlendColors(outputColor, m_textureList.at(i)->GetColor(uvCoords));
+		}
+	}
+	else
+	{
+		outputColor = m_textureList.at(0)->GetColor(uvCoords);
+	}
+	
+	return outputColor;
+}
 
+// Function to blend colors.
+void qbRT::MaterialBase::BlendColors(qbVector<double> &color1, const qbVector<double> &color2)
+{
+	color1 = (color2 * color2.GetElement(3)) + (color1 * (1.0 - color2.GetElement(3)));
+}
 
 
 
