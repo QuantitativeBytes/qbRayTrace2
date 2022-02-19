@@ -27,6 +27,7 @@
 #include "./qbMaterials/simplerefractive.hpp"
 #include "./qbTextures/checker.hpp"
 #include "./qbTextures/image.hpp"
+#include "./qbTextures/gradient.hpp"
 
 // The constructor.
 qbRT::Scene::Scene()
@@ -34,8 +35,8 @@ qbRT::Scene::Scene()
 	// **************************************************************************************
 	// Configure the camera.
 	// **************************************************************************************	
-	m_camera.SetPosition(	qbVector<double>{std::vector<double> {3.0, -5.0, 0.25}} );
-	m_camera.SetLookAt	( qbVector<double>{std::vector<double> {0.0, 0.0, 0.0}} );
+	m_camera.SetPosition(	qbVector<double>{std::vector<double> {4.0, -8.0, -2.0}} );
+	m_camera.SetLookAt	( qbVector<double>{std::vector<double> {-0.5, 0.0, 0.0}} );
 	m_camera.SetUp			( qbVector<double>{std::vector<double> {0.0, 0.0, 1.0}} );
 	m_camera.SetHorzSize(1.0);
 	m_camera.SetAspect(16.0 / 9.0);
@@ -51,135 +52,109 @@ qbRT::Scene::Scene()
 	// Create some textures.
 	// **************************************************************************************	
 	auto floorTexture = std::make_shared<qbRT::Texture::Checker> (qbRT::Texture::Checker());
-	auto imageTexture = std::make_shared<qbRT::Texture::Image> (qbRT::Texture::Image());
-	
-	// **************************************************************************************	
-	// Setup the textures.
-	// **************************************************************************************	
 	floorTexture -> SetTransform(	qbVector<double>{std::vector<double>{0.0, 0.0}},
 																0.0,
 																qbVector<double>{std::vector<double>{16.0, 16.0}} );
-																
-	imageTexture -> LoadImage("testImage2.bmp");
-	imageTexture -> SetTransform(	qbVector<double>{std::vector<double>{0.0, 0.0}},
+	floorTexture -> SetColor(qbVector<double>{std::vector<double>{0.2, 0.2, 0.2, 1.0}}, qbVector<double>{std::vector<double>{0.4, 0.4, 0.4, 1.0}});
+	
+	auto gradientTexture = std::make_shared<qbRT::Texture::Gradient> (qbRT::Texture::Gradient());
+	gradientTexture -> SetTransform(	qbVector<double>{std::vector<double>{0.0, 0.0}},
+																		0.0,
+																		qbVector<double>{std::vector<double>{1.0, 1.0}} );	
+	gradientTexture -> SetStop(0.0, qbVector<double>{std::vector<double> {1.0, 0.0, 0.0, 1.0}});
+	gradientTexture -> SetStop(0.5, qbVector<double>{std::vector<double> {0.0, 1.0, 0.0, 1.0}});
+	gradientTexture -> SetStop(1.0, qbVector<double>{std::vector<double> {0.0, 0.0, 1.0, 1.0}});
+	
+	auto smallChecks1 = std::make_shared<qbRT::Texture::Checker> (qbRT::Texture::Checker());
+	smallChecks1 -> SetTransform(	qbVector<double>{std::vector<double>{0.0, 0.0}},
 																0.0,
-																qbVector<double>{std::vector<double>{1.0, 1.0}}	);
+																qbVector<double>{std::vector<double>{8.0, 8.0}} );
+	smallChecks1 -> SetColor(qbVector<double>{std::vector<double>{1.0, 1.0, 1.0, 1.0}}, qbVector<double>{std::vector<double>{0.2, 0.2, 0.8, 1.0}});
+	
+	auto smallChecks2 = std::make_shared<qbRT::Texture::Checker> (qbRT::Texture::Checker());
+	smallChecks2 -> SetTransform(	qbVector<double>{std::vector<double>{0.0, 0.0}},
+																-M_PI/4.0,
+																qbVector<double>{std::vector<double>{8.0, 8.0}} );
+	smallChecks2 -> SetColor(qbVector<double>{std::vector<double>{0.0, 0.0, 0.0, 1.0}}, qbVector<double>{std::vector<double>{1.0, 0.5, 0.1, 1.0}});	
+	
+	auto layeredChecks = std::make_shared<qbRT::Texture::Checker> (qbRT::Texture::Checker());
+	layeredChecks -> SetTransform(	qbVector<double>{std::vector<double>{0.0, 0.0}},
+																0.0,
+																qbVector<double>{std::vector<double>{4.0, 4.0}} );
+	layeredChecks -> SetColor(smallChecks1, smallChecks2);
+	
+	auto alphaGradient = std::make_shared<qbRT::Texture::Gradient> (qbRT::Texture::Gradient());
+	alphaGradient -> SetTransform(	qbVector<double>{std::vector<double>{0.0, 0.0}},
+																	M_PI/4.0,
+																	qbVector<double>{std::vector<double>{1.0, 1.0}} );
+	alphaGradient -> SetStop(0.0, qbVector<double>{std::vector<double>{0.0, 0.0, 1.0, 1.0}});
+	alphaGradient -> SetStop(0.5, qbVector<double>{std::vector<double>{1.0, 1.0, 1.0, 0.0}});
+	alphaGradient -> SetStop(1.0, qbVector<double>{std::vector<double>{1.0, 1.0, 0.0, 1.0}});	
 
 	// **************************************************************************************
 	// Create some materials.
 	// **************************************************************************************
-	auto floorMaterial = std::make_shared<qbRT::SimpleMaterial> (qbRT::SimpleMaterial());
-	auto imageMaterial = std::make_shared<qbRT::SimpleMaterial> (qbRT::SimpleMaterial());
-	auto sphereMaterial = std::make_shared<qbRT::SimpleMaterial> (qbRT::SimpleMaterial());
-	auto sphereMaterial2 = std::make_shared<qbRT::SimpleMaterial> (qbRT::SimpleMaterial());
-	auto sphereMaterial3 = std::make_shared<qbRT::SimpleMaterial> (qbRT::SimpleMaterial());
-	auto coneMaterial = std::make_shared<qbRT::SimpleMaterial> (qbRT::SimpleMaterial());
-	auto glassMaterial = std::make_shared<qbRT::SimpleRefractive> (qbRT::SimpleRefractive());
-	
-	// **************************************************************************************	
-	// Setup the materials.
-	// **************************************************************************************
+	auto floorMaterial = std::make_shared<qbRT::SimpleMaterial> (qbRT::SimpleMaterial());	
 	floorMaterial -> m_baseColor = qbVector<double>{std::vector<double>{1.0, 1.0, 1.0}};
-	floorMaterial -> m_reflectivity = 0.25;
+	floorMaterial -> m_reflectivity = 0.5;
 	floorMaterial -> m_shininess = 0.0;
 	floorMaterial -> AssignTexture(floorTexture);
 	
-	imageMaterial -> m_baseColor = qbVector<double>{std::vector<double>{1.0, 0.125, 0.125}};
-	imageMaterial -> m_reflectivity = 0.0;
-	imageMaterial -> m_shininess = 0.0;
-	imageMaterial -> AssignTexture(imageTexture);
+	auto imageMat = std::make_shared<qbRT::SimpleMaterial> (qbRT::SimpleMaterial());
+	imageMat -> m_baseColor = std::vector<double>{0.0, 0.0, 0.0};
+	imageMat -> m_reflectivity = 0.2;
+	imageMat -> m_shininess = 0.8;
+	imageMat -> AssignTexture(gradientTexture);
 	
-	sphereMaterial -> m_baseColor = qbVector<double>{std::vector<double>{1.0, 0.2, 0.2}};
-	sphereMaterial -> m_reflectivity = 0.8;
-	sphereMaterial -> m_shininess = 32.0;
-	
-	sphereMaterial2 -> m_baseColor = qbVector<double>{std::vector<double>{0.2, 1.0, 0.2}};
-	sphereMaterial2 -> m_reflectivity = 0.8;
-	sphereMaterial2 -> m_shininess = 32.0;
-	
-	sphereMaterial3 -> m_baseColor = qbVector<double>{std::vector<double>{0.2, 0.2, 1.0}};
-	sphereMaterial3 -> m_reflectivity = 0.8;
-	sphereMaterial3 -> m_shininess = 32.0;	
-	
-	coneMaterial -> m_baseColor = qbVector<double>{std::vector<double>{0.8, 0.8, 0.2}};
-	coneMaterial -> m_reflectivity = 0.15;
-	coneMaterial -> m_shininess = 32.0;
-	
-	glassMaterial -> m_baseColor = qbVector<double>{std::vector<double>{0.7, 0.7, 0.2}};
-	glassMaterial -> m_reflectivity = 0.25;
-	glassMaterial -> m_shininess = 32.0;
-	glassMaterial -> m_translucency = 0.5;
-	glassMaterial -> m_ior = 1.57;	
+	auto layeredMat = std::make_shared<qbRT::SimpleMaterial> (qbRT::SimpleMaterial());
+	layeredMat -> m_reflectivity = 0.0;
+	layeredMat -> m_shininess = 0.0;
+	layeredMat -> AssignTexture(layeredChecks);
+	layeredMat -> AssignTexture(alphaGradient);
 	
 	// **************************************************************************************	
 	// Create and setup objects.
 	// **************************************************************************************
-	auto floor = std::make_shared<qbRT::ObjPlane> (qbRT::ObjPlane());
-	floor -> SetTransformMatrix(qbRT::GTform {	qbVector<double>{std::vector<double>{0.0, 0.0, 1.0}},
-																							qbVector<double>{std::vector<double>{0.0, 0.0, 0.0}},
-																							qbVector<double>{std::vector<double>{16.0, 16.0, 1.0}}});
-	floor -> AssignMaterial(floorMaterial);
-
-	// **************************************************************************************
+	auto imageSphere = std::make_shared<qbRT::ObjSphere> (qbRT::ObjSphere());
+	imageSphere -> m_tag = "imageSphere";
+	imageSphere -> m_isVisible = true;
+	imageSphere -> SetTransformMatrix(qbRT::GTform {	qbVector<double>{std::vector<double>{2.5, 0.0, 1.0}},
+																										qbVector<double>{std::vector<double>{-M_PI/4.0, 0.0, 0.0}},
+																										qbVector<double>{std::vector<double>{1.0, 1.0, 1.0}}}	);	
+	imageSphere -> AssignMaterial(imageMat);
+	
 	auto imagePlane = std::make_shared<qbRT::ObjPlane> (qbRT::ObjPlane());
-	imagePlane -> SetTransformMatrix(qbRT::GTform {	qbVector<double>{std::vector<double>{2.0, 5.0, -0.75}},
+	imagePlane -> m_tag = "imagePlane";
+	imagePlane -> m_isVisible = true;
+	imagePlane -> SetTransformMatrix(qbRT::GTform {	qbVector<double>{std::vector<double>{-1.0, 0.0, 0.0}},
 																									qbVector<double>{std::vector<double>{-M_PI/2.0, 0.0, 0.0}},
-																									qbVector<double>{std::vector<double>{1.75, 1.75, 1.0}}}	);
-	imagePlane -> AssignMaterial(imageMaterial);
-
-	// **************************************************************************************	
-	auto sphere = std::make_shared<qbRT::ObjSphere> (qbRT::ObjSphere());
-	sphere -> SetTransformMatrix(qbRT::GTform	{	qbVector<double>{std::vector<double>{-2.0, -2.0, 0.25}},
-																							qbVector<double>{std::vector<double>{0.0, 0.0, 0.0}},
-																							qbVector<double>{std::vector<double>{0.75, 0.75, 0.75}}}	);
-	sphere -> AssignMaterial(sphereMaterial);
+																									qbVector<double>{std::vector<double>{2.0, 2.0, 1.0}}}	);
+	imagePlane -> AssignMaterial(layeredMat);
 	
-	// **************************************************************************************	
-	auto sphere2 = std::make_shared<qbRT::ObjSphere> (qbRT::ObjSphere());
-	sphere2 -> SetTransformMatrix(qbRT::GTform	{	qbVector<double>{std::vector<double>{-2.0, -0.5, 0.25}},
-																							qbVector<double>{std::vector<double>{0.0, 0.0, 0.0}},
-																							qbVector<double>{std::vector<double>{0.75, 0.75, 0.75}}}	);
-	sphere2 -> AssignMaterial(sphereMaterial2);
-	
-	// **************************************************************************************	
-	auto sphere3 = std::make_shared<qbRT::ObjSphere> (qbRT::ObjSphere());
-	sphere3 -> SetTransformMatrix(qbRT::GTform	{	qbVector<double>{std::vector<double>{-2.0, -1.25, -1.0}},
-																							qbVector<double>{std::vector<double>{0.0, 0.0, 0.0}},
-																							qbVector<double>{std::vector<double>{0.75, 0.75, 0.75}}}	);
-	sphere3 -> AssignMaterial(sphereMaterial3);		
-	
-	// **************************************************************************************	
-	auto rmSphere = std::make_shared<qbRT::RM::Sphere> (qbRT::RM::Sphere());
-	rmSphere -> SetTransformMatrix(qbRT::GTform	{	qbVector<double>{std::vector<double>{0.0, 0.0, 0.0}},
+	auto imageBox = std::make_shared<qbRT::Box> (qbRT::Box());
+	imageBox -> m_tag = "imageBox";
+	imageBox -> m_isVisible = true;
+	imageBox -> SetTransformMatrix(qbRT::GTform {	qbVector<double>{std::vector<double>{-5.0, 0.0, 1.0}},
 																								qbVector<double>{std::vector<double>{0.0, 0.0, 0.0}},
-																								qbVector<double>{std::vector<double>{1.0, 1.0, 1.0}}	}	);
-	rmSphere -> AssignMaterial(coneMaterial);
+																								qbVector<double>{std::vector<double>{1.0, 1.0, 1.0}}}	);	
+	imageBox -> AssignMaterial(imageMat);
 	
-	auto rmTorus = std::make_shared<qbRT::RM::Torus> (qbRT::RM::Torus());
-	rmTorus -> SetRadii(0.7, 0.3);
-	rmTorus -> SetTransformMatrix(qbRT::GTform	{	qbVector<double>{std::vector<double>{2.0, 0.0, 0.0}},
-																								qbVector<double>{std::vector<double>{-M_PI/2.0, 0.0, 0.0}},
-																								qbVector<double>{std::vector<double>{1.0, 1.0, 1.0}}	}	);
-	rmTorus -> AssignMaterial(glassMaterial);
-	
-	auto rmCube = std::make_shared<qbRT::RM::Cube> (qbRT::RM::Cube());
-	rmCube -> SetTransformMatrix(qbRT::GTform	{	qbVector<double>{std::vector<double>{3.5, 0.0, 0.0}},
-																							qbVector<double>{std::vector<double>{0.0, 0.0, -M_PI/4.0}},
-																							qbVector<double>{std::vector<double>{0.5, 0.5, 0.5}}	}	);
-	rmCube -> AssignMaterial(coneMaterial);
+	auto floor = std::make_shared<qbRT::ObjPlane> (qbRT::ObjPlane());
+	floor -> m_tag = "floor";
+	floor -> m_isVisible = true;
+	floor -> SetTransformMatrix(qbRT::GTform {	qbVector<double>{std::vector<double>{0.0, 0.0, 2.0}},
+																							qbVector<double>{std::vector<double>{0.0, 0.0, 0.0}},
+																							qbVector<double>{std::vector<double>{16.0, 16.0, 1.0}}}	);	
+	floor -> AssignMaterial(floorMaterial);
 	
 
 	// **************************************************************************************
 	// Put the objects into the scene.	
 	// **************************************************************************************
-	m_objectList.push_back(floor);
+	m_objectList.push_back(imageSphere);
 	m_objectList.push_back(imagePlane);
-	m_objectList.push_back(sphere);
-	m_objectList.push_back(sphere2);	
-	m_objectList.push_back(sphere3);
-	m_objectList.push_back(rmSphere);
-	m_objectList.push_back(rmTorus);
-	m_objectList.push_back(rmCube);
+	m_objectList.push_back(imageBox);
+	m_objectList.push_back(floor);
 	
 	// **************************************************************************************	
 	// Construct and setup the lights.
