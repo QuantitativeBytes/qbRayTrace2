@@ -2,32 +2,35 @@
 	checker.cpp
 	
 	The checker class implementation - The 'classic' ray tracer
-	checkerboard pattent.
+	checkerboard patten.
 	
 	This file forms part of the qbRayTrace project as described
 	in the series of videos on the QuantitativeBytes YouTube
 	channel.
-	
-	This code corresponds specifically to Episode 9 of the series,
-	which may be found here:
-	https://youtu.be/d35gDi98gEY
 	
 	The whole series may be found on the QuantitativeBytes 
 	YouTube channel at:
 	www.youtube.com/c/QuantitativeBytes
 	
 	GPLv3 LICENSE
-	Copyright (c) 2021 Michael Bennett
+	Copyright (c) 2022 Michael Bennett
 	
 ***********************************************************/
 
 #include "checker.hpp"
+#include "./flat.hpp"
 
 // Constructor / destructor.
 qbRT::Texture::Checker::Checker()
 {
-	m_color1 = qbVector<double>{std::vector<double>{1.0, 1.0, 1.0, 1.0}};
-	m_color2 = qbVector<double>{std::vector<double>{0.2, 0.2, 0.2, 1.0}};
+	qbRT::Texture::Flat color1;
+	qbRT::Texture::Flat color2;
+	
+	color1.SetColor(qbVector<double>{std::vector<double>{1.0, 1.0, 1.0, 1.0}});
+	color2.SetColor(qbVector<double>{std::vector<double>{0.2, 0.2, 0.2, 1.0}});
+	
+	m_p_color1 = std::make_shared<qbRT::Texture::Flat> (color1);
+	m_p_color2 = std::make_shared<qbRT::Texture::Flat> (color2);
 }
 
 qbRT::Texture::Checker::~Checker()
@@ -49,11 +52,11 @@ qbVector<double> qbRT::Texture::Checker::GetColor(const qbVector<double> &uvCoor
 	
 	if ((check % 2) == 0)
 	{
-		localColor = m_color1;
+		localColor = m_p_color1 -> GetColor(uvCoords);
 	}
 	else
 	{
-		localColor = m_color2;
+		localColor = m_p_color2 -> GetColor(uvCoords);
 	}
 	
 	return localColor;
@@ -62,6 +65,18 @@ qbVector<double> qbRT::Texture::Checker::GetColor(const qbVector<double> &uvCoor
 // Function to set the colors.
 void qbRT::Texture::Checker::SetColor(const qbVector<double> &inputColor1, const qbVector<double> &inputColor2)
 {
-	m_color1 = inputColor1;
-	m_color2 = inputColor2;
+	auto color1 = std::make_shared<qbRT::Texture::Flat> (qbRT::Texture::Flat());
+	auto color2 = std::make_shared<qbRT::Texture::Flat> (qbRT::Texture::Flat());
+	
+	color1 -> SetColor(inputColor1);
+	color2 -> SetColor(inputColor2);
+	
+	m_p_color1 = color1;
+	m_p_color2 = color2;
+}
+
+void qbRT::Texture::Checker::SetColor(const std::shared_ptr<qbRT::Texture::TextureBase> &inputColor1, const std::shared_ptr<qbRT::Texture::TextureBase> &inputColor2)
+{
+	m_p_color1 = inputColor1;
+	m_p_color2 = inputColor2;
 }

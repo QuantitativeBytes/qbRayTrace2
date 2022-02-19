@@ -8,16 +8,12 @@
 	in the series of videos on the QuantitativeBytes YouTube
 	channel.
 	
-	This code corresponds specifically to Episode 9 of the series,
-	which may be found here:
-	https://youtu.be/d35gDi98gEY
-	
 	The whole series may be found on the QuantitativeBytes 
 	YouTube channel at:
 	www.youtube.com/c/QuantitativeBytes
 	
 	GPLv3 LICENSE
-	Copyright (c) 2021 Michael Bennett
+	Copyright (c) 2022 Michael Bennett
 	
 ***********************************************************/
 
@@ -42,10 +38,11 @@ namespace qbRT
 			
 				// Function to set the colors.
 				void SetColor(const qbVector<double> &inputColor1, const qbVector<double> &inputColor2);
+				void SetColor(const std::shared_ptr<qbRT::Texture::TextureBase> &inputColor1, const std::shared_ptr<qbRT::Texture::TextureBase> &inputColor2);
 			
 		private:
-			qbVector<double> m_color1 {4};
-			qbVector<double> m_color2 {4};
+			std::shared_ptr<qbRT::Texture::TextureBase> m_p_color1;
+			std::shared_ptr<qbRT::Texture::TextureBase> m_p_color2;
 			
 		};
 	}
