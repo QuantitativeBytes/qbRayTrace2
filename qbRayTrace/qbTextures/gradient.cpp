@@ -1,5 +1,5 @@
 /* ***********************************************************
-	gradient.hpp
+	gradient.cpp
 	
 	The gradient class implementation. An implementation of a simple
 	gradient texture.
@@ -13,7 +13,6 @@
 	www.youtube.com/c/QuantitativeBytes
 	
 	GPLv3 LICENSE
-	Copyright (c) 2022 Michael Bennett
 	
 ***********************************************************/
 #include "gradient.hpp"

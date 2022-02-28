@@ -13,7 +13,6 @@
 	www.youtube.com/c/QuantitativeBytes
 	
 	GPLv3 LICENSE
-	Copyright (c) 2022 Michael Bennett
 	
 ***********************************************************/
 

@@ -8,10 +8,6 @@
 	in the series of videos on the QuantitativeBytes YouTube
 	channel.
 	
-	This code corresponds specifically to Episode 6 of the series,
-	which may be found here:
-	https://youtu.be/9K9ZYq6KgFY
-	
 	The whole series may be found on the QuantitativeBytes 
 	YouTube channel at:
 	www.youtube.com/c/QuantitativeBytes
