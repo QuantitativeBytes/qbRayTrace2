@@ -15,7 +15,8 @@ objects =	main.o \
 					$(patsubst %.cpp,%.o,$(wildcard ./qbRayTrace/qbLights/*.cpp)) \
 					$(patsubst %.cpp,%.o,$(wildcard ./qbRayTrace/qbMaterials/*.cpp)) \
 					$(patsubst %.cpp,%.o,$(wildcard ./qbRayTrace/qbTextures/*.cpp)) \
-					$(patsubst %.cpp,%.o,$(wildcard ./qbRayTrace/qbRayMarch/*.cpp))
+					$(patsubst %.cpp,%.o,$(wildcard ./qbRayTrace/qbRayMarch/*.cpp)) \
+					$(patsubst %.cpp,%.o,$(wildcard ./qbRayTrace/qbNoise/*.cpp))
 					
 # Define the rebuildables.
 rebuildables = $(objects) $(linkTarget)
