@@ -15,6 +15,19 @@
 	GPLv3 LICENSE
 	Copyright (c) 2022 Michael Bennett
 	
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.	
+	
 ***********************************************************/
 
 // scene.cpp
@@ -25,6 +38,7 @@
 #include "./qbTextures/checker.hpp"
 #include "./qbTextures/image.hpp"
 #include "./qbTextures/gradient.hpp"
+#include "./qbTextures/basicvalnoise.hpp"
 
 // The constructor.
 qbRT::Scene::Scene()
@@ -54,39 +68,15 @@ qbRT::Scene::Scene()
 																qbVector<double>{std::vector<double>{16.0, 16.0}} );
 	floorTexture -> SetColor(qbVector<double>{std::vector<double>{0.2, 0.2, 0.2, 1.0}}, qbVector<double>{std::vector<double>{0.4, 0.4, 0.4, 1.0}});
 	
-	auto gradientTexture = std::make_shared<qbRT::Texture::Gradient> (qbRT::Texture::Gradient());
-	gradientTexture -> SetTransform(	qbVector<double>{std::vector<double>{0.0, 0.0}},
-																		0.0,
-																		qbVector<double>{std::vector<double>{1.0, 1.0}} );	
-	gradientTexture -> SetStop(0.0, qbVector<double>{std::vector<double> {1.0, 0.0, 0.0, 1.0}});
-	gradientTexture -> SetStop(0.5, qbVector<double>{std::vector<double> {0.0, 1.0, 0.0, 1.0}});
-	gradientTexture -> SetStop(1.0, qbVector<double>{std::vector<double> {0.0, 0.0, 1.0, 1.0}});
+	auto noiseMap = std::make_shared<qbRT::Texture::ColorMap> (qbRT::Texture::ColorMap());
+	noiseMap -> SetStop(0.0, qbVector<double>{std::vector<double>{1.0, 0.4, 0.0, 1.0}});
+	noiseMap -> SetStop(0.5, qbVector<double>{std::vector<double>{0.2, 0.4, 0.8, 1.0}});
+	noiseMap -> SetStop(1.0, qbVector<double>{std::vector<double>{1.0, 0.8, 0.0, 1.0}});
 	
-	auto smallChecks1 = std::make_shared<qbRT::Texture::Checker> (qbRT::Texture::Checker());
-	smallChecks1 -> SetTransform(	qbVector<double>{std::vector<double>{0.0, 0.0}},
-																0.0,
-																qbVector<double>{std::vector<double>{8.0, 8.0}} );
-	smallChecks1 -> SetColor(qbVector<double>{std::vector<double>{1.0, 1.0, 1.0, 1.0}}, qbVector<double>{std::vector<double>{0.2, 0.2, 0.8, 1.0}});
-	
-	auto smallChecks2 = std::make_shared<qbRT::Texture::Checker> (qbRT::Texture::Checker());
-	smallChecks2 -> SetTransform(	qbVector<double>{std::vector<double>{0.0, 0.0}},
-																-M_PI/4.0,
-																qbVector<double>{std::vector<double>{8.0, 8.0}} );
-	smallChecks2 -> SetColor(qbVector<double>{std::vector<double>{0.0, 0.0, 0.0, 1.0}}, qbVector<double>{std::vector<double>{1.0, 0.5, 0.1, 1.0}});	
-	
-	auto layeredChecks = std::make_shared<qbRT::Texture::Checker> (qbRT::Texture::Checker());
-	layeredChecks -> SetTransform(	qbVector<double>{std::vector<double>{0.0, 0.0}},
-																0.0,
-																qbVector<double>{std::vector<double>{4.0, 4.0}} );
-	layeredChecks -> SetColor(smallChecks1, smallChecks2);
-	
-	auto alphaGradient = std::make_shared<qbRT::Texture::Gradient> (qbRT::Texture::Gradient());
-	alphaGradient -> SetTransform(	qbVector<double>{std::vector<double>{0.0, 0.0}},
-																	M_PI/4.0,
-																	qbVector<double>{std::vector<double>{1.0, 1.0}} );
-	alphaGradient -> SetStop(0.0, qbVector<double>{std::vector<double>{0.0, 0.0, 1.0, 1.0}});
-	alphaGradient -> SetStop(0.5, qbVector<double>{std::vector<double>{1.0, 1.0, 1.0, 0.0}});
-	alphaGradient -> SetStop(1.0, qbVector<double>{std::vector<double>{1.0, 1.0, 0.0, 1.0}});	
+	auto valNoiseTexture = std::make_shared<qbRT::Texture::BasicValNoise> (qbRT::Texture::BasicValNoise());
+	valNoiseTexture -> SetColorMap(noiseMap);
+	valNoiseTexture -> SetAmplitude(1.0);
+	valNoiseTexture -> SetScale(4.0);	
 
 	// **************************************************************************************
 	// Create some materials.
@@ -97,17 +87,11 @@ qbRT::Scene::Scene()
 	floorMaterial -> m_shininess = 0.0;
 	floorMaterial -> AssignTexture(floorTexture);
 	
-	auto imageMat = std::make_shared<qbRT::SimpleMaterial> (qbRT::SimpleMaterial());
-	imageMat -> m_baseColor = std::vector<double>{0.0, 0.0, 0.0};
-	imageMat -> m_reflectivity = 0.2;
-	imageMat -> m_shininess = 0.8;
-	imageMat -> AssignTexture(gradientTexture);
-	
-	auto layeredMat = std::make_shared<qbRT::SimpleMaterial> (qbRT::SimpleMaterial());
-	layeredMat -> m_reflectivity = 0.0;
-	layeredMat -> m_shininess = 0.0;
-	layeredMat -> AssignTexture(layeredChecks);
-	layeredMat -> AssignTexture(alphaGradient);
+	auto valNoiseMat = std::make_shared<qbRT::SimpleMaterial> (qbRT::SimpleMaterial());
+	valNoiseMat -> m_baseColor = std::vector<double>{1.0, 1.0, 1.0};
+	valNoiseMat -> m_reflectivity = 0.2;
+	valNoiseMat -> m_shininess = 32.0;
+	valNoiseMat -> AssignTexture(valNoiseTexture);
 	
 	// **************************************************************************************	
 	// Create and setup objects.
@@ -116,9 +100,9 @@ qbRT::Scene::Scene()
 	imageSphere -> m_tag = "imageSphere";
 	imageSphere -> m_isVisible = true;
 	imageSphere -> SetTransformMatrix(qbRT::GTform {	qbVector<double>{std::vector<double>{2.5, 0.0, 1.0}},
-																										qbVector<double>{std::vector<double>{-M_PI/4.0, 0.0, 0.0}},
+																										qbVector<double>{std::vector<double>{0.0, 0.0, 0.0}},
 																										qbVector<double>{std::vector<double>{1.0, 1.0, 1.0}}}	);	
-	imageSphere -> AssignMaterial(imageMat);
+	imageSphere -> AssignMaterial(valNoiseMat);
 	
 	auto imagePlane = std::make_shared<qbRT::ObjPlane> (qbRT::ObjPlane());
 	imagePlane -> m_tag = "imagePlane";
@@ -126,7 +110,7 @@ qbRT::Scene::Scene()
 	imagePlane -> SetTransformMatrix(qbRT::GTform {	qbVector<double>{std::vector<double>{-1.0, 0.0, 0.0}},
 																									qbVector<double>{std::vector<double>{-M_PI/2.0, 0.0, 0.0}},
 																									qbVector<double>{std::vector<double>{2.0, 2.0, 1.0}}}	);
-	imagePlane -> AssignMaterial(layeredMat);
+	imagePlane -> AssignMaterial(valNoiseMat);
 	
 	auto imageBox = std::make_shared<qbRT::Box> (qbRT::Box());
 	imageBox -> m_tag = "imageBox";
@@ -134,7 +118,7 @@ qbRT::Scene::Scene()
 	imageBox -> SetTransformMatrix(qbRT::GTform {	qbVector<double>{std::vector<double>{-5.0, 0.0, 1.0}},
 																								qbVector<double>{std::vector<double>{0.0, 0.0, 0.0}},
 																								qbVector<double>{std::vector<double>{1.0, 1.0, 1.0}}}	);	
-	imageBox -> AssignMaterial(imageMat);
+	imageBox -> AssignMaterial(valNoiseMat);
 	
 	auto floor = std::make_shared<qbRT::ObjPlane> (qbRT::ObjPlane());
 	floor -> m_tag = "floor";
