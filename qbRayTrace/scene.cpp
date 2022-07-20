@@ -39,6 +39,8 @@
 #include "./qbTextures/image.hpp"
 #include "./qbTextures/gradient.hpp"
 #include "./qbTextures/basicvalnoise.hpp"
+#include "./qbTextures/basicnoise.hpp"
+#include "./qbTextures/marble.hpp"
 
 // The constructor.
 qbRT::Scene::Scene()
@@ -50,14 +52,46 @@ qbRT::Scene::Scene()
 	m_camera.SetLookAt	( qbVector<double>{std::vector<double> {-0.5, 0.0, 0.0}} );
 	m_camera.SetUp			( qbVector<double>{std::vector<double> {0.0, 0.0, 1.0}} );
 	m_camera.SetHorzSize(1.0);
+	m_camera.SetLength(3.0);
 	m_camera.SetAspect(16.0 / 9.0);
-	m_camera.UpdateCameraGeometry();
+	m_camera.UpdateCameraGeometry();	
 	
 	// **************************************************************************************
 	// Setup ambient lightling.
 	// **************************************************************************************		
 	qbRT::MaterialBase::m_ambientColor = std::vector<double>{1.0, 1.0, 1.0};
 	qbRT::MaterialBase::m_ambientIntensity = 0.2;
+
+	// **************************************************************************************
+	// Create some color maps.
+	// **************************************************************************************	
+	auto noiseMap = std::make_shared<qbRT::Texture::ColorMap> (qbRT::Texture::ColorMap());
+	noiseMap -> SetStop(0.0, qbVector<double>{std::vector<double>{1.0, 0.4, 0.0, 1.0}});
+	noiseMap -> SetStop(0.5, qbVector<double>{std::vector<double>{0.2, 0.4, 0.8, 1.0}});
+	noiseMap -> SetStop(1.0, qbVector<double>{std::vector<double>{1.0, 0.8, 0.0, 1.0}});
+	
+	auto cloudMap = std::make_shared<qbRT::Texture::ColorMap> (qbRT::Texture::ColorMap());
+	cloudMap -> SetStop(0.0, qbVector<double>{std::vector<double>{0.2, 0.4, 0.8, 1.0}});
+	cloudMap -> SetStop(0.75, qbVector<double>{std::vector<double>{1.0, 1.0, 1.0, 1.0}});
+	cloudMap -> SetStop(1.0, qbVector<double>{std::vector<double>{0.7, 0.7, 0.7, 1.0}});
+	
+	auto marbleMap = std::make_shared<qbRT::Texture::ColorMap> (qbRT::Texture::ColorMap());
+	marbleMap -> SetStop(0.0, qbVector<double>{std::vector<double>{1.0, 1.0, 1.0, 1.0}});
+	marbleMap -> SetStop(0.2, qbVector<double>{std::vector<double>{1.0, 1.0, 1.0, 1.0}});
+	marbleMap -> SetStop(0.5, qbVector<double>{std::vector<double>{1.0, 0.4, 0.0, 1.0}});
+	marbleMap -> SetStop(0.8, qbVector<double>{std::vector<double>{1.0, 1.0, 1.0, 1.0}});
+	marbleMap -> SetStop(1.0, qbVector<double>{std::vector<double>{1.0, 1.0, 1.0, 1.0}});
+	
+	auto candyMap = std::make_shared<qbRT::Texture::ColorMap> (qbRT::Texture::ColorMap());
+	candyMap -> SetStop(0.0, qbVector<double>{std::vector<double>{1.0, 1.0, 1.0, 1.0}});
+	candyMap -> SetStop(0.5, qbVector<double>{std::vector<double>{1.0, 0.0, 0.0, 1.0}});
+	candyMap -> SetStop(1.0, qbVector<double>{std::vector<double>{1.0, 1.0, 1.0, 1.0}});
+	
+	auto woodMap = std::make_shared<qbRT::Texture::ColorMap> (qbRT::Texture::ColorMap());
+	woodMap -> SetStop(0.0, qbVector<double>{std::vector<double>{200.0/255.0, 150.0/255.0, 120.0/255.0, 1.0}});
+	woodMap -> SetStop(0.5, qbVector<double>{std::vector<double>{100.0/255.0, 50.0/255.0, 30.0/255.0, 1.0}});
+	woodMap -> SetStop(1.0, qbVector<double>{std::vector<double>{200.0/255.0, 150.0/255.0, 120.0/255.0, 1.0}});
+	
 
 	// **************************************************************************************
 	// Create some textures.
@@ -68,15 +102,42 @@ qbRT::Scene::Scene()
 																qbVector<double>{std::vector<double>{16.0, 16.0}} );
 	floorTexture -> SetColor(qbVector<double>{std::vector<double>{0.2, 0.2, 0.2, 1.0}}, qbVector<double>{std::vector<double>{0.4, 0.4, 0.4, 1.0}});
 	
-	auto noiseMap = std::make_shared<qbRT::Texture::ColorMap> (qbRT::Texture::ColorMap());
-	noiseMap -> SetStop(0.0, qbVector<double>{std::vector<double>{1.0, 0.4, 0.0, 1.0}});
-	noiseMap -> SetStop(0.5, qbVector<double>{std::vector<double>{0.2, 0.4, 0.8, 1.0}});
-	noiseMap -> SetStop(1.0, qbVector<double>{std::vector<double>{1.0, 0.8, 0.0, 1.0}});
-	
+	// Value noise texture from Episode 15.
 	auto valNoiseTexture = std::make_shared<qbRT::Texture::BasicValNoise> (qbRT::Texture::BasicValNoise());
 	valNoiseTexture -> SetColorMap(noiseMap);
 	valNoiseTexture -> SetAmplitude(1.0);
 	valNoiseTexture -> SetScale(4.0);	
+	
+	// qbMarble...
+	auto qbMarble = std::make_shared<qbRT::Texture::Marble> (qbRT::Texture::Marble());
+	qbMarble -> SetColorMap(marbleMap);
+	qbMarble -> SetAmplitude(4.0, 2.0);
+	qbMarble -> SetScale(6.0, 40.0);
+	qbMarble -> SetSine(1.0, 4.0);
+	qbMarble -> SetMinMax(-1.0, 1.0);
+	
+	// qbCloud...
+	auto qbCloud = std::make_shared<qbRT::Texture::BasicNoise> (qbRT::Texture::BasicNoise());
+	qbCloud -> SetColorMap(cloudMap);
+	qbCloud -> SetAmplitude(12.0);
+	qbCloud -> SetScale(10);
+	
+	// Candy-cane...
+	auto qbCandy = std::make_shared<qbRT::Texture::Marble> (qbRT::Texture::Marble());
+	qbCandy -> SetColorMap(candyMap);
+	qbCandy -> SetAmplitude(0.0, 0.0);
+	qbCandy -> SetScale(1.0, 10.0);
+	qbCandy -> SetSine(1.0, 8.0);
+	qbCandy -> SetMinMax(-1.0, 1.0);
+	qbCandy -> SetTransform(qbVector<double>{std::vector<double>{0.0, 0.0}}, 0.0, qbVector<double>{std::vector<double>{1.0, 1.0}});
+	
+	auto qbWood = std::make_shared<qbRT::Texture::Marble> (qbRT::Texture::Marble());
+	qbWood -> SetColorMap(woodMap);
+	qbWood -> SetAmplitude(8.0, 1.0);
+	qbWood -> SetScale(2.0, 10.0);
+	qbWood -> SetSine(1.0, 8.0);
+	qbWood -> SetMinMax(-1.0, 1.0);
+	qbWood -> SetTransform(qbVector<double>{std::vector<double>{0.0, 0.0}}, 0.0, qbVector<double>{std::vector<double>{1.0, 1.0}});	
 
 	// **************************************************************************************
 	// Create some materials.
@@ -93,62 +154,112 @@ qbRT::Scene::Scene()
 	valNoiseMat -> m_shininess = 32.0;
 	valNoiseMat -> AssignTexture(valNoiseTexture);
 	
+	auto qbMarbleMat = std::make_shared<qbRT::SimpleMaterial> (qbRT::SimpleMaterial());
+	qbMarbleMat -> m_baseColor = std::vector<double>{1.0, 1.0, 1.0};
+	qbMarbleMat -> m_reflectivity = 0.05;
+	qbMarbleMat -> m_shininess = 32.0;
+	qbMarbleMat -> AssignTexture(qbMarble);
+	
+	auto cloudMat = std::make_shared<qbRT::SimpleMaterial> (qbRT::SimpleMaterial());
+	cloudMat -> m_baseColor = std::vector<double>{1.0, 1.0, 1.0};
+	cloudMat -> m_reflectivity = 0.05;
+	cloudMat -> m_shininess = 32.0;
+	cloudMat -> AssignTexture(qbCloud);	
+	
+	auto candyMat = std::make_shared<qbRT::SimpleMaterial> (qbRT::SimpleMaterial());
+	candyMat -> m_baseColor = std::vector<double>{1.0, 1.0, 1.0};
+	candyMat -> m_reflectivity = 0.05;
+	candyMat -> m_shininess = 32.0;
+	candyMat -> AssignTexture(qbCandy);		
+	
+	auto woodMat = std::make_shared<qbRT::SimpleMaterial> (qbRT::SimpleMaterial());
+	woodMat -> m_baseColor = std::vector<double>{1.0, 1.0, 1.0};
+	woodMat -> m_reflectivity = 0.05;
+	woodMat -> m_shininess = 32.0;
+	woodMat -> AssignTexture(qbWood);		
+	
 	// **************************************************************************************	
 	// Create and setup objects.
 	// **************************************************************************************
-	auto imageSphere = std::make_shared<qbRT::ObjSphere> (qbRT::ObjSphere());
-	imageSphere -> m_tag = "imageSphere";
-	imageSphere -> m_isVisible = true;
-	imageSphere -> SetTransformMatrix(qbRT::GTform {	qbVector<double>{std::vector<double>{2.5, 0.0, 1.0}},
-																										qbVector<double>{std::vector<double>{0.0, 0.0, 0.0}},
-																										qbVector<double>{std::vector<double>{1.0, 1.0, 1.0}}}	);	
-	imageSphere -> AssignMaterial(valNoiseMat);
+	auto sphere1 = std::make_shared<qbRT::ObjSphere> (qbRT::ObjSphere());
+	sphere1 -> m_tag = "sphere1";
+	sphere1 -> m_isVisible = true;
+	sphere1 -> SetTransformMatrix(qbRT::GTform	{	qbVector<double>{std::vector<double>{-0.5, 0.0, -0.75}}, 
+																								qbVector<double>{std::vector<double>{0.0, 0.0, 0.0}}, 
+																								qbVector<double>{std::vector<double>{0.5, 0.5, 0.5}}	});
+	sphere1 -> AssignMaterial(qbMarbleMat);
 	
-	auto imagePlane = std::make_shared<qbRT::ObjPlane> (qbRT::ObjPlane());
-	imagePlane -> m_tag = "imagePlane";
-	imagePlane -> m_isVisible = true;
-	imagePlane -> SetTransformMatrix(qbRT::GTform {	qbVector<double>{std::vector<double>{-1.0, 0.0, 0.0}},
-																									qbVector<double>{std::vector<double>{-M_PI/2.0, 0.0, 0.0}},
-																									qbVector<double>{std::vector<double>{2.0, 2.0, 1.0}}}	);
-	imagePlane -> AssignMaterial(valNoiseMat);
+	auto sphere2 = std::make_shared<qbRT::ObjSphere> (qbRT::ObjSphere());
+	sphere2 -> m_tag = "sphere2";
+	sphere2 -> m_isVisible = true;
+	sphere2 -> SetTransformMatrix(qbRT::GTform	{	qbVector<double>{std::vector<double>{0.5, 0.0, -0.75}}, 
+																								qbVector<double>{std::vector<double>{0.0, 0.0, 0.0}}, 
+																								qbVector<double>{std::vector<double>{0.5, 0.5, 0.5}}	});
+	sphere2 -> AssignMaterial(cloudMat);	
 	
-	auto imageBox = std::make_shared<qbRT::Box> (qbRT::Box());
-	imageBox -> m_tag = "imageBox";
-	imageBox -> m_isVisible = true;
-	imageBox -> SetTransformMatrix(qbRT::GTform {	qbVector<double>{std::vector<double>{-5.0, 0.0, 1.0}},
-																								qbVector<double>{std::vector<double>{0.0, 0.0, 0.0}},
-																								qbVector<double>{std::vector<double>{1.0, 1.0, 1.0}}}	);	
-	imageBox -> AssignMaterial(valNoiseMat);
+	auto sphere3 = std::make_shared<qbRT::ObjSphere> (qbRT::ObjSphere());
+	sphere3 -> m_tag = "sphere3";
+	sphere3 -> m_isVisible = true;
+	sphere3 -> SetTransformMatrix(qbRT::GTform	{	qbVector<double>{std::vector<double>{1.0, 0.0, 0.0}}, 
+																								qbVector<double>{std::vector<double>{0.0, 0.0, 0.0}}, 
+																								qbVector<double>{std::vector<double>{0.5, 0.5, 0.5}}	});
+	sphere3 -> AssignMaterial(valNoiseMat);		
+	
+	auto sphere4 = std::make_shared<qbRT::ObjSphere> (qbRT::ObjSphere());
+	sphere4 -> m_tag = "sphere4";
+	sphere4 -> m_isVisible = true;
+	sphere4 -> SetTransformMatrix(qbRT::GTform	{	qbVector<double>{std::vector<double>{-1.0, 0.0, 0.0}}, 
+																								qbVector<double>{std::vector<double>{0.0, 0.0, 0.0}}, 
+																								qbVector<double>{std::vector<double>{0.5, 0.5, 0.5}}	});
+	sphere4 -> AssignMaterial(candyMat);	
+	
+	auto sphere5 = std::make_shared<qbRT::ObjSphere> (qbRT::ObjSphere());
+	sphere5 -> m_tag = "sphere5";
+	sphere5 -> m_isVisible = true;
+	sphere5 -> SetTransformMatrix(qbRT::GTform	{	qbVector<double>{std::vector<double>{0.0, 0.0, 0.0}}, 
+																								qbVector<double>{std::vector<double>{0.0, 0.0, 0.0}}, 
+																								qbVector<double>{std::vector<double>{0.5, 0.5, 0.5}}	});
+	sphere5 -> AssignMaterial(woodMat);			
 	
 	auto floor = std::make_shared<qbRT::ObjPlane> (qbRT::ObjPlane());
 	floor -> m_tag = "floor";
 	floor -> m_isVisible = true;
-	floor -> SetTransformMatrix(qbRT::GTform {	qbVector<double>{std::vector<double>{0.0, 0.0, 2.0}},
+	floor -> SetTransformMatrix(qbRT::GTform {	qbVector<double>{std::vector<double>{0.0, 0.0, 0.5}},
 																							qbVector<double>{std::vector<double>{0.0, 0.0, 0.0}},
 																							qbVector<double>{std::vector<double>{16.0, 16.0, 1.0}}}	);	
-	floor -> AssignMaterial(floorMaterial);
-	
+	floor -> AssignMaterial(floorMaterial);	
 
 	// **************************************************************************************
 	// Put the objects into the scene.	
 	// **************************************************************************************
-	m_objectList.push_back(imageSphere);
-	m_objectList.push_back(imagePlane);
-	m_objectList.push_back(imageBox);
+	m_objectList.push_back(sphere1);
+	m_objectList.push_back(sphere2);
+	m_objectList.push_back(sphere3);
+	m_objectList.push_back(sphere4);
+	m_objectList.push_back(sphere5);
 	m_objectList.push_back(floor);
 	
 	// **************************************************************************************	
 	// Construct and setup the lights.
 	// **************************************************************************************	
-	m_lightList.push_back(std::make_shared<qbRT::PointLight> (qbRT::PointLight()));
-	m_lightList.at(0) -> m_location = qbVector<double> {std::vector<double> {3.0, -10.0, -5.0}};
-	m_lightList.at(0) -> m_color = qbVector<double> {std::vector<double> {1.0, 1.0, 1.0}};
-	m_lightList.at(0) -> m_intensity = 4.0;
+	auto leftLight = std::make_shared<qbRT::PointLight> (qbRT::PointLight());
+	leftLight -> m_location = qbVector<double> {std::vector<double> {-8.0, -20.0, -10.0}};
+	leftLight -> m_color = qbVector<double> {std::vector<double> {1.0, 1.0, 1.0}};
+	leftLight -> m_intensity = 4.0;
 	
-	m_lightList.push_back(std::make_shared<qbRT::PointLight> (qbRT::PointLight()));
-	m_lightList.at(1) -> m_location = qbVector<double> {std::vector<double> {0.0, -10.0, -5.0}};
-	m_lightList.at(1) -> m_color = qbVector<double> {std::vector<double> {1.0, 1.0, 1.0}};
-	m_lightList.at(1) -> m_intensity = 2.0;
+	auto rightLight = std::make_shared<qbRT::PointLight> (qbRT::PointLight());
+	rightLight -> m_location = qbVector<double> {std::vector<double> {8.0, -20.0, -10.0}};
+	rightLight -> m_color = qbVector<double> {std::vector<double> {1.0, 1.0, 1.0}};
+	rightLight -> m_intensity = 6.0;
+	
+	auto topLight = std::make_shared<qbRT::PointLight> (qbRT::PointLight());
+	topLight -> m_location = qbVector<double> {std::vector<double> {0.0, 0.0, -10.0}};
+	topLight -> m_color = qbVector<double> {std::vector<double> {1.0, 1.0, 1.0}};
+	topLight -> m_intensity = 4.0;
+	
+	m_lightList.push_back(leftLight);
+	m_lightList.push_back(rightLight);
+	m_lightList.push_back(topLight);
 
 }
 
