@@ -60,7 +60,7 @@ qbRT::Scene::Scene()
 	// Setup ambient lightling.
 	// **************************************************************************************		
 	qbRT::MaterialBase::m_ambientColor = std::vector<double>{1.0, 1.0, 1.0};
-	qbRT::MaterialBase::m_ambientIntensity = 0.2;
+	qbRT::MaterialBase::m_ambientIntensity = 0.0;
 
 	// **************************************************************************************
 	// Create some color maps.
@@ -105,8 +105,8 @@ qbRT::Scene::Scene()
 	// Value noise texture from Episode 15.
 	auto valNoiseTexture = std::make_shared<qbRT::Texture::BasicValNoise> (qbRT::Texture::BasicValNoise());
 	valNoiseTexture -> SetColorMap(noiseMap);
-	valNoiseTexture -> SetAmplitude(1.0);
-	valNoiseTexture -> SetScale(4.0);	
+	valNoiseTexture -> SetAmplitude(2.0);
+	valNoiseTexture -> SetScale(16.0);	
 	
 	// qbMarble...
 	auto qbMarble = std::make_shared<qbRT::Texture::Marble> (qbRT::Texture::Marble());
@@ -122,14 +122,14 @@ qbRT::Scene::Scene()
 	qbCloud -> SetAmplitude(12.0);
 	qbCloud -> SetScale(10);
 	
-	// Candy-cane...
-	auto qbCandy = std::make_shared<qbRT::Texture::Marble> (qbRT::Texture::Marble());
-	qbCandy -> SetColorMap(candyMap);
-	qbCandy -> SetAmplitude(0.0, 0.0);
-	qbCandy -> SetScale(1.0, 10.0);
-	qbCandy -> SetSine(1.0, 8.0);
-	qbCandy -> SetMinMax(-1.0, 1.0);
-	qbCandy -> SetTransform(qbVector<double>{std::vector<double>{0.0, 0.0}}, 0.0, qbVector<double>{std::vector<double>{1.0, 1.0}});
+	// Spiral...
+	auto qbSpiral = std::make_shared<qbRT::Texture::Marble> (qbRT::Texture::Marble());
+	qbSpiral -> SetColorMap(candyMap);
+	qbSpiral -> SetAmplitude(0.0, 0.0);
+	qbSpiral -> SetScale(1.0, 10.0);
+	qbSpiral -> SetSine(1.0, 8.0);
+	qbSpiral -> SetMinMax(-1.0, 1.0);
+	qbSpiral -> SetTransform(qbVector<double>{std::vector<double>{0.0, 0.0}}, 0.0, qbVector<double>{std::vector<double>{1.0, 1.0}});
 	
 	auto qbWood = std::make_shared<qbRT::Texture::Marble> (qbRT::Texture::Marble());
 	qbWood -> SetColorMap(woodMap);
@@ -170,7 +170,7 @@ qbRT::Scene::Scene()
 	candyMat -> m_baseColor = std::vector<double>{1.0, 1.0, 1.0};
 	candyMat -> m_reflectivity = 0.05;
 	candyMat -> m_shininess = 32.0;
-	candyMat -> AssignTexture(qbCandy);		
+	candyMat -> AssignTexture(qbSpiral);		
 	
 	auto woodMat = std::make_shared<qbRT::SimpleMaterial> (qbRT::SimpleMaterial());
 	woodMat -> m_baseColor = std::vector<double>{1.0, 1.0, 1.0};
@@ -259,7 +259,7 @@ qbRT::Scene::Scene()
 	
 	m_lightList.push_back(leftLight);
 	m_lightList.push_back(rightLight);
-	m_lightList.push_back(topLight);
+	//m_lightList.push_back(topLight);
 
 }
 
