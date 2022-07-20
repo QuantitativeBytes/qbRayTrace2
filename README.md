@@ -28,3 +28,15 @@ https://youtu.be/Fg-_f1L-6dI
 ### Ray Tracing vs. Ray Marching
 A comparison of ray marching and ray tracing techniques, with a simple implementation of ray marching.
 https://youtu.be/4408vlE_60Y
+
+## Episode 14
+### Procedural textures - Part 1
+A quick look at the basics of procedural textures.
+https://youtu.be/5fuE4mTu8Cg
+
+## Episode 15
+### Value noise
+A look at how procedural noise can be used to create more natural looking textures, starting with simple value noise.
+https://youtu.be/iuJKrOtne_Y
+
+
