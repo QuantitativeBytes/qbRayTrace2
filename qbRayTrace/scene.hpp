@@ -49,6 +49,7 @@
 #include "./qbRayMarch/sphere.hpp"
 #include "./qbRayMarch/torus.hpp"
 #include "./qbRayMarch/cube.hpp"
+#include "./qbNormals/simplerough.hpp"
 
 namespace qbRT
 {

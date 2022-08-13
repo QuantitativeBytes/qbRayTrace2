@@ -63,6 +63,12 @@ qbRT::Scene::Scene()
 	qbRT::MaterialBase::m_ambientIntensity = 0.0;
 
 	// **************************************************************************************
+	// Create and setup a simple normal map.
+	// **************************************************************************************	
+	auto normMap = std::make_shared<qbRT::Normal::SimpleRough> (qbRT::Normal::SimpleRough());
+	normMap -> m_amplitudeScale = 0.125;
+
+	// **************************************************************************************
 	// Create some color maps.
 	// **************************************************************************************	
 	auto noiseMap = std::make_shared<qbRT::Texture::ColorMap> (qbRT::Texture::ColorMap());
@@ -147,6 +153,7 @@ qbRT::Scene::Scene()
 	floorMaterial -> m_reflectivity = 0.5;
 	floorMaterial -> m_shininess = 0.0;
 	floorMaterial -> AssignTexture(floorTexture);
+	floorMaterial -> AssignNormalMap(normMap);
 	
 	auto valNoiseMat = std::make_shared<qbRT::SimpleMaterial> (qbRT::SimpleMaterial());
 	valNoiseMat -> m_baseColor = std::vector<double>{1.0, 1.0, 1.0};

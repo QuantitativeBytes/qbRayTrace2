@@ -36,6 +36,7 @@
 #define MATERIALBASE_H
 
 #include <memory>
+#include "../qbNormals/normalbase.hpp"
 #include "../qbTextures/texturebase.hpp"
 #include "../qbPrimatives/objectbase.hpp"
 #include "../qbLights/lightbase.hpp"
@@ -81,8 +82,14 @@ namespace qbRT
 			// Function to assign a texture.
 			void AssignTexture(const std::shared_ptr<qbRT::Texture::TextureBase> &inputTexture);
 			
+			// Function to assign a normal map.
+			void AssignNormalMap(const std::shared_ptr<qbRT::Normal::NormalBase> &inputNormalMap);			
+			
 			// Function to return the color due to the textures at the given (u,v) coordinate.
 			qbVector<double> GetTextureColor(const qbVector<double> &uvCoords);
+
+			// *** Function to perturb the object normal to give the material normal.
+			qbVector<double> PerturbNormal(const qbVector<double> &normal, const qbVector<double> &uvCoords, const qbVector<double> &upVector);			
 			
 			// Function to blend RGBA colors (blends into color1).
 			void BlendColors(qbVector<double> &color1, const qbVector<double> &color2);			
@@ -99,8 +106,17 @@ namespace qbRT
 			// List of texures assigned to this material.
 			std::vector<std::shared_ptr<qbRT::Texture::TextureBase>> m_textureList;
 			
+			// *** List of normal maps assigned to this material.
+			std::vector<std::shared_ptr<qbRT::Normal::NormalBase>> m_normalMapList;			
+			
 			// Flat to indicate whether at least one texture has been assigned.
 			bool m_hasTexture = false;
+			
+			// *** Flag to indicate whether at least one normal map has been assigned.
+			bool m_hasNormalMap = false;
+		
+			// *** Store the material normal at the current point.
+			qbVector<double> m_localNormal;			
 		
 		private:
 		

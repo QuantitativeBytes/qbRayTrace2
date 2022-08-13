@@ -208,6 +208,13 @@ void qbRT::MaterialBase::AssignTexture(const std::shared_ptr<qbRT::Texture::Text
 	m_hasTexture = true;
 }
 
+// *** Function to assign a normal map.
+void qbRT::MaterialBase::AssignNormalMap(const std::shared_ptr<qbRT::Normal::NormalBase> &inputNormalMap)
+{
+	m_normalMapList.push_back(inputNormalMap);
+	m_hasNormalMap = true;
+}
+
 // Function to return the color due to textures at the given (u,v) coordinate.
 qbVector<double> qbRT::MaterialBase::GetTextureColor(const qbVector<double> &uvCoords)
 {
@@ -235,7 +242,21 @@ void qbRT::MaterialBase::BlendColors(qbVector<double> &color1, const qbVector<do
 	color1 = (color2 * color2.GetElement(3)) + (color1 * (1.0 - color2.GetElement(3)));
 }
 
+// *** Function to perturb the object normal to give the material normal.
+qbVector<double> qbRT::MaterialBase::PerturbNormal(const qbVector<double> &normal, const qbVector<double> &uvCoords, const qbVector<double> &upVector)
+{
+	// Copy the original normal.
+	qbVector<double> newNormal = normal;
+	
+	// Perturb the new normal with each normal map in turn.
+	for (int i=0; i<m_normalMapList.size(); ++i)
+	{
+		newNormal = m_normalMapList.at(i) -> ComputePerturbation(newNormal, uvCoords);
+	}
 
+	// And return the output.
+	return newNormal;
+}
 
 
 
