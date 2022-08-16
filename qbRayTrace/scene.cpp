@@ -66,7 +66,7 @@ qbRT::Scene::Scene()
 	// Create and setup a simple normal map.
 	// **************************************************************************************	
 	auto normMap = std::make_shared<qbRT::Normal::SimpleRough> (qbRT::Normal::SimpleRough());
-	normMap -> m_amplitudeScale = 0.125;
+	normMap -> m_amplitudeScale = 0.25;
 
 	// **************************************************************************************
 	// Create some color maps.
