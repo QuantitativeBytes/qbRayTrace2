@@ -56,6 +56,9 @@ namespace qbRT
 				// Note that the color is returned as a 4-dimensional vector (RGBA).
 				virtual qbVector<double> GetColor(const qbVector<double> &uvCoords);
 				
+				// *** Function to return the actual texture value at a given point in the (u,v) coordinate system.
+				virtual double GetValue(const qbVector<double> &uvCoords);				
+				
 				// Function to set transform.
 				void SetTransform(const qbVector<double> &translation, const double &rotation, const qbVector<double> &scale);
 				

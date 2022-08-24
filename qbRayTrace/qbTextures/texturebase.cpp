@@ -58,6 +58,13 @@ qbVector<double> qbRT::Texture::TextureBase::GetColor(const qbVector<double> &uv
 	return outputColor;
 }
 
+// *** Function to return the actual texture value at a given (u,v) location.
+double qbRT::Texture::TextureBase::GetValue(const qbVector<double> &uvCoords)
+{
+	// Return a default value.
+	return 0.0;
+}
+
 // Function to set the transform matrix.
 void qbRT::Texture::TextureBase::SetTransform(const qbVector<double> &translation, const double &rotation, const qbVector<double> &scale)
 {
