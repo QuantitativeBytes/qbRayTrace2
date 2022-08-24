@@ -41,6 +41,7 @@
 #include "./qbTextures/basicvalnoise.hpp"
 #include "./qbTextures/basicnoise.hpp"
 #include "./qbTextures/marble.hpp"
+#include "./qbTextures/qbStone1.hpp"
 
 // The constructor.
 qbRT::Scene::Scene()
@@ -61,12 +62,6 @@ qbRT::Scene::Scene()
 	// **************************************************************************************		
 	qbRT::MaterialBase::m_ambientColor = std::vector<double>{1.0, 1.0, 1.0};
 	qbRT::MaterialBase::m_ambientIntensity = 0.0;
-
-	// **************************************************************************************
-	// Create and setup a simple normal map.
-	// **************************************************************************************	
-	auto normMap = std::make_shared<qbRT::Normal::SimpleRough> (qbRT::Normal::SimpleRough());
-	normMap -> m_amplitudeScale = 0.25;
 
 	// **************************************************************************************
 	// Create some color maps.
@@ -108,6 +103,12 @@ qbRT::Scene::Scene()
 																qbVector<double>{std::vector<double>{16.0, 16.0}} );
 	floorTexture -> SetColor(qbVector<double>{std::vector<double>{0.2, 0.2, 0.2, 1.0}}, qbVector<double>{std::vector<double>{0.4, 0.4, 0.4, 1.0}});
 	
+	// *** An instance of the stone texture.
+	auto stoneTexture = std::make_shared<qbRT::Texture::qbStone1> (qbRT::Texture::qbStone1());
+	stoneTexture -> SetTransform( qbVector<double>{std::vector<double>{0.0, 0.0}},
+																0.0,
+																qbVector<double>{std::vector<double>{4.0, 4.0}} );
+	
 	// Value noise texture from Episode 15.
 	auto valNoiseTexture = std::make_shared<qbRT::Texture::BasicValNoise> (qbRT::Texture::BasicValNoise());
 	valNoiseTexture -> SetColorMap(noiseMap);
@@ -144,6 +145,13 @@ qbRT::Scene::Scene()
 	qbWood -> SetSine(1.0, 8.0);
 	qbWood -> SetMinMax(-1.0, 1.0);
 	qbWood -> SetTransform(qbVector<double>{std::vector<double>{0.0, 0.0}}, 0.0, qbVector<double>{std::vector<double>{1.0, 1.0}});	
+	
+	// **************************************************************************************
+	// Create and setup a simple normal map.
+	// **************************************************************************************	
+	auto normMap = std::make_shared<qbRT::Normal::TextureNormal> (qbRT::Normal::TextureNormal());
+	normMap -> AssignBaseTexture(stoneTexture);
+	normMap -> m_scale = 0.015;	
 
 	// **************************************************************************************
 	// Create some materials.
@@ -154,6 +162,14 @@ qbRT::Scene::Scene()
 	floorMaterial -> m_shininess = 0.0;
 	floorMaterial -> AssignTexture(floorTexture);
 	floorMaterial -> AssignNormalMap(normMap);
+	
+	// *** The stone material.
+	auto stoneMat = std::make_shared<qbRT::SimpleMaterial> (qbRT::SimpleMaterial());
+	stoneMat -> m_baseColor = std::vector<double>{1.0, 1.0, 1.0};
+	stoneMat -> m_reflectivity = 0.35;
+	stoneMat -> m_shininess = 32.0;
+	stoneMat -> AssignTexture(stoneTexture);
+	stoneMat -> AssignNormalMap(normMap);		
 	
 	auto valNoiseMat = std::make_shared<qbRT::SimpleMaterial> (qbRT::SimpleMaterial());
 	valNoiseMat -> m_baseColor = std::vector<double>{1.0, 1.0, 1.0};
@@ -234,7 +250,7 @@ qbRT::Scene::Scene()
 	floor -> SetTransformMatrix(qbRT::GTform {	qbVector<double>{std::vector<double>{0.0, 0.0, 0.5}},
 																							qbVector<double>{std::vector<double>{0.0, 0.0, 0.0}},
 																							qbVector<double>{std::vector<double>{16.0, 16.0, 1.0}}}	);	
-	floor -> AssignMaterial(floorMaterial);	
+	floor -> AssignMaterial(stoneMat);	
 
 	// **************************************************************************************
 	// Put the objects into the scene.	

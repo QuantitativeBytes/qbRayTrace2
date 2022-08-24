@@ -50,6 +50,7 @@
 #include "./qbRayMarch/torus.hpp"
 #include "./qbRayMarch/cube.hpp"
 #include "./qbNormals/simplerough.hpp"
+#include "./qbNormals/texturenormal.hpp"
 
 namespace qbRT
 {
