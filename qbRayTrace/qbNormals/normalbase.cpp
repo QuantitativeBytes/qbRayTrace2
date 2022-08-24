@@ -82,8 +82,8 @@ qbVector<double> qbRT::Normal::NormalBase::TextureDiff(const std::shared_ptr<qbR
 {
 	// We will use the symmetric difference quotient to estimate the partial derivatives of the texture
 	// at the point (u,v).
-	// uGrad = f(u+h, v) - (u-h, v) / 2h
-	// vGrad = f(u, v+h) - (u, v-h) / 2h
+	// uGrad = f(u+h, v) - f(u-h, v) / 2h
+	// vGrad = f(u, v+h) - f(u, v-h) / 2h
 	double h = 0.001;
 	qbVector<double> uDisp = std::vector<double> {h, 0.0};
 	qbVector<double> vDisp = std::vector<double> {0.0, h};
