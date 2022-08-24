@@ -50,6 +50,9 @@ namespace qbRT
 				// Function to return the color.
 				virtual qbVector<double> GetColor(const qbVector<double> &uvCoords) override;
 				
+				// *** Function to return the value.
+				virtual double GetValue(const qbVector<double> &uvCoords) override;				
+				
 				// Function to set stops for the color map.
 				void SetStop(double position, const qbVector<double> &value);
 				
