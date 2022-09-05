@@ -39,4 +39,17 @@ https://youtu.be/5fuE4mTu8Cg
 A look at how procedural noise can be used to create more natural looking textures, starting with simple value noise.
 https://youtu.be/iuJKrOtne_Y
 
+## Episode 16
+### Gradient noise
+Extending the work we did in the last episode to implement gradient based procedural noise, allowing us to generate even more realistic and natural looking textures.
+https://youtu.be/K-Tp8ucK3CU
 
+## Episode 17
+### Normal (bump) maps - Part 1
+Part 1 of a mini-series looking at implementing normal maps. Normal maps, or bump maps as they are sometimes called, are a technique for adding surface detail without adding geometry.
+https://youtu.be/22-8c0ow7XA
+
+## Episode 18
+### Texture based normal maps
+Part 2 of the mini-series looking at normal maps. This episode looks at how we can compute a normal map directly from a procedural texture using numerical differentiation.
+https://youtu.be/R-4QBaUvH84
