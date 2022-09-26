@@ -53,3 +53,8 @@ https://youtu.be/22-8c0ow7XA
 ### Texture based normal maps
 Part 2 of the mini-series looking at normal maps. This episode looks at how we can compute a normal map directly from a procedural texture using numerical differentiation.
 https://youtu.be/R-4QBaUvH84
+
+## Episode 19
+### Image based normal maps
+Part 3 of the mini-series looking at normal maps. This episode focuses on how to implement and work with image based normal maps, such as those usually included with PBR textures. Note that you will have to use your own bitmap-format image files for the texture and normal map to make this code work, as these are not included with the repository. If you download from one of the common website that provide free textures, you may have to convert to a bitmap format first (it should work with either 3-bytes-per-pixel (RGB) or 4-bytes-per-pixel (RGBA) bitmap files).
+https://youtu.be/4GGRx502-iY
