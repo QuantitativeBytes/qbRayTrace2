@@ -1,4 +1,3 @@
-
 /* ***********************************************************
 	scene.hpp
 	
@@ -14,7 +13,6 @@
 	www.youtube.com/c/QuantitativeBytes
 	
 	GPLv3 LICENSE
-	Copyright (c) 2022 Michael Bennett	
 	
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -52,6 +50,7 @@
 #include "./qbRayMarch/cube.hpp"
 #include "./qbNormals/simplerough.hpp"
 #include "./qbNormals/texturenormal.hpp"
+#include "./qbNormals/image.hpp"
 
 namespace qbRT
 {

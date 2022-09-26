@@ -1,8 +1,8 @@
 /* ***********************************************************
 	image.hpp
 	
-	The image class definition - A class to implement
-	image based textures.
+	The image normal class. A simple implementation of image
+	based normal maps.
 	
 	This file forms part of the qbRayTrace project as described
 	in the series of videos on the QuantitativeBytes YouTube
@@ -25,31 +25,34 @@
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with this program.  If not, see <https://www.gnu.org/licenses/>.	
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.		
 	
 ***********************************************************/
 
-#ifndef IMAGE_H
-#define IMAGE_H
 
-#include "texturebase.hpp"
+#ifndef Image_H
+#define Image_H
+
+#include "normalbase.hpp"
 #include <SDL2/SDL.h>
+#include <random>
 
 namespace qbRT
 {
-	namespace Texture
+	namespace Normal
 	{
-		class Image : public TextureBase
+		class Image : public NormalBase
 		{
 			public:
+				// Constructor / Destructor.
 				Image();
 				virtual ~Image() override;
 				
-				// Function to return the color.
-				virtual qbVector<double> GetColor(const qbVector<double> &uvCoords) override;
-			
 				// Function to load the image to be used.
 				bool LoadImage(std::string fileName);
+			
+				// Function to compute the perturbation.
+				virtual qbVector<double> ComputePerturbation(const qbVector<double> &normal, const qbVector<double> &uvCoords) override;
 				
 			private:
 				// Functions to handle interpolation.
@@ -61,17 +64,26 @@ namespace qbRT
 																const double &x, const double &y);
 			
 				// Function to return the value of a pixel in the image surface.													
-				void GetPixelValue(int x, int y, double &red, double &green, double &blue, double &alpha);				
+				void GetPixelValue(int x, int y, double &red, double &green, double &blue, double &alpha);
+				
+			public:
+				bool m_reverseXY = false;
 				
 			private:
+				// Initialise the transform matrix to the identity matrix.
+				qbMatrix2<double> m_transformMatrix {3, 3, std::vector<double>{1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 1.0}};
+				
+				// TO BE DELETED.			
+				std::shared_ptr<std::mt19937> m_p_randGen;
+				
+				// SDL2 stuff to handle the image.
 				std::string m_fileName;
 				SDL_Surface *m_imageSurface;
 				SDL_PixelFormat *m_pixelFormat;
 				bool m_imageLoaded = false;
 				int m_xSize, m_ySize, m_pitch;
-				uint8_t m_bytesPerPixel;
-				uint32_t m_rMask, m_gMask, m_bMask, m_aMask;				
-							
+				uint8_t m_bytesPerPixel;				
+				
 		};
 	}
 }

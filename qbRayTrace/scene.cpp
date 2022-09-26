@@ -13,7 +13,6 @@
 	www.youtube.com/c/QuantitativeBytes
 	
 	GPLv3 LICENSE
-	Copyright (c) 2022 Michael Bennett	
 	
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -97,13 +96,22 @@ qbRT::Scene::Scene()
 	// **************************************************************************************
 	// Create some textures.
 	// **************************************************************************************	
+	
+	// *** An example image texture.
+	auto imageTexture = std::make_shared<qbRT::Texture::Image> (qbRT::Texture::Image());
+	imageTexture -> LoadImage("Voronoi.bmp");
+	imageTexture -> SetTransform(	qbVector<double>{std::vector<double>{0.0, 0.0}},
+																0.0,
+																qbVector<double>{std::vector<double>{1.0, 1.0}} );
+	
+	
 	auto floorTexture = std::make_shared<qbRT::Texture::Checker> (qbRT::Texture::Checker());
 	floorTexture -> SetTransform(	qbVector<double>{std::vector<double>{0.0, 0.0}},
 																0.0,
 																qbVector<double>{std::vector<double>{16.0, 16.0}} );
 	floorTexture -> SetColor(qbVector<double>{std::vector<double>{0.2, 0.2, 0.2, 1.0}}, qbVector<double>{std::vector<double>{0.4, 0.4, 0.4, 1.0}});
 	
-	// *** An instance of the stone texture.
+	// An instance of the stone texture.
 	auto stoneTexture = std::make_shared<qbRT::Texture::qbStone1> (qbRT::Texture::qbStone1());
 	stoneTexture -> SetTransform( qbVector<double>{std::vector<double>{0.0, 0.0}},
 																0.0,
@@ -151,7 +159,14 @@ qbRT::Scene::Scene()
 	// **************************************************************************************	
 	auto normMap = std::make_shared<qbRT::Normal::TextureNormal> (qbRT::Normal::TextureNormal());
 	normMap -> AssignBaseTexture(stoneTexture);
-	normMap -> m_scale = 0.015;	
+	normMap -> m_scale = 0.015;
+	
+	// *** An image based normal map.
+	auto imageNormal = std::make_shared<qbRT::Normal::Image> (qbRT::Normal::Image());
+	imageNormal -> LoadImage("Voronoi_normal.bmp");
+	imageNormal -> SetTransform(	qbVector<double>{std::vector<double>{0.0, 0.0}},
+																0.0,
+																qbVector<double>{std::vector<double>{1.0, 1.0}} );
 
 	// **************************************************************************************
 	// Create some materials.
@@ -160,8 +175,8 @@ qbRT::Scene::Scene()
 	floorMaterial -> m_baseColor = qbVector<double>{std::vector<double>{1.0, 1.0, 1.0}};
 	floorMaterial -> m_reflectivity = 0.5;
 	floorMaterial -> m_shininess = 0.0;
-	floorMaterial -> AssignTexture(floorTexture);
-	floorMaterial -> AssignNormalMap(normMap);
+	floorMaterial -> AssignTexture(imageTexture);
+	floorMaterial -> AssignNormalMap(imageNormal);
 	
 	// *** The stone material.
 	auto stoneMat = std::make_shared<qbRT::SimpleMaterial> (qbRT::SimpleMaterial());
@@ -249,8 +264,8 @@ qbRT::Scene::Scene()
 	floor -> m_isVisible = true;
 	floor -> SetTransformMatrix(qbRT::GTform {	qbVector<double>{std::vector<double>{0.0, 0.0, 0.5}},
 																							qbVector<double>{std::vector<double>{0.0, 0.0, 0.0}},
-																							qbVector<double>{std::vector<double>{16.0, 16.0, 1.0}}}	);	
-	floor -> AssignMaterial(stoneMat);	
+																							qbVector<double>{std::vector<double>{4.0, 4.0, 1.0}}}	);	
+	floor -> AssignMaterial(floorMaterial);	
 
 	// **************************************************************************************
 	// Put the objects into the scene.	
