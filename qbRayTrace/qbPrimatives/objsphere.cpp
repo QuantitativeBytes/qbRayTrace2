@@ -52,7 +52,7 @@ qbRT::ObjSphere::~ObjSphere()
 }
 
 // Function to test for intersections.
-bool qbRT::ObjSphere::TestIntersection(const qbRT::Ray &castRay, qbRT::DATA::hitData_t &hitData)
+bool qbRT::ObjSphere::TestIntersection(const qbRT::Ray &castRay, qbRT::DATA::hitData &hitData)
 {
 	if (!m_isVisible)
 		return false;

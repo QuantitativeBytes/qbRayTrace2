@@ -50,7 +50,7 @@ qbRT::RM::RayMarchBase::~RayMarchBase()
 }
 
 // Test for intersections.
-bool qbRT::RM::RayMarchBase::TestIntersection(	const qbRT::Ray &castRay, qbRT::DATA::hitData_t &hitData	)
+bool qbRT::RM::RayMarchBase::TestIntersection(	const qbRT::Ray &castRay, qbRT::DATA::hitData &hitData	)
 {
 	// Check if an object function has been defined.
 	if (m_haveObjectFcn)
@@ -66,7 +66,7 @@ bool qbRT::RM::RayMarchBase::TestIntersection(	const qbRT::Ray &castRay, qbRT::D
 		//qbVector<double> boundPOI			{3};
 		//qbVector<double> boundNormal	{3};
 		//qbVector<double> boundColor		{3};
-		qbRT::DATA::hitData_t boundHit;
+		qbRT::DATA::hitData boundHit;
 		if (m_boundingBox.TestIntersection(bckRay, boundHit))
 		{
 			// Extract ray direction.

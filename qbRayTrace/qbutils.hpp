@@ -11,7 +11,7 @@ namespace qbRT
 
 	namespace DATA
 	{
-		struct hitData_t
+		struct hitData
 		{
 			qbVector<double> poi			{3};
 			qbVector<double> normal		{3};

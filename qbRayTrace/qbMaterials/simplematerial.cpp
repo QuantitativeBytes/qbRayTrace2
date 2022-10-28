@@ -125,7 +125,7 @@ qbVector<double> qbRT::SimpleMaterial::ComputeSpecular(	const std::vector<std::s
 		//qbVector<double> poi				{3};
 		//qbVector<double> poiNormal	{3};
 		//qbVector<double> poiColor		{3};
-		qbRT::DATA::hitData_t hitData;
+		qbRT::DATA::hitData hitData;
 		bool validInt = false;
 		for (auto sceneObject : objectList)
 		{

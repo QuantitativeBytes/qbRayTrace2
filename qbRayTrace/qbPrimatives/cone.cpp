@@ -50,7 +50,7 @@ qbRT::Cone::~Cone()
 }
 
 // The function to test for intersections.
-bool qbRT::Cone::TestIntersection(	const qbRT::Ray &castRay, qbRT::DATA::hitData_t &hitData)
+bool qbRT::Cone::TestIntersection(	const qbRT::Ray &castRay, qbRT::DATA::hitData &hitData)
 {
 	if (!m_isVisible)
 		return false;

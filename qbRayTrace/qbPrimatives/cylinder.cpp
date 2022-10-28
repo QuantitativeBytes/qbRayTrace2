@@ -50,7 +50,7 @@ qbRT::Cylinder::~Cylinder()
 }
 
 // The function to test for intersections.
-bool qbRT::Cylinder::TestIntersection(	const qbRT::Ray &castRay, qbRT::DATA::hitData_t &hitData)
+bool qbRT::Cylinder::TestIntersection(	const qbRT::Ray &castRay, qbRT::DATA::hitData &hitData)
 {
 	if (!m_isVisible)
 		return false;

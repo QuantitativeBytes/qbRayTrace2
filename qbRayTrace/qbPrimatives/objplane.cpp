@@ -53,7 +53,7 @@ qbRT::ObjPlane::~ObjPlane()
 }
 
 // The function to test for intersections.
-bool qbRT::ObjPlane::TestIntersection(	const qbRT::Ray &castRay, qbRT::DATA::hitData_t &hitData)
+bool qbRT::ObjPlane::TestIntersection(	const qbRT::Ray &castRay, qbRT::DATA::hitData &hitData)
 {
 	if (!m_isVisible)
 		return false;

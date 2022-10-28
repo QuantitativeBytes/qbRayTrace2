@@ -337,7 +337,7 @@ bool qbRT::Scene::Render(qbImage &outputImage)
 			qbVector<double> closestIntPoint		{3};
 			qbVector<double> closestLocalNormal	{3};
 			qbVector<double> closestLocalColor	{3};
-			qbRT::DATA::hitData_t closestHitData;
+			qbRT::DATA::hitData closestHitData;
 			bool intersectionFound = CastRay(cameraRay, closestObject, closestHitData);
 			
 			/* Compute the illumination for the closest object, assuming that there
@@ -372,9 +372,9 @@ bool qbRT::Scene::Render(qbImage &outputImage)
 
 // Function to cast a ray into the scene.
 bool qbRT::Scene::CastRay(	qbRT::Ray &castRay, std::shared_ptr<qbRT::ObjectBase> &closestObject,
-														qbRT::DATA::hitData_t &closestHitData)
+														qbRT::DATA::hitData &closestHitData)
 {
-	qbRT::DATA::hitData_t hitData;
+	qbRT::DATA::hitData hitData;
 	double minDist = 1e6;
 	bool intersectionFound = false;
 	for (auto currentObject : m_objectList)

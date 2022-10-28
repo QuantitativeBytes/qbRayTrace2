@@ -52,7 +52,7 @@ namespace qbRT
 			virtual ~Cylinder() override;
 			
 			// Override the function to test for intersections.
-			virtual bool TestIntersection(	const qbRT::Ray &castRay, qbRT::DATA::hitData_t &hitData) override;
+			virtual bool TestIntersection(	const qbRT::Ray &castRay, qbRT::DATA::hitData &hitData) override;
 	};
 }
 

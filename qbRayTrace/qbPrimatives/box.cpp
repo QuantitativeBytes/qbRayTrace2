@@ -47,7 +47,7 @@ qbRT::Box::~Box()
 }
 
 // Function to test for intersections.
-bool qbRT::Box::TestIntersection(const qbRT::Ray &castRay, qbRT::DATA::hitData_t &hitData)
+bool qbRT::Box::TestIntersection(const qbRT::Ray &castRay, qbRT::DATA::hitData &hitData)
 {
 	if (!m_isVisible)
 		return false;

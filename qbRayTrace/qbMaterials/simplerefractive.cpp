@@ -124,8 +124,8 @@ qbVector<double> qbRT::SimpleRefractive::ComputeTranslucency(	const std::vector<
 	//qbVector<double> newIntPoint				{3};
 	//qbVector<double> newLocalNormal			{3};
 	//qbVector<double> newLocalColor			{3};
-	qbRT::DATA::hitData_t closestHitData;
-	qbRT::DATA::hitData_t hitData;	
+	qbRT::DATA::hitData closestHitData;
+	qbRT::DATA::hitData hitData;	
 	bool test = currentObject -> TestIntersection(refractedRay, hitData);
 	bool intersectionFound = false;
 	qbRT::Ray finalRay;
@@ -218,7 +218,7 @@ qbVector<double> qbRT::SimpleRefractive::ComputeSpecular(	const std::vector<std:
 		//qbVector<double> poi				{3};
 		//qbVector<double> poiNormal	{3};
 		//qbVector<double> poiColor		{3};
-		qbRT::DATA::hitData_t hitData;
+		qbRT::DATA::hitData hitData;
 		bool validInt = false;
 		for (auto sceneObject : objectList)
 		{

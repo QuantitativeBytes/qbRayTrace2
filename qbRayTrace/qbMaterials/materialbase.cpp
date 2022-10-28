@@ -124,7 +124,7 @@ qbVector<double> qbRT::MaterialBase::ComputeReflectionColor(	const std::vector<s
 	
 	/* Cast this ray into the scene and find the closest object that it intersects with. */
 	std::shared_ptr<qbRT::ObjectBase> closestObject;
-	qbRT::DATA::hitData_t closestHitData;
+	qbRT::DATA::hitData closestHitData;
 	bool intersectionFound = CastRay(reflectionRay, objectList, NULL, closestObject, closestHitData);
 	
 	/* Compute illumination for closest object assuming that there was a
@@ -163,13 +163,13 @@ qbVector<double> qbRT::MaterialBase::ComputeReflectionColor(	const std::vector<s
 bool qbRT::MaterialBase::CastRay( const qbRT::Ray &castRay, const std::vector<std::shared_ptr<qbRT::ObjectBase>> &objectList,
 																	const std::shared_ptr<qbRT::ObjectBase> &thisObject,
 																	std::shared_ptr<qbRT::ObjectBase> &closestObject,
-																	qbRT::DATA::hitData_t &closestHitData)
+																	qbRT::DATA::hitData &closestHitData)
 {
 	// Test for intersections with all of the objects in the scene.
 	//qbVector<double> intPoint			{3};
 	//qbVector<double> localNormal	{3};
 	//qbVector<double> localColor		{3};
-	qbRT::DATA::hitData_t hitData;
+	qbRT::DATA::hitData hitData;
 	
 	double minDist = 1e6;
 	bool intersectionFound = false;
