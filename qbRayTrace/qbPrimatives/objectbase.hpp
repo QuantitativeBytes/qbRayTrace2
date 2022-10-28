@@ -40,6 +40,7 @@
 #define OBJECTBASE_H
 
 #include <memory>
+#include "../qbutils.hpp"
 #include "../qbLinAlg/qbVector.h"
 #include "../ray.hpp"
 #include "../gtfm.hpp"
@@ -58,7 +59,8 @@ namespace qbRT
 			virtual ~ObjectBase();
 			
 			// Function to test for intersections.
-			virtual bool TestIntersection(const Ray &castRay, qbVector<double> &intPoint, qbVector<double> &localNormal, qbVector<double> &localColor);
+			//virtual bool TestIntersection(const Ray &castRay, qbVector<double> &intPoint, qbVector<double> &localNormal, qbVector<double> &localColor);
+			virtual bool TestIntersection(const Ray &castRay, qbRT::DATA::hitData_t &hitData);
 			
 			// Function to set the transform matrix.
 			void SetTransformMatrix(const qbRT::GTform &transformMatrix);
