@@ -118,13 +118,15 @@ qbVector<double> qbRT::SimpleRefractive::ComputeTranslucency(	const std::vector<
 	
 	// Test for secondary intersection with this object.
 	std::shared_ptr<qbRT::ObjectBase> closestObject;
-	qbVector<double> closestIntPoint		{3};
-	qbVector<double> closestLocalNormal	{3};
-	qbVector<double> closestLocalColor	{3};
-	qbVector<double> newIntPoint				{3};
-	qbVector<double> newLocalNormal			{3};
-	qbVector<double> newLocalColor			{3};
-	bool test = currentObject -> TestIntersection(refractedRay, newIntPoint, newLocalNormal, newLocalColor);
+	//qbVector<double> closestIntPoint		{3};
+	//qbVector<double> closestLocalNormal	{3};
+	//qbVector<double> closestLocalColor	{3};
+	//qbVector<double> newIntPoint				{3};
+	//qbVector<double> newLocalNormal			{3};
+	//qbVector<double> newLocalColor			{3};
+	qbRT::DATA::hitData_t closestHitData;
+	qbRT::DATA::hitData_t hitData;	
+	bool test = currentObject -> TestIntersection(refractedRay, hitData);
 	bool intersectionFound = false;
 	qbRT::Ray finalRay;
 	if (test)
@@ -132,7 +134,7 @@ qbVector<double> qbRT::SimpleRefractive::ComputeTranslucency(	const std::vector<
 		// Compute the refracted vector.
 		qbVector<double> p2 = refractedRay.m_lab;
 		p2.Normalize();
-		qbVector<double> tempNormal2 = newLocalNormal;
+		qbVector<double> tempNormal2 = hitData.normal;
 		double r2 = m_ior;
 		double c2 = -qbVector<double>::dot(tempNormal2, p2);
 		if (c2 < 0.0)
@@ -143,16 +145,16 @@ qbVector<double> qbRT::SimpleRefractive::ComputeTranslucency(	const std::vector<
 		qbVector<double> refractedVector2 = r2*p2 + (r2*c2 - sqrtf(1.0-pow(r2,2.0) * (1.0-pow(c2,2.0)))) * tempNormal2;
 		
 		// Compute the refracted ray.
-		qbRT::Ray refractedRay2 (newIntPoint + (refractedVector2 * 0.01), newIntPoint + refractedVector2);
+		qbRT::Ray refractedRay2 (hitData.poi + (refractedVector2 * 0.01), hitData.poi + refractedVector2);
 		
 		// Cast this ray into the scene.
-		intersectionFound = CastRay(refractedRay2, objectList, currentObject, closestObject, closestIntPoint, closestLocalNormal, closestLocalColor);
+		intersectionFound = CastRay(refractedRay2, objectList, currentObject, closestObject, closestHitData);
 		finalRay = refractedRay2;
 	}
 	else
 	{
 		/* No secondary intersections were found, so continue the original refracted ray. */
-		intersectionFound = CastRay(refractedRay, objectList, currentObject, closestObject, closestIntPoint, closestLocalNormal, closestLocalColor);
+		intersectionFound = CastRay(refractedRay, objectList, currentObject, closestObject, closestHitData);
 		finalRay = refractedRay;
 	}
 	
@@ -163,11 +165,17 @@ qbVector<double> qbRT::SimpleRefractive::ComputeTranslucency(	const std::vector<
 		// Check if a material has been assigned.
 		if (closestObject -> m_hasMaterial)
 		{
-			matColor = closestObject -> m_pMaterial -> ComputeColor(objectList, lightList, closestObject, closestIntPoint, closestLocalNormal, finalRay);
+			matColor = closestHitData.hitObject -> m_pMaterial -> ComputeColor(	objectList, lightList, 
+																																					closestHitData.hitObject, 
+																																					closestHitData.poi, 
+																																					closestHitData.normal, finalRay);
 		}
 		else
 		{
-			matColor = qbRT::MaterialBase::ComputeDiffuseColor(objectList, lightList, closestObject, closestIntPoint, closestLocalNormal, closestObject->m_baseColor);
+			matColor = qbRT::MaterialBase::ComputeDiffuseColor(	objectList, lightList, 
+																													closestHitData.hitObject, 
+																													closestHitData.poi, 
+																													closestHitData.normal, closestObject->m_baseColor);
 		}
 	}
 	else
@@ -207,13 +215,14 @@ qbVector<double> qbRT::SimpleRefractive::ComputeSpecular(	const std::vector<std:
 		
 		/* Loop through all objects in the scene to check if any
 			obstruct light from this source. */
-		qbVector<double> poi				{3};
-		qbVector<double> poiNormal	{3};
-		qbVector<double> poiColor		{3};
+		//qbVector<double> poi				{3};
+		//qbVector<double> poiNormal	{3};
+		//qbVector<double> poiColor		{3};
+		qbRT::DATA::hitData_t hitData;
 		bool validInt = false;
 		for (auto sceneObject : objectList)
 		{
-			validInt = sceneObject -> TestIntersection(lightRay, poi, poiNormal, poiColor);
+			validInt = sceneObject -> TestIntersection(lightRay, hitData);
 			if (validInt)
 				break;
 		}

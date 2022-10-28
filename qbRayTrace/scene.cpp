@@ -337,28 +337,29 @@ bool qbRT::Scene::Render(qbImage &outputImage)
 			qbVector<double> closestIntPoint		{3};
 			qbVector<double> closestLocalNormal	{3};
 			qbVector<double> closestLocalColor	{3};
-			bool intersectionFound = CastRay(cameraRay, closestObject, closestIntPoint, closestLocalNormal, closestLocalColor);
+			qbRT::DATA::hitData_t closestHitData;
+			bool intersectionFound = CastRay(cameraRay, closestObject, closestHitData);
 			
 			/* Compute the illumination for the closest object, assuming that there
 				was a valid intersection. */
 			if (intersectionFound)
 			{
 				// Check if the object has a material.
-				if (closestObject -> m_hasMaterial)
+				if (closestHitData.hitObject -> m_hasMaterial)
 				{
 					// Use the material to compute the color.
 					qbRT::MaterialBase::m_reflectionRayCount = 0;
-					qbVector<double> color = closestObject -> m_pMaterial -> ComputeColor(	m_objectList, m_lightList,
-																																									closestObject, closestIntPoint,
-																																									closestLocalNormal, cameraRay);
+					qbVector<double> color = closestHitData.hitObject -> m_pMaterial -> ComputeColor(	m_objectList, m_lightList,
+																																														closestHitData.hitObject, closestHitData.poi,
+																																														closestHitData.normal, cameraRay);
 					outputImage.SetPixel(x, y, color.GetElement(0), color.GetElement(1), color.GetElement(2));
 				}
 				else
 				{
 					// Use the basic method to compute the color.
 					qbVector<double> matColor = qbRT::MaterialBase::ComputeDiffuseColor(m_objectList, m_lightList,
-																																							closestObject, closestIntPoint,
-																																							closestLocalNormal, closestObject->m_baseColor);
+																																							closestHitData.hitObject, closestHitData.poi,
+																																							closestHitData.normal, closestObject->m_baseColor);
 					outputImage.SetPixel(x, y, matColor.GetElement(0), matColor.GetElement(1), matColor.GetElement(2));
 				}
 			}
@@ -371,17 +372,14 @@ bool qbRT::Scene::Render(qbImage &outputImage)
 
 // Function to cast a ray into the scene.
 bool qbRT::Scene::CastRay(	qbRT::Ray &castRay, std::shared_ptr<qbRT::ObjectBase> &closestObject,
-														qbVector<double> &closestIntPoint, qbVector<double> &closestLocalNormal,
-														qbVector<double> &closestLocalColor)
+														qbRT::DATA::hitData_t &closestHitData)
 {
-	qbVector<double> intPoint			{3};
-	qbVector<double> localNormal	{3};
-	qbVector<double> localColor		{3};
+	qbRT::DATA::hitData_t hitData;
 	double minDist = 1e6;
 	bool intersectionFound = false;
 	for (auto currentObject : m_objectList)
 	{
-		bool validInt = currentObject -> TestIntersection(castRay, intPoint, localNormal, localColor);
+		bool validInt = currentObject -> TestIntersection(castRay, hitData);
 		
 		// If we have a valid intersection.
 		if (validInt)
@@ -390,7 +388,7 @@ bool qbRT::Scene::CastRay(	qbRT::Ray &castRay, std::shared_ptr<qbRT::ObjectBase>
 			intersectionFound = true;
 					
 			// Compute the distance between the camera and the point of intersection.
-			double dist = (intPoint - castRay.m_point1).norm();
+			double dist = (hitData.poi - castRay.m_point1).norm();
 					
 			/* If this object is closer to the camera than any one that we have
 				seen before, then store a reference to it. */
@@ -398,9 +396,10 @@ bool qbRT::Scene::CastRay(	qbRT::Ray &castRay, std::shared_ptr<qbRT::ObjectBase>
 			{
 				minDist = dist;
 				closestObject = currentObject;
-				closestIntPoint = intPoint;
-				closestLocalNormal = localNormal;
-				closestLocalColor = localColor;
+				//closestIntPoint = intPoint;
+				//closestLocalNormal = localNormal;
+				//closestLocalColor = localColor;
+				closestHitData = hitData;
 			}
 		}
 	}

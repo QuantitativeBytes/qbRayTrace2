@@ -65,8 +65,7 @@ namespace qbRT
 			
 			// Function to cast a ray into the scene.
 			bool CastRay(	qbRT::Ray &castRay, std::shared_ptr<qbRT::ObjectBase> &closestObject,
-										qbVector<double> &closestIntPoint, qbVector<double> &closestLocalNormal,
-										qbVector<double> &closestLocalColor);
+										qbRT::DATA::hitData_t &closestHitData);
 			
 		// Private functions.
 		private:

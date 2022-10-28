@@ -77,7 +77,7 @@ qbVector<double> qbRT::MaterialBase::ComputeDiffuseColor(	const std::vector<std:
 	bool illumFound = false;
 	for (auto currentLight : lightList)
 	{
-		validIllum = currentLight -> ComputeIllumination(intPoint, localNormal, objectList, currentObject, color, intensity);
+		validIllum = currentLight -> ComputeIllumination(intPoint, localNormal, objectList, NULL, color, intensity);
 		if (validIllum)
 		{
 			illumFound = true;
@@ -116,17 +116,16 @@ qbVector<double> qbRT::MaterialBase::ComputeReflectionColor(	const std::vector<s
 	
 	// Compute the reflection vector.
 	qbVector<double> d = incidentRay.m_lab;
-	qbVector<double> reflectionVector = d - (2 * qbVector<double>::dot(d, localNormal) * localNormal);
+	qbVector<double> reflectionVector = d - (2.0 * qbVector<double>::dot(d, localNormal) * localNormal);
 	
 	// Construct the reflection ray.
-	qbRT::Ray reflectionRay (intPoint, intPoint + reflectionVector);
+	qbVector<double> startPoint = intPoint + (localNormal * 0.001);
+	qbRT::Ray reflectionRay (startPoint, startPoint + reflectionVector);
 	
 	/* Cast this ray into the scene and find the closest object that it intersects with. */
 	std::shared_ptr<qbRT::ObjectBase> closestObject;
-	qbVector<double> closestIntPoint			{3};
-	qbVector<double> closestLocalNormal		{3};
-	qbVector<double> closestLocalColor		{3};
-	bool intersectionFound = CastRay(reflectionRay, objectList, currentObject, closestObject, closestIntPoint, closestLocalNormal, closestLocalColor);
+	qbRT::DATA::hitData_t closestHitData;
+	bool intersectionFound = CastRay(reflectionRay, objectList, NULL, closestObject, closestHitData);
 	
 	/* Compute illumination for closest object assuming that there was a
 		valid intersection. */
@@ -140,11 +139,15 @@ qbVector<double> qbRT::MaterialBase::ComputeReflectionColor(	const std::vector<s
 		if (closestObject -> m_hasMaterial)
 		{
 			// Use the material to compute the color.
-			matColor = closestObject -> m_pMaterial -> ComputeColor(objectList, lightList, closestObject, closestIntPoint, closestLocalNormal, reflectionRay);
+			matColor = closestObject -> m_pMaterial -> ComputeColor(	objectList, lightList, 
+																																closestObject, closestHitData.poi, 
+																																closestHitData.normal, reflectionRay);
 		}
 		else
 		{
-			matColor = qbRT::MaterialBase::ComputeDiffuseColor(objectList, lightList, closestObject, closestIntPoint, closestLocalNormal, closestObject->m_baseColor);
+			matColor = qbRT::MaterialBase::ComputeDiffuseColor(	objectList, lightList, 
+																													closestObject, closestHitData.poi, 
+																													closestHitData.normal, closestObject->m_baseColor);
 		}
 	}
 	else
@@ -160,13 +163,13 @@ qbVector<double> qbRT::MaterialBase::ComputeReflectionColor(	const std::vector<s
 bool qbRT::MaterialBase::CastRay( const qbRT::Ray &castRay, const std::vector<std::shared_ptr<qbRT::ObjectBase>> &objectList,
 																	const std::shared_ptr<qbRT::ObjectBase> &thisObject,
 																	std::shared_ptr<qbRT::ObjectBase> &closestObject,
-																	qbVector<double> &closestIntPoint, qbVector<double> &closestLocalNormal,
-																	qbVector<double> &closestLocalColor)
+																	qbRT::DATA::hitData_t &closestHitData)
 {
 	// Test for intersections with all of the objects in the scene.
-	qbVector<double> intPoint			{3};
-	qbVector<double> localNormal	{3};
-	qbVector<double> localColor		{3};
+	//qbVector<double> intPoint			{3};
+	//qbVector<double> localNormal	{3};
+	//qbVector<double> localColor		{3};
+	qbRT::DATA::hitData_t hitData;
 	
 	double minDist = 1e6;
 	bool intersectionFound = false;
@@ -174,7 +177,7 @@ bool qbRT::MaterialBase::CastRay( const qbRT::Ray &castRay, const std::vector<st
 	{
 		if (currentObject != thisObject)
 		{
-			bool validInt = currentObject -> TestIntersection(castRay, intPoint, localNormal, localColor);
+			bool validInt = currentObject -> TestIntersection(castRay, hitData);
 			
 			// If we have a valid intersection.
 			if (validInt)
@@ -183,16 +186,17 @@ bool qbRT::MaterialBase::CastRay( const qbRT::Ray &castRay, const std::vector<st
 				intersectionFound = true;
 				
 				// Compute the distance between the source and the intersection point.
-				double dist = (intPoint - castRay.m_point1).norm();
+				double dist = (hitData.poi - castRay.m_point1).norm();
 				
 				// Store a reference to this object if it is the closest.
 				if (dist < minDist)
 				{
 					minDist = dist;
 					closestObject = currentObject;
-					closestIntPoint = intPoint;
-					closestLocalNormal = localNormal;
-					closestLocalColor = localColor;
+					//closestIntPoint = intPoint;
+					//closestLocalNormal = localNormal;
+					//closestLocalColor = localColor;
+					closestHitData = hitData;
 				}
 			}
 		}

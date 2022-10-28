@@ -76,8 +76,7 @@ namespace qbRT
 			bool CastRay(	const qbRT::Ray &castRay, const std::vector<std::shared_ptr<qbRT::ObjectBase>> &objectList,
 										const std::shared_ptr<qbRT::ObjectBase> &thisObject,
 										std::shared_ptr<qbRT::ObjectBase> &closestObject,
-										qbVector<double> &closestIntPoint, qbVector<double> &closestLocalNormal,
-										qbVector<double> &closestLocalColor);
+										qbRT::DATA::hitData_t &closestHitData);
 										
 			// Function to assign a texture.
 			void AssignTexture(const std::shared_ptr<qbRT::Texture::TextureBase> &inputTexture);

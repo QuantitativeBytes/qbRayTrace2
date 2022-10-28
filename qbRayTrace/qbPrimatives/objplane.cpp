@@ -53,8 +53,7 @@ qbRT::ObjPlane::~ObjPlane()
 }
 
 // The function to test for intersections.
-bool qbRT::ObjPlane::TestIntersection(	const qbRT::Ray &castRay, qbVector<double> &intPoint,
-																				qbVector<double> &localNormal, qbVector<double> &localColor)
+bool qbRT::ObjPlane::TestIntersection(	const qbRT::Ray &castRay, qbRT::DATA::hitData_t &hitData)
 {
 	if (!m_isVisible)
 		return false;
@@ -89,7 +88,7 @@ bool qbRT::ObjPlane::TestIntersection(	const qbRT::Ray &castRay, qbVector<double
 				qbVector<double> poi = bckRay.m_point1 + t * k;
 				
 				// Transform the intersection point back into world coordinates.
-				intPoint = m_transformMatrix.Apply(poi, qbRT::FWDTFORM);
+				hitData.poi = m_transformMatrix.Apply(poi, qbRT::FWDTFORM);
 				
 				// Compute the local normal.
 				//qbVector<double> localOrigin {std::vector<double> {0.0, 0.0, 0.0}};
@@ -98,15 +97,19 @@ bool qbRT::ObjPlane::TestIntersection(	const qbRT::Ray &castRay, qbVector<double
 				//localNormal.Normalize();
 								
 				qbVector<double> normalVector {std::vector<double> {0.0, 0.0, -1.0}};
-				localNormal = m_transformMatrix.ApplyNorm(normalVector);
-				localNormal.Normalize();
+				hitData.normal = m_transformMatrix.ApplyNorm(normalVector);
+				hitData.normal.Normalize();
 				
 				// Return the base color.
-				localColor = m_baseColor;
+				hitData.color = m_baseColor;
 				
 				// Store the (u,v) coordinates for possible later use.
 				m_uvCoords.SetElement(0, u);
 				m_uvCoords.SetElement(1, v);
+				hitData.uvCoords = m_uvCoords;
+				
+				// Return a reference to this object.
+				hitData.hitObject = std::make_shared<qbRT::ObjectBase> (*this);	
 				
 				return true;
 			}

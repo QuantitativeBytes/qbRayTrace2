@@ -61,25 +61,27 @@ bool qbRT::PointLight::ComputeIllumination(	const qbVector<double> &intPoint, co
 	double lightDist = (m_location - intPoint).norm();
 	
 	// Compute a starting point.
-	qbVector<double> startPoint = intPoint;
+	qbVector<double> startPoint = intPoint + (localNormal * 0.001);
 	
 	// Construct a ray from the point of intersection to the light.
 	qbRT::Ray lightRay (startPoint, startPoint + lightDir);
 	
 	/* Check for intersections with all of the objects
 		in the scene, except for the current one. */
-	qbVector<double> poi				{3};
-	qbVector<double> poiNormal	{3};
-	qbVector<double> poiColor		{3};
+	//qbVector<double> poi				{3};
+	//qbVector<double> poiNormal	{3};
+	//qbVector<double> poiColor		{3};
+	qbRT::DATA::hitData_t hitData;
 	bool validInt = false;
 	for (auto sceneObject : objectList)
 	{
 		if (sceneObject != currentObject)
 		{
-			validInt = sceneObject -> TestIntersection(lightRay, poi, poiNormal, poiColor);
+			//validInt = sceneObject -> TestIntersection(lightRay, poi, poiNormal, poiColor);
+			validInt = sceneObject -> TestIntersection(lightRay, hitData);
 			if (validInt)
 			{
-				double dist = (poi - startPoint).norm();
+				double dist = (hitData.poi - startPoint).norm();
 				if (dist > lightDist)
 					validInt = false;
 			}

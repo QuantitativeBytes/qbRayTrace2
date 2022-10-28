@@ -50,10 +50,7 @@ qbRT::RM::RayMarchBase::~RayMarchBase()
 }
 
 // Test for intersections.
-bool qbRT::RM::RayMarchBase::TestIntersection(	const qbRT::Ray &castRay,
-																								qbVector<double> &intPoint,
-																								qbVector<double> &localNormal,
-																								qbVector<double> &localColor	)
+bool qbRT::RM::RayMarchBase::TestIntersection(	const qbRT::Ray &castRay, qbRT::DATA::hitData_t &hitData	)
 {
 	// Check if an object function has been defined.
 	if (m_haveObjectFcn)
@@ -66,10 +63,11 @@ bool qbRT::RM::RayMarchBase::TestIntersection(	const qbRT::Ray &castRay,
 		qbRT::Ray bckRay = m_transformMatrix.Apply(castRay, qbRT::BCKTFORM);
 		
 		// Test for intersections with the bounding box.
-		qbVector<double> boundPOI			{3};
-		qbVector<double> boundNormal	{3};
-		qbVector<double> boundColor		{3};
-		if (m_boundingBox.TestIntersection(bckRay, boundPOI, boundNormal, boundColor))
+		//qbVector<double> boundPOI			{3};
+		//qbVector<double> boundNormal	{3};
+		//qbVector<double> boundColor		{3};
+		qbRT::DATA::hitData_t boundHit;
+		if (m_boundingBox.TestIntersection(bckRay, boundHit))
 		{
 			// Extract ray direction.
 			qbVector<double> vhat = bckRay.m_lab;
@@ -102,7 +100,7 @@ bool qbRT::RM::RayMarchBase::TestIntersection(	const qbRT::Ray &castRay,
 		
 			// Otherwise, we have a valid intersection at currentLoc.
 			// Transform the intersection point back into world coordinates.
-			intPoint = m_transformMatrix.Apply(currentLoc, qbRT::FWDTFORM);
+			hitData.poi = m_transformMatrix.Apply(currentLoc, qbRT::FWDTFORM);
 			
 			// Compute the local normal.
 			qbVector<double> surfaceNormal {3};
@@ -118,11 +116,14 @@ bool qbRT::RM::RayMarchBase::TestIntersection(	const qbRT::Ray &castRay,
 		
 			// Transform the local normal.
 			surfaceNormal.Normalize();
-			localNormal = m_transformMatrix.ApplyNorm(surfaceNormal);
-			localNormal.Normalize();
+			hitData.normal = m_transformMatrix.ApplyNorm(surfaceNormal);
+			hitData.normal.Normalize();
 			
 			// Return the base color.
-			localColor = m_baseColor;
+			hitData.color = m_baseColor;
+			
+			// Return a pointer to this object.
+			hitData.hitObject = std::make_shared<qbRT::ObjectBase> (*this);			
 		
 			return true;
 		}

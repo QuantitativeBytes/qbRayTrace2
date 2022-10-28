@@ -1,6 +1,7 @@
 #ifndef QBRT_UTILS_H
 #define QBRT_UTILS_H
 
+#include <memory>
 #include "./qbLinAlg/qbVector.h"
 
 namespace qbRT

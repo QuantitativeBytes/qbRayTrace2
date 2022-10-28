@@ -49,7 +49,7 @@ namespace qbRT
 			virtual ~Box() override;
 			
 			// Override the function to test for intersections.
-			virtual bool TestIntersection(const qbRT::Ray &castRay, qbVector<double> &intPoint, qbVector<double> &localNormal, qbVector<double> &localColor) override;
+			virtual bool TestIntersection(const qbRT::Ray &castRay, qbRT::DATA::hitData_t &hitData) override;
 			
 		private:
 			std::array<double, 6> t;

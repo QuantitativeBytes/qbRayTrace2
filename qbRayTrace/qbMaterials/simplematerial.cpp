@@ -122,13 +122,14 @@ qbVector<double> qbRT::SimpleMaterial::ComputeSpecular(	const std::vector<std::s
 		
 		/* Loop through all objects in the scene to check if any
 			obstruct light from this source. */
-		qbVector<double> poi				{3};
-		qbVector<double> poiNormal	{3};
-		qbVector<double> poiColor		{3};
+		//qbVector<double> poi				{3};
+		//qbVector<double> poiNormal	{3};
+		//qbVector<double> poiColor		{3};
+		qbRT::DATA::hitData_t hitData;
 		bool validInt = false;
 		for (auto sceneObject : objectList)
 		{
-			validInt = sceneObject -> TestIntersection(lightRay, poi, poiNormal, poiColor);
+			validInt = sceneObject -> TestIntersection(lightRay, hitData);
 			if (validInt)
 				break;
 		}
