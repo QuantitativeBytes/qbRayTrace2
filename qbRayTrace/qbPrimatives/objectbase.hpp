@@ -50,6 +50,12 @@ namespace qbRT
 	/* Forward-declare the material base class. This will be
 		overriden later. */
 	class MaterialBase;
+	
+	// Define constants for UV mapping types.
+	constexpr int uvSPHERE = 0;
+	constexpr int uvPLANE = 1;
+	constexpr int uvCYLINDER = 2;
+	constexpr int uvBOX = 3;	
 
 	class ObjectBase
 	{
@@ -71,6 +77,9 @@ namespace qbRT
 			
 			// Function to assign a material.
 			bool AssignMaterial(const std::shared_ptr<qbRT::MaterialBase> &objectMaterial);
+			
+			// Function to compute UV space.
+			void ComputeUV(const qbVector<double> &localPOI, qbVector<double> &uvCoords);			
 			
 		// Public member variables.
 		public:
@@ -94,6 +103,9 @@ namespace qbRT
 			
 			// Store the (u,v) coordinates from a detected intersection.
 			qbVector<double> m_uvCoords {2};
+			
+			// Control what type of UV mapping to apply to this object.
+			int m_uvMapType = qbRT::uvSPHERE;			
 	};
 }
 

@@ -192,14 +192,15 @@ bool qbRT::Cone::TestIntersection(	const qbRT::Ray &castRay, qbRT::DATA::hitData
 		hitData.color = m_baseColor;
 		
 		// Compute and store the (u,v) coordinates.
-		double x = validPOI.GetElement(0);
-		double y = validPOI.GetElement(1);
-		double z = validPOI.GetElement(2);
-		double u = atan2(y,x) / M_PI;
-		double v = (z * 2.0) + 1.0;
+		//double x = validPOI.GetElement(0);
+		//double y = validPOI.GetElement(1);
+		//double z = validPOI.GetElement(2);
+		//double u = atan2(y,x) / M_PI;
+		//double v = (z * 2.0) + 1.0;
 		//double v = (-z * 2.0) + 0.5;
-		m_uvCoords.SetElement(0, u);
-		m_uvCoords.SetElement(1, v);
+		//m_uvCoords.SetElement(0, u);
+		//m_uvCoords.SetElement(1, v);
+		ComputeUV(validPOI, m_uvCoords);
 		hitData.uvCoords = m_uvCoords;
 		
 		// Return a reference to this object.
@@ -232,11 +233,12 @@ bool qbRT::Cone::TestIntersection(	const qbRT::Ray &castRay, qbRT::DATA::hitData
 				hitData.color = m_baseColor;
 				
 				// Compute and store the (u,v) coordinates.
-				double x = validPOI.GetElement(0);
-				double y = validPOI.GetElement(1);
-				double z = validPOI.GetElement(2);
-				m_uvCoords.SetElement(0, x);
-				m_uvCoords.SetElement(1, y);
+				//double x = validPOI.GetElement(0);
+				//double y = validPOI.GetElement(1);
+				//double z = validPOI.GetElement(2);
+				//m_uvCoords.SetElement(0, x);
+				//m_uvCoords.SetElement(1, y);
+				ComputeUV(validPOI, m_uvCoords);
 				hitData.uvCoords = m_uvCoords;
 				
 				// Return a reference to this object.

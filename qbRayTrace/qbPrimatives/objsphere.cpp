@@ -167,13 +167,14 @@ bool qbRT::ObjSphere::TestIntersection(const qbRT::Ray &castRay, qbRT::DATA::hit
 			//if (x < 0)
 			//	v += M_PI;
 				
-			u /= M_PI;
-			v /= M_PI;
+			//u /= M_PI;
+			//v /= M_PI;
 			
-			m_uvCoords.SetElement(0, u);
-			m_uvCoords.SetElement(1, v);
+			//m_uvCoords.SetElement(0, u);
+			//m_uvCoords.SetElement(1, v);
 			
 			// ***
+			ComputeUV(poi, m_uvCoords);
 			hitData.uvCoords = m_uvCoords;
 			
 			// Return a reference to this object.

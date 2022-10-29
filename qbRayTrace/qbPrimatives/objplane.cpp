@@ -104,8 +104,9 @@ bool qbRT::ObjPlane::TestIntersection(	const qbRT::Ray &castRay, qbRT::DATA::hit
 				hitData.color = m_baseColor;
 				
 				// Store the (u,v) coordinates for possible later use.
-				m_uvCoords.SetElement(0, u);
-				m_uvCoords.SetElement(1, v);
+				//m_uvCoords.SetElement(0, u);
+				//m_uvCoords.SetElement(1, v);
+				ComputeUV(poi, m_uvCoords);
 				hitData.uvCoords = m_uvCoords;
 				
 				// Return a reference to this object.
