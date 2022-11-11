@@ -39,7 +39,7 @@
 #include "objectbase.hpp"
 #include <math.h>
 
-#define EPSILON 1e-21f;
+#define EPSILON 1e-6f;
 
 // Default constructor.
 qbRT::ObjectBase::ObjectBase()
@@ -157,7 +157,7 @@ void qbRT::ObjectBase::ComputeUV(const qbVector<double> &localPOI, qbVector<doub
 				else if (CloseEnough(y, 1.0))
 				{
 					// Back face.
-					u = (x * 0.25) - 0.25;;
+					u = -(x * 0.25) - 0.25;;
 					v = (-z * 0.25) + 0.5;
 					
 				}
@@ -189,7 +189,8 @@ void qbRT::ObjectBase::ComputeUV(const qbVector<double> &localPOI, qbVector<doub
 	}
 	
 	// Apply the transform to the UV coordinates.
-	uvCoords = ApplyUVTransform(uvCoords);
+	// *** TO BE IMPLEMENTED ***
+	//uvCoords = ApplyUVTransform(uvCoords);
 	
 }
 
