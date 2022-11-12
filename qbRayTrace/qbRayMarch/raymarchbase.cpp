@@ -104,12 +104,26 @@ bool qbRT::RM::RayMarchBase::TestIntersection(	const qbRT::Ray &castRay, qbRT::D
 			
 			// Compute the local normal.
 			qbVector<double> surfaceNormal {3};
-			qbVector<double> x1 = currentLoc - m_xDisp;
-			qbVector<double> x2 = currentLoc + m_xDisp;
-			qbVector<double> y1 = currentLoc - m_yDisp;
-			qbVector<double> y2 = currentLoc + m_yDisp;
-			qbVector<double> z1 = currentLoc - m_zDisp;
-			qbVector<double> z2 = currentLoc + m_zDisp;
+
+			/*
+			 Note the extra code here to compute an offset location from which
+			to compute the normal. The reason to do this is that in some cases,
+			especially with more complex distance functions, the point of intersection
+			can be computed as being very slightly inside the surface. This would
+			obviously result in a normal vector pointing in the wrong direction.
+			By tracing back along the intersecting ray a short distance and then using
+			that location instead, we can avoid this problem.
+			*/
+
+			// Determine an offset point.
+			qbVector<double> normalLoc = currentLoc - (vhat * 0.01);
+			
+			qbVector<double> x1 = normalLoc - m_xDisp;
+			qbVector<double> x2 = normalLoc + m_xDisp;
+			qbVector<double> y1 = normalLoc - m_yDisp;
+			qbVector<double> y2 = normalLoc + m_yDisp;
+			qbVector<double> z1 = normalLoc - m_zDisp;
+			qbVector<double> z2 = normalLoc + m_zDisp;
 			surfaceNormal.SetElement(0, EvaluateSDF(&x2, &m_parms) - EvaluateSDF(&x1, &m_parms));
 			surfaceNormal.SetElement(1, EvaluateSDF(&y2, &m_parms) - EvaluateSDF(&y1, &m_parms));
 			surfaceNormal.SetElement(2, EvaluateSDF(&z2, &m_parms) - EvaluateSDF(&z1, &m_parms));
@@ -124,6 +138,13 @@ bool qbRT::RM::RayMarchBase::TestIntersection(	const qbRT::Ray &castRay, qbRT::D
 			
 			// Return a pointer to this object.
 			hitData.hitObject = std::make_shared<qbRT::ObjectBase> (*this);			
+			
+			// Return the local point of intersection.
+			hitData.localPOI = currentLoc;			
+			
+			// Compute UV.		
+			ComputeUV(currentLoc, m_uvCoords);
+			hitData.uvCoords = m_uvCoords;				
 		
 			return true;
 		}
