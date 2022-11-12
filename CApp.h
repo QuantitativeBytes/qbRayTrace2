@@ -40,6 +40,7 @@
 #include <SDL2/SDL.h>
 #include "./qbRayTrace/qbImage.hpp"
 #include "./qbRayTrace/scene.hpp"
+#include "./qbRayTrace/scene_E21.hpp"
 #include "./qbRayTrace/camera.hpp"
 #include "./qbRayTrace/qbTextures/flat.hpp"
 #include "./qbRayTrace/qbTextures/checker.hpp"
@@ -65,7 +66,8 @@ class CApp
 		qbImage m_image;
 		
 		// An instance of the scene class.
-		qbRT::Scene m_scene;
+		qbRT::Scene_E21 m_scene;
+		//qbRT::Scene m_scene;
 		
 		// SDL2 stuff.
 		bool isRunning;
