@@ -4,6 +4,10 @@ Welcome to my series on building a ray tracer from scratch in C++ with the SDL2 
 
 **Note that the SDL2 library is not included here, you will have to obtain and install that yourself from the SDL2 website in order to use the qbRayTrace code.
 
+You will also need to make sure that you clone this repository recursively to include the submodule containing the linear algebra library. This can be done using the --recurse-submodules command like this:
+
+git clone --recurse-submodules https://www.github.com/QuantitativeBytes/qbRayTrace2.git
+
 The code for the first 10 episodes is in a separate repository "qbRayTrace", where the code for each episode is in a different sub-folder. I did it this way to make it easier for people to follow the series. The code for episodes 11 and onwards will be here, in the "qbRayTrace2" repository and I will not be using seperate sub-folders for each episode. As the project gets more complex, I thought that duplicating the code over and over again in each sub-folder would be too inefficient.
 
 This code is intended to be primarily for educational purposes and to be studied alongside the corresponding videos on the QuantitativeBytes YouTube channel.
@@ -58,3 +62,12 @@ https://youtu.be/R-4QBaUvH84
 ### Image based normal maps
 Part 3 of the mini-series looking at normal maps. This episode focuses on how to implement and work with image based normal maps, such as those usually included with PBR textures. Note that you will have to use your own bitmap-format image files for the texture and normal map to make this code work, as these are not included with the repository. If you download from one of the common website that provide free textures, you may have to convert to a bitmap format first (it should work with either 3-bytes-per-pixel (RGB) or 4-bytes-per-pixel (RGBA) bitmap files).
 https://youtu.be/4GGRx502-iY
+
+## Episode 20
+### Building a useful ray tracer
+https://youtu.be/4gVQJWmMeSQ
+
+## Episode 21
+### UV Projection
+A look at UV projection and how this differs from the UV mapping techniques that we have already implemented in Episode 9.
+https://youtu.be/1nJwteZIOBI
