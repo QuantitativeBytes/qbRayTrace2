@@ -7,7 +7,7 @@
 	This file forms part of the qbRayTrace project as described
 	in the series of videos on the QuantitativeBytes YouTube
 	channel.
-	
+		
 	This code corresponds specifically to Episode 2 of the series,
 	which may be found here:
 	https://youtu.be/8fWZM8hCX5E
@@ -17,7 +17,7 @@
 	www.youtube.com/c/QuantitativeBytes
 	
 	GPLv3 LICENSE
-	Copyright (c) 2021 Michael Bennett
+	Copyright (c) 2022 Michael Bennett
 	
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by

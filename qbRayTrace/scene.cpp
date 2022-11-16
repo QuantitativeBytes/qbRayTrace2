@@ -13,6 +13,7 @@
 	www.youtube.com/c/QuantitativeBytes
 	
 	GPLv3 LICENSE
+	Copyright (c) 2022 Michael Bennett
 	
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -265,7 +266,8 @@ qbRT::Scene::Scene()
 	floor -> SetTransformMatrix(qbRT::GTform {	qbVector<double>{std::vector<double>{0.0, 0.0, 0.5}},
 																							qbVector<double>{std::vector<double>{0.0, 0.0, 0.0}},
 																							qbVector<double>{std::vector<double>{4.0, 4.0, 1.0}}}	);	
-	floor -> AssignMaterial(floorMaterial);	
+	floor -> AssignMaterial(floorMaterial);
+	floor -> m_uvMapType = qbRT::uvPLANE;	
 
 	// **************************************************************************************
 	// Put the objects into the scene.	
