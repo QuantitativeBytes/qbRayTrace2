@@ -66,8 +66,8 @@ class CApp
 		qbImage m_image;
 		
 		// An instance of the scene class.
-		qbRT::Scene_E21 m_scene;
-		//qbRT::Scene m_scene;
+		//qbRT::Scene_E21 m_scene;
+		qbRT::Scene m_scene;
 		
 		// SDL2 stuff.
 		bool isRunning;
