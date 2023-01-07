@@ -40,11 +40,12 @@
 #define OBJSPHERE_H
 
 #include "objectbase.hpp"
+#include "box.hpp"
 #include "../gtfm.hpp"
 
 namespace qbRT
 {
-	class ObjSphere : public ObjectBase
+	class ObjSphere : public ObjectBase, public std::enable_shared_from_this<qbRT::ObjSphere>
 	{
 		public:
 			/* The default constructor.

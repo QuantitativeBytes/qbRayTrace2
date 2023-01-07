@@ -13,7 +13,7 @@
 	www.youtube.com/c/QuantitativeBytes
 	
 	GPLv3 LICENSE
-	Copyright (c) 2022 Michael Bennett
+
 	
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -38,7 +38,7 @@
 
 namespace qbRT
 {
-	class Box : public ObjectBase
+	class Box : public ObjectBase, public std::enable_shared_from_this<qbRT::Box>
 	{
 		public:
 			/* The default constructor.
@@ -51,10 +51,14 @@ namespace qbRT
 			// Override the function to test for intersections.
 			virtual bool TestIntersection(const qbRT::Ray &castRay, qbRT::DATA::hitData &hitData) override;
 			
+			// Overloaded version of TestIntersection for the specific bounding box case.
+			bool TestIntersection(const qbRT::Ray &castRay);
+			
 		private:
-			std::array<double, 6> t;
-			std::array<double, 6> u;
-			std::array<double, 6> v;
+			// Moved these into the test intersection function as this is the only place they are used.
+			//std::array<double, 6> t;
+			//std::array<double, 6> u;
+			//std::array<double, 6> v;
 	};
 }
 

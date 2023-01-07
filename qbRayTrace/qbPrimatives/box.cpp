@@ -13,7 +13,7 @@
 	www.youtube.com/c/QuantitativeBytes
 	
 	GPLv3 LICENSE
-	Copyright (c) 2022 Michael Bennett
+
 	
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -54,6 +54,11 @@ bool qbRT::Box::TestIntersection(const qbRT::Ray &castRay, qbRT::DATA::hitData &
 	
 	// Copy the ray and apply the backwards transform.
 	qbRT::Ray bckRay = m_transformMatrix.Apply(castRay, qbRT::BCKTFORM);
+	
+	// Moved these here from the header file.
+	std::array<double, 6> t;
+	std::array<double, 6> u;
+	std::array<double, 6> v;	
 	
 	// Extract values of a.
 	double ax = bckRay.m_point1.GetElement(0);
@@ -190,15 +195,14 @@ bool qbRT::Box::TestIntersection(const qbRT::Ray &castRay, qbRT::DATA::hitData &
 			
 		// Return the base color.
 		hitData.color = m_baseColor;
-					
-		// Store the (u,v) coordinates for possible later use.
-		//m_uvCoords.SetElement(0, finalU);
-		//m_uvCoords.SetElement(1, finalV);
+
+		// Compute and return the UV coordinates.
 		ComputeUV(poi, m_uvCoords);
 		hitData.uvCoords = m_uvCoords;
 		
 		// Return a reference to this object.
-		hitData.hitObject = std::make_shared<qbRT::ObjectBase> (*this);			
+		//hitData.hitObject = std::make_shared<qbRT::ObjectBase> (*this);	
+		hitData.hitObject = this -> shared_from_this();
 		
 		return true;
 	}
@@ -206,6 +210,81 @@ bool qbRT::Box::TestIntersection(const qbRT::Ray &castRay, qbRT::DATA::hitData &
 	{
 		return false;
 	}
+}
 
-
+bool qbRT::Box::TestIntersection(const qbRT::Ray &castRay)
+{
+	if (!m_isVisible)
+		return false;
+	
+	// Copy the ray and apply the backwards transform.
+	qbRT::Ray bckRay = m_transformMatrix.Apply(castRay, qbRT::BCKTFORM);
+	
+	std::array<double, 6> t {100e6, 100e6, 100e6, 100e6, 100e6, 100e6};
+	std::array<double, 6> u {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+	std::array<double, 6> v {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};	
+	
+	// Extract values of a.
+	double ax = bckRay.m_point1.GetElement(0);
+	double ay = bckRay.m_point1.GetElement(1);
+	double az = bckRay.m_point1.GetElement(2);
+	
+	// Extract the value of k.
+	qbVector<double> k = bckRay.m_lab;
+	double kx = k.GetElement(0);
+	double ky = k.GetElement(1);
+	double kz = k.GetElement(2);
+		
+	// Test for intersections with each plane (side of the box).
+	// Top and bottom.
+	if (!CloseEnough(kz, 0.0))
+	{
+		t[0] = (az - 1.0) / -kz;
+		t[1] = (az + 1.0) / -kz;
+		u[0] = ax + kx * t[0];
+		v[0] = ay + ky * t[0];
+		u[1] = ax + kx * t[1];
+		v[1] = ay + ky * t[1];
+	}
+	
+	// Left and right.
+	if (!CloseEnough(kx, 0.0))
+	{
+		t[2] = (ax + 1.0) / -kx;
+		t[3] = (ax - 1.0) / -kx;
+		u[2] = az + kz * t[2];
+		v[2] = ay + ky * t[2];
+		u[3] = az + kz * t[3];
+		v[3] = ay + ky * t[3];
+	}
+	
+	// Front and back.
+	if (!CloseEnough(ky, 0.0))
+	{
+		t[4] = (ay + 1.0) / -ky;
+		t[5] = (ay - 1.0) / -ky;
+		u[4] = ax + kx * t[4];
+		v[4] = az + kz * t[4];
+		u[5] = ax + kx * t[5];
+		v[5] = az + kz * t[5];
+	}
+	
+	// Find the index of the smallest non-negative value of t.
+	/* Note that in the case of a bounding box, we are only interested
+		in whether or not there was a valid intersection, we don't need
+		to know which face of the box was actually involved. */
+	bool validIntersection = false;
+	int i = 0;
+	while ((i < 6) && (!validIntersection))
+	{
+		if ((t[i] < 100e6) && (t[i] > 0.0) && (abs(u[i]) <= 1.0) && (abs(v[i]) <= 1.0))
+		{
+			validIntersection = true;
+			break;
+		}
+			
+		i++;
+	}
+	
+	return validIntersection;
 }

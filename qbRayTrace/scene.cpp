@@ -13,7 +13,7 @@
 	www.youtube.com/c/QuantitativeBytes
 	
 	GPLv3 LICENSE
-	Copyright (c) 2022 Michael Bennett
+	
 	
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -32,6 +32,7 @@
 
 // scene.cpp
 
+#include <chrono>
 #include "scene.hpp"
 #include "./qbMaterials/simplematerial.hpp"
 #include "./qbMaterials/simplerefractive.hpp"
@@ -49,7 +50,7 @@ qbRT::Scene::Scene()
 	// **************************************************************************************
 	// Configure the camera.
 	// **************************************************************************************	
-	m_camera.SetPosition(	qbVector<double>{std::vector<double> {4.0, -8.0, -2.0}} );
+	m_camera.SetPosition(	qbVector<double>{std::vector<double> {4.0, -8.0, -4.0}} );
 	m_camera.SetLookAt	( qbVector<double>{std::vector<double> {-0.5, 0.0, 0.0}} );
 	m_camera.SetUp			( qbVector<double>{std::vector<double> {0.0, 0.0, 1.0}} );
 	m_camera.SetHorzSize(1.0);
@@ -260,6 +261,14 @@ qbRT::Scene::Scene()
 																								qbVector<double>{std::vector<double>{0.5, 0.5, 0.5}}	});
 	sphere5 -> AssignMaterial(woodMat);			
 	
+	auto torus = std::make_shared<qbRT::RM::Torus> (qbRT::RM::Torus());
+	torus -> SetRadii(0.7, 0.3);
+	torus -> SetTransformMatrix(qbRT::GTform	{	qbVector<double>{std::vector<double>{0.0, -1.25, 0.5}}, 
+																							qbVector<double>{std::vector<double>{0.0, 0.0, 0.0}}, 
+																							qbVector<double>{std::vector<double>{1.0, 1.0, 1.0}}	});
+	torus -> AssignMaterial(candyMat);
+	torus -> m_uvMapType = qbRT::uvSPHERE;
+	
 	auto floor = std::make_shared<qbRT::ObjPlane> (qbRT::ObjPlane());
 	floor -> m_tag = "floor";
 	floor -> m_isVisible = true;
@@ -277,6 +286,7 @@ qbRT::Scene::Scene()
 	m_objectList.push_back(sphere3);
 	m_objectList.push_back(sphere4);
 	m_objectList.push_back(sphere5);
+	m_objectList.push_back(torus);
 	m_objectList.push_back(floor);
 	
 	// **************************************************************************************	
@@ -306,6 +316,9 @@ qbRT::Scene::Scene()
 // Function to perform the rendering.
 bool qbRT::Scene::Render(qbImage &outputImage)
 {
+	// Record the start time.
+	auto startTime = std::chrono::steady_clock::now();
+
 	// Get the dimensions of the output image.
 	int xSize = outputImage.GetXSize();
 	int ySize = outputImage.GetYSize();
@@ -367,6 +380,14 @@ bool qbRT::Scene::Render(qbImage &outputImage)
 			}
 		}
 	}
+	
+	// Record the end time.
+	auto endTime = std::chrono::steady_clock::now();
+	
+	// Compute the time it took to render.
+	std::chrono::duration<double> renderTime = endTime - startTime;
+	std::cout.flush();
+	std::cout << "\n\nRendering time: " << renderTime.count() << "s" << std::endl;
 	
 	std::cout << std::endl;
 	return true;

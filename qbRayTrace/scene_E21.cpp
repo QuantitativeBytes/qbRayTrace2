@@ -13,7 +13,7 @@
 	www.youtube.com/c/QuantitativeBytes
 	
 	GPLv3 LICENSE
-	Copyright (c) 2022 Michael Bennett
+
 	
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -32,6 +32,7 @@
 
 // Scene_E21.cpp
 
+#include <chrono>
 #include "scene_E21.hpp"
 #include "./qbMaterials/simplematerial.hpp"
 #include "./qbMaterials/simplerefractive.hpp"
@@ -325,6 +326,9 @@ qbRT::Scene_E21::Scene_E21()
 // Function to perform the rendering.
 bool qbRT::Scene_E21::Render(qbImage &outputImage)
 {
+	// Record the start time.
+	auto startTime = std::chrono::steady_clock::now();
+	
 	// Get the dimensions of the output image.
 	int xSize = outputImage.GetXSize();
 	int ySize = outputImage.GetYSize();
@@ -387,6 +391,14 @@ bool qbRT::Scene_E21::Render(qbImage &outputImage)
 		}
 	}
 	
+	// Record the end time.
+	auto endTime = std::chrono::steady_clock::now();
+	
+	// Compute the time it took to render.
+	std::chrono::duration<double> renderTime = endTime - startTime;
+	std::cout.flush();
+	std::cout << "\n\nRendering time: " << renderTime.count() << "s" << std::endl;	
+	
 	std::cout << std::endl;
 	return true;
 }
@@ -417,9 +429,6 @@ bool qbRT::Scene_E21::CastRay(	qbRT::Ray &castRay, std::shared_ptr<qbRT::ObjectB
 			{
 				minDist = dist;
 				closestObject = currentObject;
-				//closestIntPoint = intPoint;
-				//closestLocalNormal = localNormal;
-				//closestLocalColor = localColor;
 				closestHitData = hitData;
 			}
 		}

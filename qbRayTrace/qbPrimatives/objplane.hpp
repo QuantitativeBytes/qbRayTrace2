@@ -44,7 +44,7 @@
 
 namespace qbRT
 {
-	class ObjPlane : public ObjectBase
+	class ObjPlane : public ObjectBase, public std::enable_shared_from_this<qbRT::ObjPlane>
 	{
 		public:
 			// Default constructor.

@@ -13,7 +13,7 @@
 	www.youtube.com/c/QuantitativeBytes
 	
 	GPLv3 LICENSE
-	Copyright (c) 2022 Michael Bennett
+
 	
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -42,7 +42,7 @@ namespace qbRT
 {
 	namespace RM
 	{
-		class RayMarchBase : public ObjectBase
+		class RayMarchBase : public ObjectBase, public std::enable_shared_from_this<qbRT::RM::RayMarchBase>
 		{
 			public:
 				// Default constructor.

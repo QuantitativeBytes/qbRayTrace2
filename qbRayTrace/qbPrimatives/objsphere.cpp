@@ -178,7 +178,8 @@ bool qbRT::ObjSphere::TestIntersection(const qbRT::Ray &castRay, qbRT::DATA::hit
 			hitData.uvCoords = m_uvCoords;
 			
 			// Return a reference to this object.
-			hitData.hitObject = std::make_shared<qbRT::ObjectBase> (*this);	
+			//hitData.hitObject = std::make_shared<qbRT::ObjectBase> (*this);	
+			hitData.hitObject = this -> shared_from_this();
 			// ***
 			
 		}
