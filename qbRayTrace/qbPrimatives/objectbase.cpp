@@ -70,6 +70,112 @@ qbRT::GTform qbRT::ObjectBase::GetTransformMatrix()
 	return m_transformMatrix;
 }
 
+// Function to compute the extents of the object.
+void qbRT::ObjectBase::GetExtents(qbVector<double> &xLim, qbVector<double> &yLim, qbVector<double> &zLim)
+{
+	// Construct an array of corner points for a unit cube.
+	std::vector<qbVector<double>> cornerPoints = ConstructCube(-1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
+	
+	// Form the combined object and bounding box transform matrix.
+	qbRT::GTform combinedTransform = m_transformMatrix * m_boundingBoxTransform;
+	
+	// Apply the transforms to the unit cube corner points and compute limits.
+	double minX = 1e6;
+	double minY = 1e6;
+	double minZ = 1e6;
+	double maxX = -1e6;
+	double maxY = -1e6;
+	double maxZ = -1e6;
+	for (int i=0; i<8; ++i)
+	{
+		cornerPoints.at(i) = combinedTransform.Apply(cornerPoints.at(i), qbRT::FWDTFORM);
+		
+		if (cornerPoints.at(i).GetElement(0) < minX)
+			minX = cornerPoints.at(i).GetElement(0);
+		if (cornerPoints.at(i).GetElement(0) > maxX)
+			maxX = cornerPoints.at(i).GetElement(0);
+			
+		if (cornerPoints.at(i).GetElement(1) < minY)
+			minY = cornerPoints.at(i).GetElement(1);
+		if (cornerPoints.at(i).GetElement(1) > maxY)
+			maxY = cornerPoints.at(i).GetElement(1);
+			
+		if (cornerPoints.at(i).GetElement(2) < minZ)
+			minZ = cornerPoints.at(i).GetElement(2);
+		if (cornerPoints.at(i).GetElement(2) > maxZ)
+			maxZ = cornerPoints.at(i).GetElement(2);					
+	}
+	
+	// Return the limits.
+	xLim.SetElement(0, minX);
+	xLim.SetElement(1, maxX);
+	yLim.SetElement(0, minY);
+	yLim.SetElement(1, maxY);
+	zLim.SetElement(0, minZ);
+	zLim.SetElement(1, maxZ);
+}
+
+// Function to compute the extents of the object, accepting an additional transform matrix as input.
+void qbRT::ObjectBase::GetExtents(const qbRT::GTform &parentTransform, qbVector<double> &xLim, qbVector<double> &yLim, qbVector<double> &zLim)
+{
+	// Construct an array of corner points for a unit cube.
+	std::vector<qbVector<double>> cornerPoints = ConstructCube(-1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
+	
+	// Form the combined object and bounding box transform matrix.
+	qbRT::GTform combinedTransform = parentTransform * m_transformMatrix * m_boundingBoxTransform;
+	
+	// Apply the transforms to the unit cube corner points and compute limits.
+	double minX = 1e6;
+	double minY = 1e6;
+	double minZ = 1e6;
+	double maxX = -1e6;
+	double maxY = -1e6;
+	double maxZ = -1e6;
+	for (int i=0; i<8; ++i)
+	{
+		cornerPoints.at(i) = combinedTransform.Apply(cornerPoints.at(i), qbRT::FWDTFORM);
+		
+		if (cornerPoints.at(i).GetElement(0) < minX)
+			minX = cornerPoints.at(i).GetElement(0);
+		if (cornerPoints.at(i).GetElement(0) > maxX)
+			maxX = cornerPoints.at(i).GetElement(0);
+			
+		if (cornerPoints.at(i).GetElement(1) < minY)
+			minY = cornerPoints.at(i).GetElement(1);
+		if (cornerPoints.at(i).GetElement(1) > maxY)
+			maxY = cornerPoints.at(i).GetElement(1);
+			
+		if (cornerPoints.at(i).GetElement(2) < minZ)
+			minZ = cornerPoints.at(i).GetElement(2);
+		if (cornerPoints.at(i).GetElement(2) > maxZ)
+			maxZ = cornerPoints.at(i).GetElement(2);					
+	}
+	
+	// Return the limits.
+	xLim.SetElement(0, minX);
+	xLim.SetElement(1, maxX);
+	yLim.SetElement(0, minY);
+	yLim.SetElement(1, maxY);
+	zLim.SetElement(0, minZ);
+	zLim.SetElement(1, maxZ);
+}
+
+// Function to construct a unit cube.
+std::vector<qbVector<double>> qbRT::ObjectBase::ConstructCube(double xMin, double xMax, double yMin, double yMax, double zMin, double zMax)
+{
+	// Construct an array of corner points for a unit cube.
+	std::vector<qbVector<double>> cornerPoints (8);
+	cornerPoints.at(0) = std::vector<double> {xMin - m_boundingBoxPadding, yMin - m_boundingBoxPadding, zMin - m_boundingBoxPadding};
+	cornerPoints.at(1) = std::vector<double> {xMin - m_boundingBoxPadding, yMin - m_boundingBoxPadding, zMax + m_boundingBoxPadding};
+	cornerPoints.at(2) = std::vector<double> {xMax + m_boundingBoxPadding, yMin - m_boundingBoxPadding, zMax + m_boundingBoxPadding};
+	cornerPoints.at(3) = std::vector<double> {xMax + m_boundingBoxPadding, yMin - m_boundingBoxPadding, zMin - m_boundingBoxPadding};
+	cornerPoints.at(4) = std::vector<double> {xMin - m_boundingBoxPadding, yMax + m_boundingBoxPadding, zMin - m_boundingBoxPadding};
+	cornerPoints.at(5) = std::vector<double> {xMin - m_boundingBoxPadding, yMax + m_boundingBoxPadding, zMax - m_boundingBoxPadding};
+	cornerPoints.at(6) = std::vector<double> {xMax + m_boundingBoxPadding, yMax + m_boundingBoxPadding, zMax + m_boundingBoxPadding};
+	cornerPoints.at(7) = std::vector<double> {xMax + m_boundingBoxPadding, yMax + m_boundingBoxPadding, zMin - m_boundingBoxPadding};
+	return cornerPoints;
+}
+
 // Function to assign a material.
 bool qbRT::ObjectBase::AssignMaterial(const std::shared_ptr<qbRT::MaterialBase> &objectMaterial)
 {

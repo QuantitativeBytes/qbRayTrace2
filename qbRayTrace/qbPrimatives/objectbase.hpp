@@ -68,6 +68,11 @@ namespace qbRT
 			//virtual bool TestIntersection(const Ray &castRay, qbVector<double> &intPoint, qbVector<double> &localNormal, qbVector<double> &localColor);
 			virtual bool TestIntersection(const Ray &castRay, qbRT::DATA::hitData &hitData);
 			
+			// Function to get the extents of the object.
+			virtual void GetExtents(qbVector<double> &xLim, qbVector<double> &yLim, qbVector<double> &zLim);
+			virtual void GetExtents(const qbRT::GTform &parentTransformMatrix, qbVector<double> &xLim, qbVector<double> &yLim, qbVector<double> &zLim);
+			std::vector<qbVector<double>> ConstructCube(double xMin, double xMax, double yMin, double yMax, double zMin, double zMax);			
+			
 			// Function to set the transform matrix.
 			void SetTransformMatrix(const qbRT::GTform &transformMatrix);
 			qbRT::GTform GetTransformMatrix();
@@ -106,6 +111,12 @@ namespace qbRT
 			
 			// Control what type of UV mapping to apply to this object.
 			int m_uvMapType = qbRT::uvSPHERE;			
+			
+			// Bounding box GTform.		
+			qbRT::GTform m_boundingBoxTransform;
+			
+			// Bounding box padding.
+			double m_boundingBoxPadding = 0.0;			
 	};
 }
 
