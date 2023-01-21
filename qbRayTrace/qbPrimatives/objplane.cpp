@@ -43,7 +43,13 @@
 // The default constructor.
 qbRT::ObjPlane::ObjPlane()
 {
-
+	// Define the default uv mapping.
+	m_uvMapType = qbRT::uvPLANE;
+	
+	// Construct the default bounding box.
+	m_boundingBoxTransform.SetTransform(	qbVector<double>{std::vector<double>{0.0, 0.0, 0.0}},
+																				qbVector<double>{std::vector<double>{0.0, 0.0, 0.0}},
+																				qbVector<double>{std::vector<double>{1.0, 1.0, 0.01}});
 }
 
 // The destructor.

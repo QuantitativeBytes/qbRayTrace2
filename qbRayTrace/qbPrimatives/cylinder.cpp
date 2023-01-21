@@ -40,7 +40,13 @@
 // The default constructor.
 qbRT::Cylinder::Cylinder()
 {
-
+	// Define the default uv mapping.
+	m_uvMapType = qbRT::uvCYLINDER;
+	
+	// Construct the default bounding box.
+	m_boundingBoxTransform.SetTransform(	qbVector<double>{std::vector<double>{0.0, 0.0, 0.0}},
+																				qbVector<double>{std::vector<double>{0.0, 0.0, 0.0}},
+																				qbVector<double>{std::vector<double>{1.0, 1.0, 1.0}});
 }
 
 // The destructor.
