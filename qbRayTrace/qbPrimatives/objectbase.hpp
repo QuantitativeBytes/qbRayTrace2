@@ -8,10 +8,6 @@
 	in the series of videos on the QuantitativeBytes YouTube
 	channel.
 	
-	This code corresponds specifically to Episode 2 of the series,
-	which may be found here:
-	https://youtu.be/8fWZM8hCX5E
-	
 	The whole series may be found on the QuantitativeBytes 
 	YouTube channel at:
 	www.youtube.com/c/QuantitativeBytes
@@ -65,9 +61,9 @@ namespace qbRT
 			virtual ~ObjectBase();
 			
 			// Function to test for intersections.
-			//virtual bool TestIntersection(const Ray &castRay, qbVector<double> &intPoint, qbVector<double> &localNormal, qbVector<double> &localColor);
 			virtual bool TestIntersection(const Ray &castRay, qbRT::DATA::hitData &hitData);
 			
+			// ***
 			// Function to get the extents of the object.
 			virtual void GetExtents(qbVector<double> &xLim, qbVector<double> &yLim, qbVector<double> &zLim);
 			virtual void GetExtents(const qbRT::GTform &parentTransformMatrix, qbVector<double> &xLim, qbVector<double> &yLim, qbVector<double> &zLim);
@@ -112,6 +108,7 @@ namespace qbRT
 			// Control what type of UV mapping to apply to this object.
 			int m_uvMapType = qbRT::uvSPHERE;			
 			
+			// ***
 			// Bounding box GTform.		
 			qbRT::GTform m_boundingBoxTransform;
 			

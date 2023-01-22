@@ -8,10 +8,6 @@
 	in the series of videos on the QuantitativeBytes YouTube
 	channel.
 	
-	This code corresponds specifically to Episode 2 of the series,
-	which may be found here:
-	https://youtu.be/8fWZM8hCX5E
-	
 	The whole series may be found on the QuantitativeBytes 
 	YouTube channel at:
 	www.youtube.com/c/QuantitativeBytes
@@ -54,7 +50,6 @@ qbRT::ObjectBase::~ObjectBase()
 }
 
 // Function to test for intersections.
-//bool qbRT::ObjectBase::TestIntersection(const Ray &castRay, qbVector<double> &intPoint, qbVector<double> &localNormal, qbVector<double> &localColor)
 bool qbRT::ObjectBase::TestIntersection(const Ray &castRay, qbRT::DATA::hitData &hitData)
 {
 	return false;
