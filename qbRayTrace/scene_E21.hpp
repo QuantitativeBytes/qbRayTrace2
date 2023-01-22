@@ -45,6 +45,7 @@
 #include "./qbPrimatives/cylinder.hpp"
 #include "./qbPrimatives/cone.hpp"
 #include "./qbPrimatives/box.hpp"
+#include "./qbPrimatives/compositebase.hpp"
 #include "./qbLights/pointlight.hpp"
 #include "./qbRayMarch/sphere.hpp"
 #include "./qbRayMarch/torus.hpp"
