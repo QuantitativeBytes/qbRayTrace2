@@ -286,7 +286,6 @@ bool qbRT::Box::TestIntersection(const qbRT::Ray &castRay)
 		if ((t[i] < 100e6) && (t[i] > 0.0) && (abs(u[i]) <= 1.0) && (abs(v[i]) <= 1.0))
 		{
 			validIntersection = true;
-			break;
 		}
 			
 		i++;
