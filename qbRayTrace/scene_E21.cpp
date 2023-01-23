@@ -374,9 +374,6 @@ bool qbRT::Scene_E21::Render(qbImage &outputImage)
 			
 			// Test for intersections with all objects in the Scene_E21.
 			std::shared_ptr<qbRT::ObjectBase> closestObject;
-			qbVector<double> closestIntPoint		{3};
-			qbVector<double> closestLocalNormal	{3};
-			qbVector<double> closestLocalColor	{3};
 			qbRT::DATA::hitData closestHitData;
 			bool intersectionFound = CastRay(cameraRay, closestObject, closestHitData);
 			
