@@ -13,7 +13,7 @@
 	www.youtube.com/c/QuantitativeBytes
 	
 	GPLv3 LICENSE
-
+	Copyright (c) 2023 Michael Bennett
 	
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -235,10 +235,10 @@ qbRT::Scene_E21::Scene_E21()
 																								qbVector<double>{std::vector<double>{4.0, 4.0, 1.0}}}	);	
 	sideWall -> AssignMaterial(mirrorMat2);
 	
-	double sprayX = 1.0;
-	double sprayY = -1.75;	
-	//double sprayX = 0.0;
-	//double sprayY = 0.0;
+	//double sprayX = 1.0;
+	//double sprayY = -1.75;	
+	double sprayX = 0.0;
+	double sprayY = 0.0;
 	auto sprayBody = std::make_shared<qbRT::Cylinder> (qbRT::Cylinder());
 	sprayBody -> m_tag = "sprayBody";
 	sprayBody -> m_isVisible = true;
@@ -264,7 +264,6 @@ qbRT::Scene_E21::Scene_E21()
 																								qbVector<double>{std::vector<double>{0.2, 0.2, 0.5}}}	);
 	sprayTop -> AssignMaterial(whitePlasticMat);
 	
-	/*
 	auto sprayCan = std::make_shared<qbRT::SHAPES::CompositeBase> (qbRT::SHAPES::CompositeBase());
 	sprayCan -> m_tag = "sprayCan";
 	sprayCan -> m_isVisible = true;
@@ -272,9 +271,8 @@ qbRT::Scene_E21::Scene_E21()
 	sprayCan -> AddSubShape(sprayTopCone);
 	sprayCan -> AddSubShape(sprayTop);
 	sprayCan -> SetTransformMatrix(qbRT::GTform{	qbVector<double>{std::vector<double>{1.0, -1.75, 0.0}},
-																								qbVector<double>{std::vector<double>{0.0, 0.0, 0.0}},
+																								qbVector<double>{std::vector<double>{0.0, -M_PI/4.0, 0.0}},
 																								qbVector<double>{std::vector<double>{1.0, 1.0, 1.0}}});
-	*/
 	
 	auto box = std::make_shared<qbRT::Box> (qbRT::Box());
 	box -> m_tag = "box";
@@ -303,10 +301,10 @@ qbRT::Scene_E21::Scene_E21()
 	// **************************************************************************************
 	// Put the objects into the scene.	
 	// **************************************************************************************
-	m_objectList.push_back(sprayBody);
-	m_objectList.push_back(sprayTopCone);
-	m_objectList.push_back(sprayTop);
-	//m_objectList.push_back(sprayCan);
+	//m_objectList.push_back(sprayBody);
+	//m_objectList.push_back(sprayTopCone);
+	//m_objectList.push_back(sprayTop);
+	m_objectList.push_back(sprayCan);
 	m_objectList.push_back(box);
 	m_objectList.push_back(box2);	
 	m_objectList.push_back(floor);
