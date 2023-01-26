@@ -71,6 +71,14 @@ namespace qbRT
 																								const std::shared_ptr<qbRT::ObjectBase> &currentObject,
 																								const qbVector<double> &intPoint, const qbVector<double> &localNormal,
 																								const qbRT::Ray &incidentRay);
+															
+			// *************************************************************************************																								
+			// Function that combines the computation of diffuse and specular components (faster).
+			qbVector<double> ComputeSpecAndDiffuse(	const std::vector<std::shared_ptr<qbRT::ObjectBase>> &objectList,
+																							const std::vector<std::shared_ptr<qbRT::LightBase>> &lightList,
+																							const std::shared_ptr<qbRT::ObjectBase> &currentObject,
+																							const qbVector<double> &intPoint, const qbVector<double> &localNormal,
+																							const qbVector<double> &baseColor, const qbRT::Ray &cameraRay);																								
 																										
 			// Function to cast a ray into the scene.
 			bool CastRay(	const qbRT::Ray &castRay, const std::vector<std::shared_ptr<qbRT::ObjectBase>> &objectList,
@@ -115,7 +123,12 @@ namespace qbRT
 			bool m_hasNormalMap = false;
 		
 			// *** Store the material normal at the current point.
-			qbVector<double> m_localNormal;			
+			qbVector<double> m_localNormal;		
+			
+			// ***
+			// Values for specular hightlights.
+			double m_specular = 0.0;		
+			double m_shininess = 0.0;				
 		
 		private:
 		

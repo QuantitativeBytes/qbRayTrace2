@@ -73,9 +73,16 @@ qbVector<double> qbRT::SimpleMaterial::ComputeColor(	const std::vector<std::shar
 	
 	// Compute the diffuse component.
 	if (!m_hasTexture)
-		difColor = ComputeDiffuseColor(objectList, lightList, currentObject, intPoint, newNormal, m_baseColor);
+	{
+		//difColor = ComputeDiffuseColor(objectList, lightList, currentObject, intPoint, newNormal, m_baseColor);
+		difColor = ComputeSpecAndDiffuse(objectList, lightList, currentObject, intPoint, newNormal, m_baseColor, cameraRay);
+	}
 	else
-		difColor = ComputeDiffuseColor(objectList, lightList, currentObject, intPoint, newNormal, GetTextureColor(currentObject->m_uvCoords));
+	{
+		//difColor = ComputeDiffuseColor(objectList, lightList, currentObject, intPoint, newNormal, GetTextureColor(currentObject->m_uvCoords));
+		qbVector<double> textureColor = GetTextureColor(currentObject->m_uvCoords);
+		difColor = ComputeSpecAndDiffuse(objectList, lightList, currentObject, intPoint, newNormal, textureColor, cameraRay);		
+	}
 	
 	// Compute the reflection component.
 	if (m_reflectivity > 0.0)
@@ -85,11 +92,13 @@ qbVector<double> qbRT::SimpleMaterial::ComputeColor(	const std::vector<std::shar
 	matColor = (refColor * m_reflectivity) + (difColor * (1 - m_reflectivity));
 	
 	// Compute the specular component.
+	/*
 	if (m_shininess > 0.0)
 		spcColor = ComputeSpecular(objectList, lightList, intPoint, newNormal, cameraRay);
 		
 	// Add the specular component to the final color.
 	matColor = matColor + spcColor;
+	*/
 	
 	return matColor;
 }

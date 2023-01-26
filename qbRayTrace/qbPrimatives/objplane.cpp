@@ -69,7 +69,7 @@ bool qbRT::ObjPlane::TestIntersection(	const qbRT::Ray &castRay, qbRT::DATA::hit
 	
 	// Copy the m_lab vector from bckRay and normalize it.
 	qbVector<double> k = bckRay.m_lab;
-	k.Normalize();
+	//k.Normalize();
 	
 	/* Check if there is an intersection, ie. if the castRay is not parallel
 		to the plane. */

@@ -273,7 +273,99 @@ qbVector<double> qbRT::MaterialBase::PerturbNormal(const qbVector<double> &norma
 	return newNormal;
 }
 
-
+// **********************************************************************
+// Function to compute combined specular and diffuse lighting components.
+qbVector<double> qbRT::MaterialBase::ComputeSpecAndDiffuse(	const std::vector<std::shared_ptr<qbRT::ObjectBase>> &objectList,
+																														const std::vector<std::shared_ptr<qbRT::LightBase>> &lightList,
+																														const std::shared_ptr<qbRT::ObjectBase> &currentObject,
+																														const qbVector<double> &intPoint, const qbVector<double> &localNormal,
+																														const qbVector<double> &baseColor, const qbRT::Ray &cameraRay)
+{
+	// Compute the color due to diffuse illumination and specular highlights.
+	qbVector<double> outputColor {3};
+	qbVector<double> diffuseColor	{3};
+	qbVector<double> spcColor	{3};
+	double intensity;
+	double specIntensity = 0.0;
+	qbVector<double> color {3};
+	double red = 0.0;
+	double green = 0.0;
+	double blue = 0.0;
+	double specR = 0.0;
+	double specG = 0.0;
+	double specB = 0.0;
+	bool validIllum = false;
+	bool illumFound = false;
+	for (auto currentLight : lightList)
+	{
+		validIllum = currentLight -> ComputeIllumination(intPoint, localNormal, objectList, NULL, color, intensity);
+		if (validIllum)
+		{
+			illumFound = true;
+			
+			// The diffuse component.
+			red += color.GetElement(0) * intensity;
+			green += color.GetElement(1) * intensity;
+			blue += color.GetElement(2) * intensity;
+			
+			// The specular component.
+			if ((m_specular > 0.0) && (m_shininess > 0.0))
+			{
+				specIntensity = 0.0;
+				
+				// Construct a vector pointing from the intersection point to the light.
+				qbVector<double> lightDir = (currentLight->m_location - intPoint).Normalized();
+				
+				// Compute a start point.
+				qbVector<double> startPoint = intPoint + (lightDir * 0.001);
+				
+				// Construct a ray from the point of intersection to the light.
+				qbRT::Ray lightRay (startPoint, startPoint + lightDir);	
+				
+				// Compute the reflection vector.
+				qbVector<double> d = lightRay.m_lab;
+				qbVector<double> r = d - (2 * qbVector<double>::dot(d, localNormal) * localNormal);
+				//r.Normalize();
+				
+				// Compute the dot product.
+				qbVector<double> v = cameraRay.m_lab;
+				v.Normalize();
+				double dotProduct = qbVector<double>::dot(r, v);
+				
+				// Only proceed if the dot product is positive.
+				if (dotProduct > 0.0)
+				{
+					specIntensity = (m_specular * std::pow(dotProduct, m_shininess));
+				}
+				
+				specR += currentLight->m_color.GetElement(0) * specIntensity;
+				specG += currentLight->m_color.GetElement(1) * specIntensity;
+				specB += currentLight->m_color.GetElement(2) * specIntensity;	
+			}				
+		}
+	}
+	
+	if (illumFound)
+	{
+		diffuseColor.SetElement(0, red * baseColor.GetElement(0));
+		diffuseColor.SetElement(1, green * baseColor.GetElement(1));
+		diffuseColor.SetElement(2, blue * baseColor.GetElement(2));
+		spcColor.SetElement(0, specR);
+		spcColor.SetElement(1, specG);
+		spcColor.SetElement(2, specB);		
+	}
+	
+	// Add the ambient light.
+	diffuseColor.SetElement(0, diffuseColor.GetElement(0) + ((m_ambientColor.GetElement(0) * m_ambientIntensity) * baseColor.GetElement(0)));
+	diffuseColor.SetElement(1, diffuseColor.GetElement(1) + ((m_ambientColor.GetElement(1) * m_ambientIntensity) * baseColor.GetElement(1)));
+	diffuseColor.SetElement(2, diffuseColor.GetElement(2) + ((m_ambientColor.GetElement(2) * m_ambientIntensity) * baseColor.GetElement(2)));		
+	
+	// Compute the color due to specular highlights.
+	outputColor = diffuseColor + spcColor;
+	
+	// Return the material color.
+	return outputColor;	
+}
 
 
 

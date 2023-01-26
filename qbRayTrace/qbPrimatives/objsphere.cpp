@@ -68,12 +68,13 @@ bool qbRT::ObjSphere::TestIntersection(const qbRT::Ray &castRay, qbRT::DATA::hit
 
 	// Compute the values of a, b and c.
 	qbVector<double> vhat = bckRay.m_lab;
-	vhat.Normalize();
+	//vhat.Normalize();
 	
 	/* Note that a is equal to the squared magnitude of the
 		direction of the cast ray. As this will be a unit vector,
 		we can conclude that the value of 'a' will always be 1. */
 	// a = 1.0;
+	double a = qbVector<double>::dot(vhat, vhat);
 	
 	// Calculate b.
 	double b = 2.0 * qbVector<double>::dot(bckRay.m_point1, vhat);
@@ -82,12 +83,13 @@ bool qbRT::ObjSphere::TestIntersection(const qbRT::Ray &castRay, qbRT::DATA::hit
 	double c = qbVector<double>::dot(bckRay.m_point1, bckRay.m_point1) - 1.0;
 	
 	// Test whether we actually have an intersection.
-	double intTest = (b*b) - 4.0 * c;
+	double intTest = (b*b) - 4.0 * a * c;
 	
 	qbVector<double> poi;
 	if (intTest > 0.0)
 	{
-		double numSQRT = sqrtf(intTest);
+		//double numSQRT = sqrtf(intTest);
+		double numSQRT = sqrt(intTest);
 		double t1 = (-b + numSQRT) / 2.0;
 		double t2 = (-b - numSQRT) / 2.0;
 		
