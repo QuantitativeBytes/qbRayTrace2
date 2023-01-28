@@ -17,7 +17,7 @@
 	www.youtube.com/c/QuantitativeBytes
 	
 	GPLv3 LICENSE
-	Copyright (c) 2023 Michael Bennett
+	Copyright (c) 2023 Michael Bennett	
 	
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -69,6 +69,7 @@ bool qbRT::ObjPlane::TestIntersection(	const qbRT::Ray &castRay, qbRT::DATA::hit
 	
 	// Copy the m_lab vector from bckRay and normalize it.
 	qbVector<double> k = bckRay.m_lab;
+	// ****
 	//k.Normalize();
 	
 	/* Check if there is an intersection, ie. if the castRay is not parallel

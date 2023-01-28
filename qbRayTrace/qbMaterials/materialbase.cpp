@@ -13,7 +13,7 @@
 	www.youtube.com/c/QuantitativeBytes
 	
 	GPLv3 LICENSE
-	Copyright (c) 2023 Michael Bennett
+	Copyright (c) 2023 Michael Bennett	
 	
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -136,26 +136,15 @@ qbVector<double> qbRT::MaterialBase::ComputeReflectionColor(	const std::vector<s
 		m_reflectionRayCount++;
 		
 		// Check if a material has been assigned.
-		//if (closestObject -> m_hasMaterial)
 		if (closestHitData.hitObject -> m_hasMaterial)
 		{
 			// Use the material to compute the color.
-			/*
-			matColor = closestObject -> m_pMaterial -> ComputeColor(	objectList, lightList, 
-																																closestObject, closestHitData.poi, 
-																																closestHitData.normal, reflectionRay);
-			*/
 			matColor = closestHitData.hitObject -> m_pMaterial -> ComputeColor(	objectList, lightList, 
 																																					closestHitData.hitObject, closestHitData.poi, 
 																																					closestHitData.normal, reflectionRay);
 		}
 		else
 		{
-			/*
-			matColor = qbRT::MaterialBase::ComputeDiffuseColor(	objectList, lightList, 
-																													closestObject, closestHitData.poi, 
-																													closestHitData.normal, closestObject->m_baseColor);
-			*/
 			matColor = qbRT::MaterialBase::ComputeDiffuseColor(	objectList, lightList, closestHitData.hitObject, 
 																													closestHitData.poi, closestHitData.normal, 
 																													closestObject->m_baseColor);			

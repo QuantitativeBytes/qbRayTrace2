@@ -17,7 +17,7 @@
 	www.youtube.com/c/QuantitativeBytes
 	
 	GPLv3 LICENSE
-	Copyright (c) 2023 Michael Bennett
+	Copyright (c) 2023 Michael Bennett	
 	
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -68,12 +68,14 @@ bool qbRT::ObjSphere::TestIntersection(const qbRT::Ray &castRay, qbRT::DATA::hit
 
 	// Compute the values of a, b and c.
 	qbVector<double> vhat = bckRay.m_lab;
+	// ***
 	//vhat.Normalize();
 	
 	/* Note that a is equal to the squared magnitude of the
 		direction of the cast ray. As this will be a unit vector,
 		we can conclude that the value of 'a' will always be 1. */
-	// a = 1.0;
+	//double a = 1.0;
+	// ****
 	double a = qbVector<double>::dot(vhat, vhat);
 	
 	// Calculate b.

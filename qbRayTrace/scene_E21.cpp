@@ -13,7 +13,7 @@
 	www.youtube.com/c/QuantitativeBytes
 	
 	GPLv3 LICENSE
-	Copyright (c) 2023 Michael Bennett
+	Copyright (c) 2023 Michael Bennett	
 	
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -271,7 +271,7 @@ qbRT::Scene_E21::Scene_E21()
 	sprayCan -> AddSubShape(sprayTopCone);
 	sprayCan -> AddSubShape(sprayTop);
 	sprayCan -> SetTransformMatrix(qbRT::GTform{	qbVector<double>{std::vector<double>{1.0, -1.75, 0.0}},
-																								qbVector<double>{std::vector<double>{0.0, -M_PI/4.0, 0.0}},
+																								qbVector<double>{std::vector<double>{0.0, 0.0, 0.0}},
 																								qbVector<double>{std::vector<double>{1.0, 1.0, 1.0}}});
 	
 	auto box = std::make_shared<qbRT::Box> (qbRT::Box());

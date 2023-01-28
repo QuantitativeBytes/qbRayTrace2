@@ -73,7 +73,7 @@ bool qbRT::Box::TestIntersection(const qbRT::Ray &castRay, qbRT::DATA::hitData &
 	
 	// Extract the value of k.
 	qbVector<double> k = bckRay.m_lab;
-	k.Normalize();
+	//k.Normalize();
 	double kx = k.GetElement(0);
 	double ky = k.GetElement(1);
 	double kz = k.GetElement(2);

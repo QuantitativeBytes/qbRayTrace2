@@ -13,7 +13,7 @@
 	www.youtube.com/c/QuantitativeBytes
 	
 	GPLv3 LICENSE
-	Copyright (c) 2022 Michael Bennett
+	Copyright (c) 2023 Michael Bennett	
 	
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -91,8 +91,8 @@ qbVector<double> qbRT::SimpleMaterial::ComputeColor(	const std::vector<std::shar
 	// Combine reflection and diffuse components.
 	matColor = (refColor * m_reflectivity) + (difColor * (1 - m_reflectivity));
 	
-	// Compute the specular component.
 	/*
+	// Compute the specular component.
 	if (m_shininess > 0.0)
 		spcColor = ComputeSpecular(objectList, lightList, intPoint, newNormal, cameraRay);
 		
