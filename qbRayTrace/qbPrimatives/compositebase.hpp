@@ -58,7 +58,7 @@ namespace qbRT
 				void AddSubShape(std::shared_ptr<qbRT::ObjectBase> subShape);
 				
 				// Override the GetExtents function.
-				virtual void GetExtents(qbVector<double> &xLim, qbVector<double> &yLim, qbVector<double> &zLim) override;
+				virtual void GetExtents(qbVector2<double> &xLim, qbVector2<double> &yLim, qbVector2<double> &zLim) override;
 				
 				// Override the function to test for intersections.
 				virtual bool TestIntersection(const qbRT::Ray &castRay, qbRT::DATA::hitData &hitData) override;
@@ -70,7 +70,7 @@ namespace qbRT
 				// Test for intersections with the list of sub-objects.
 				int TestIntersections(	const qbRT::Ray &castRay,
 																const qbRT::Ray &bckRay,
-																qbVector<double> &intPoint,
+																qbVector3<double> &intPoint,
 																double &currentDist,
 																qbRT::DATA::hitData &hitData	);			
 																
@@ -83,9 +83,9 @@ namespace qbRT
 				std::vector<std::shared_ptr<qbRT::ObjectBase>> m_shapeList;
 
 				// Object limits.
-				qbVector<double> m_xLim {2};
-				qbVector<double> m_yLim {2};
-				qbVector<double> m_zLim {2};
+				qbVector2<double> m_xLim;
+				qbVector2<double> m_yLim;
+				qbVector2<double> m_zLim;
 				
 		};
 	}

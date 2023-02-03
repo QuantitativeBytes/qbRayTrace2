@@ -46,7 +46,7 @@ namespace qbRT
 				virtual ~Image() override;
 				
 				// Function to return the color.
-				virtual qbVector<double> GetColor(const qbVector<double> &uvCoords) override;
+				virtual qbVector4<double> GetColor(const qbVector2<double> &uvCoords) override;
 			
 				// Function to load the image to be used.
 				bool LoadImage(std::string fileName);

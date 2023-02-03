@@ -46,9 +46,9 @@ qbRT::ObjSphere::ObjSphere()
 	m_uvMapType = qbRT::uvSPHERE;
 	
 	// Construct the default bounding box.
-	m_boundingBoxTransform.SetTransform(	qbVector<double>{std::vector<double>{0.0, 0.0, 0.0}},
-																				qbVector<double>{std::vector<double>{0.0, 0.0, 0.0}},
-																				qbVector<double>{std::vector<double>{1.0, 1.0, 1.0}});
+	m_boundingBoxTransform.SetTransform(	qbVector3<double>{std::vector<double>{0.0, 0.0, 0.0}},
+																				qbVector3<double>{std::vector<double>{0.0, 0.0, 0.0}},
+																				qbVector3<double>{std::vector<double>{1.0, 1.0, 1.0}});
 }
 
 // The destructor.
@@ -67,7 +67,7 @@ bool qbRT::ObjSphere::TestIntersection(const qbRT::Ray &castRay, qbRT::DATA::hit
 	qbRT::Ray bckRay = m_transformMatrix.Apply(castRay, qbRT::BCKTFORM);
 
 	// Compute the values of a, b and c.
-	qbVector<double> vhat = bckRay.m_lab;
+	qbVector3<double> vhat = bckRay.m_lab;
 	// ***
 	//vhat.Normalize();
 	
@@ -76,18 +76,18 @@ bool qbRT::ObjSphere::TestIntersection(const qbRT::Ray &castRay, qbRT::DATA::hit
 		we can conclude that the value of 'a' will always be 1. */
 	//double a = 1.0;
 	// ****
-	double a = qbVector<double>::dot(vhat, vhat);
+	double a = qbVector3<double>::dot(vhat, vhat);
 	
 	// Calculate b.
-	double b = 2.0 * qbVector<double>::dot(bckRay.m_point1, vhat);
+	double b = 2.0 * qbVector3<double>::dot(bckRay.m_point1, vhat);
 	
 	// Calculate c.
-	double c = qbVector<double>::dot(bckRay.m_point1, bckRay.m_point1) - 1.0;
+	double c = qbVector3<double>::dot(bckRay.m_point1, bckRay.m_point1) - 1.0;
 	
 	// Test whether we actually have an intersection.
 	double intTest = (b*b) - 4.0 * a * c;
 	
-	qbVector<double> poi;
+	qbVector3<double> poi;
 	if (intTest > 0.0)
 	{
 		//double numSQRT = sqrtf(intTest);
@@ -149,12 +149,12 @@ bool qbRT::ObjSphere::TestIntersection(const qbRT::Ray &castRay, qbRT::DATA::hit
 			
 			// Compute the local normal (easy for a sphere at the origin!).
 			
-			//qbVector<double> objOrigin = qbVector<double>{std::vector<double>{0.0, 0.0, 0.0}};
-			//qbVector<double> newObjOrigin = m_transformMatrix.Apply(objOrigin, qbRT::FWDTFORM);
+			//qbVector3<double> objOrigin = qbVector3<double>{std::vector<double>{0.0, 0.0, 0.0}};
+			//qbVector3<double> newObjOrigin = m_transformMatrix.Apply(objOrigin, qbRT::FWDTFORM);
 			//localNormal = intPoint - newObjOrigin;
 			//localNormal.Normalize();
 
-			qbVector<double> normalVector = poi;
+			qbVector3<double> normalVector = poi;
 			//localNormal = m_transformMatrix.ApplyNorm(normalVector);
 			//localNormal.Normalize();
 			hitData.normal = m_transformMatrix.ApplyNorm(normalVector);

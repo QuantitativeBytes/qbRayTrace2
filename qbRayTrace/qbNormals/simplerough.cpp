@@ -45,7 +45,7 @@ qbRT::Normal::SimpleRough::~SimpleRough()
 
 }
 
-qbVector<double> qbRT::Normal::SimpleRough::ComputePerturbation(const qbVector<double> &normal, const qbVector<double> &uvCoords)
+qbVector3<double> qbRT::Normal::SimpleRough::ComputePerturbation(const qbVector3<double> &normal, const qbVector2<double> &uvCoords)
 {
 	std::uniform_real_distribution<double> randomDist (-m_amplitudeScale, m_amplitudeScale);
 	double x = randomDist(*m_p_randGen);
@@ -56,6 +56,6 @@ qbVector<double> qbRT::Normal::SimpleRough::ComputePerturbation(const qbVector<d
 	//double y = 0.0;
 	//double z = 0.0;
 	
-	qbVector<double> perturbation = std::vector<double> {x, y, z};
+	qbVector3<double> perturbation = std::vector<double> {x, y, z};
 	return PerturbNormal(normal, perturbation);
 }

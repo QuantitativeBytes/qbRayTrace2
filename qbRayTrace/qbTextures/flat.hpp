@@ -51,13 +51,13 @@ namespace qbRT
 				virtual ~Flat() override;
 				
 				// Function to return the color.
-				virtual qbVector<double> GetColor(const qbVector<double> &uvCoords) override;
+				virtual qbVector4<double> GetColor(const qbVector2<double> &uvCoords) override;
 				
 				// Function to set the color.
-				void SetColor(const qbVector<double> &inputColor);
+				void SetColor(const qbVector4<double> &inputColor);
 				
 			private:
-				qbVector<double> m_color {4};
+				qbVector4<double> m_color;
 				
 		};
 	}

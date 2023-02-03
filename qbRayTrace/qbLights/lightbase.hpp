@@ -51,14 +51,14 @@ namespace qbRT
 			virtual ~LightBase();
 			
 			// Function to compute illumination contribution.
-			virtual bool ComputeIllumination(	const qbVector<double> &intPoint, const qbVector<double> &localNormal,
+			virtual bool ComputeIllumination(	const qbVector3<double> &intPoint, const qbVector3<double> &localNormal,
 																				const std::vector<std::shared_ptr<qbRT::ObjectBase>> &objectList,
 																				const std::shared_ptr<qbRT::ObjectBase> &currentObject,
-																				qbVector<double> &color, double &intensity);
+																				qbVector3<double> &color, double &intensity);
 																				
 		public:
-			qbVector<double>	m_color			{3};
-			qbVector<double>	m_location	{3};
+			qbVector3<double>	m_color			{3};
+			qbVector3<double>	m_location	{3};
 			double						m_intensity;
 	};
 }

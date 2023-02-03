@@ -47,29 +47,29 @@ qbRT::MaterialBase::~MaterialBase()
 }
 
 // Function to compute the color of the material.
-qbVector<double> qbRT::MaterialBase::ComputeColor(	const std::vector<std::shared_ptr<qbRT::ObjectBase>> &objectList,
+qbVector3<double> qbRT::MaterialBase::ComputeColor(	const std::vector<std::shared_ptr<qbRT::ObjectBase>> &objectList,
 																										const std::vector<std::shared_ptr<qbRT::LightBase>> &lightList,
 																										const std::shared_ptr<qbRT::ObjectBase> &currentObject,
-																										const qbVector<double> &intPoint, const qbVector<double> &localNormal,
+																										const qbVector3<double> &intPoint, const qbVector3<double> &localNormal,
 																										const qbRT::Ray &cameraRay)
 {
 	// Define an initial material color.
-	qbVector<double> matColor	{3};
+	qbVector3<double> matColor	{3};
 	
 	return matColor;
 }
 
 // Function to compute the diffuse color.
-qbVector<double> qbRT::MaterialBase::ComputeDiffuseColor(	const std::vector<std::shared_ptr<qbRT::ObjectBase>> &objectList,
+qbVector3<double> qbRT::MaterialBase::ComputeDiffuseColor(	const std::vector<std::shared_ptr<qbRT::ObjectBase>> &objectList,
 																													const std::vector<std::shared_ptr<qbRT::LightBase>> &lightList,
 																													const std::shared_ptr<qbRT::ObjectBase> &currentObject,
-																													const qbVector<double> &intPoint, const qbVector<double> &localNormal,
-																													const qbVector<double> &baseColor)
+																													const qbVector3<double> &intPoint, const qbVector3<double> &localNormal,
+																													const qbVector3<double> &baseColor)
 {
 	// Compute the color due to diffuse illumination.
-	qbVector<double> diffuseColor	{3};
+	qbVector3<double> diffuseColor	{3};
 	double intensity;
-	qbVector<double> color {3};
+	qbVector3<double> color {3};
 	double red = 0.0;
 	double green = 0.0;
 	double blue = 0.0;
@@ -106,20 +106,20 @@ qbVector<double> qbRT::MaterialBase::ComputeDiffuseColor(	const std::vector<std:
 }
 
 // Function to compute the color due to reflection.
-qbVector<double> qbRT::MaterialBase::ComputeReflectionColor(	const std::vector<std::shared_ptr<qbRT::ObjectBase>> &objectList,
+qbVector3<double> qbRT::MaterialBase::ComputeReflectionColor(	const std::vector<std::shared_ptr<qbRT::ObjectBase>> &objectList,
 																															const std::vector<std::shared_ptr<qbRT::LightBase>> &lightList,
 																															const std::shared_ptr<qbRT::ObjectBase> &currentObject,
-																															const qbVector<double> &intPoint, const qbVector<double> &localNormal,
+																															const qbVector3<double> &intPoint, const qbVector3<double> &localNormal,
 																															const qbRT::Ray &incidentRay)
 {
-	qbVector<double> reflectionColor {3};
+	qbVector3<double> reflectionColor {3};
 	
 	// Compute the reflection vector.
-	qbVector<double> d = incidentRay.m_lab;
-	qbVector<double> reflectionVector = d - (2.0 * qbVector<double>::dot(d, localNormal) * localNormal);
+	qbVector3<double> d = incidentRay.m_lab;
+	qbVector3<double> reflectionVector = d - (2.0 * qbVector3<double>::dot(d, localNormal) * localNormal);
 	
 	// Construct the reflection ray.
-	qbVector<double> startPoint = intPoint + (localNormal * 0.001);
+	qbVector3<double> startPoint = intPoint + (localNormal * 0.001);
 	qbRT::Ray reflectionRay (startPoint, startPoint + reflectionVector);
 	
 	/* Cast this ray into the scene and find the closest object that it intersects with. */
@@ -129,7 +129,7 @@ qbVector<double> qbRT::MaterialBase::ComputeReflectionColor(	const std::vector<s
 	
 	/* Compute illumination for closest object assuming that there was a
 		valid intersection. */
-	qbVector<double> matColor	{3};
+	qbVector3<double> matColor	{3};
 	if ((intersectionFound) && (m_reflectionRayCount < m_maxReflectionRays))
 	{
 		// Increment the reflectionRayCount.
@@ -166,9 +166,9 @@ bool qbRT::MaterialBase::CastRay( const qbRT::Ray &castRay, const std::vector<st
 																	qbRT::DATA::hitData &closestHitData)
 {
 	// Test for intersections with all of the objects in the scene.
-	//qbVector<double> intPoint			{3};
-	//qbVector<double> localNormal	{3};
-	//qbVector<double> localColor		{3};
+	//qbVector3<double> intPoint			{3};
+	//qbVector3<double> localNormal	{3};
+	//qbVector3<double> localColor		{3};
 	qbRT::DATA::hitData hitData;
 	
 	double minDist = 1e6;
@@ -220,9 +220,10 @@ void qbRT::MaterialBase::AssignNormalMap(const std::shared_ptr<qbRT::Normal::Nor
 }
 
 // Function to return the color due to textures at the given (u,v) coordinate.
-qbVector<double> qbRT::MaterialBase::GetTextureColor(const qbVector<double> &uvCoords)
+qbVector3<double> qbRT::MaterialBase::GetTextureColor(const qbVector2<double> &uvCoords)
 {
-	qbVector<double> outputColor (4);
+	qbVector4<double> outputColor;
+	qbVector3<double> finalColor;
 	
 	if (m_textureList.size() > 1)
 	{
@@ -237,20 +238,23 @@ qbVector<double> qbRT::MaterialBase::GetTextureColor(const qbVector<double> &uvC
 		outputColor = m_textureList.at(0)->GetColor(uvCoords);
 	}
 	
-	return outputColor;
+	finalColor.m_x = outputColor.m_v1;
+	finalColor.m_y = outputColor.m_v2;
+	finalColor.m_z = outputColor.m_v3;
+	return finalColor;
 }
 
 // Function to blend colors.
-void qbRT::MaterialBase::BlendColors(qbVector<double> &color1, const qbVector<double> &color2)
+void qbRT::MaterialBase::BlendColors(qbVector4<double> &color1, const qbVector4<double> &color2)
 {
 	color1 = (color2 * color2.GetElement(3)) + (color1 * (1.0 - color2.GetElement(3)));
 }
 
 // *** Function to perturb the object normal to give the material normal.
-qbVector<double> qbRT::MaterialBase::PerturbNormal(const qbVector<double> &normal, const qbVector<double> &uvCoords, const qbVector<double> &upVector)
+qbVector3<double> qbRT::MaterialBase::PerturbNormal(const qbVector3<double> &normal, const qbVector2<double> &uvCoords, const qbVector3<double> &upVector)
 {
 	// Copy the original normal.
-	qbVector<double> newNormal = normal;
+	qbVector3<double> newNormal = normal;
 	
 	// Perturb the new normal with each normal map in turn.
 	for (int i=0; i<m_normalMapList.size(); ++i)
@@ -264,19 +268,19 @@ qbVector<double> qbRT::MaterialBase::PerturbNormal(const qbVector<double> &norma
 
 // **********************************************************************
 // Function to compute combined specular and diffuse lighting components.
-qbVector<double> qbRT::MaterialBase::ComputeSpecAndDiffuse(	const std::vector<std::shared_ptr<qbRT::ObjectBase>> &objectList,
+qbVector3<double> qbRT::MaterialBase::ComputeSpecAndDiffuse(	const std::vector<std::shared_ptr<qbRT::ObjectBase>> &objectList,
 																														const std::vector<std::shared_ptr<qbRT::LightBase>> &lightList,
 																														const std::shared_ptr<qbRT::ObjectBase> &currentObject,
-																														const qbVector<double> &intPoint, const qbVector<double> &localNormal,
-																														const qbVector<double> &baseColor, const qbRT::Ray &cameraRay)
+																														const qbVector3<double> &intPoint, const qbVector3<double> &localNormal,
+																														const qbVector3<double> &baseColor, const qbRT::Ray &cameraRay)
 {
 	// Compute the color due to diffuse illumination and specular highlights.
-	qbVector<double> outputColor {3};
-	qbVector<double> diffuseColor	{3};
-	qbVector<double> spcColor	{3};
+	qbVector3<double> outputColor;
+	qbVector3<double> diffuseColor;
+	qbVector3<double> spcColor;
 	double intensity;
 	double specIntensity = 0.0;
-	qbVector<double> color {3};
+	qbVector3<double> color;
 	double red = 0.0;
 	double green = 0.0;
 	double blue = 0.0;
@@ -303,23 +307,23 @@ qbVector<double> qbRT::MaterialBase::ComputeSpecAndDiffuse(	const std::vector<st
 				specIntensity = 0.0;
 				
 				// Construct a vector pointing from the intersection point to the light.
-				qbVector<double> lightDir = (currentLight->m_location - intPoint).Normalized();
+				qbVector3<double> lightDir = (currentLight->m_location - intPoint).Normalized();
 				
 				// Compute a start point.
-				qbVector<double> startPoint = intPoint + (lightDir * 0.001);
+				qbVector3<double> startPoint = intPoint + (lightDir * 0.001);
 				
 				// Construct a ray from the point of intersection to the light.
 				qbRT::Ray lightRay (startPoint, startPoint + lightDir);	
 				
 				// Compute the reflection vector.
-				qbVector<double> d = lightRay.m_lab;
-				qbVector<double> r = d - (2 * qbVector<double>::dot(d, localNormal) * localNormal);
+				qbVector3<double> d = lightRay.m_lab;
+				qbVector3<double> r = d - (2 * qbVector3<double>::dot(d, localNormal) * localNormal);
 				//r.Normalize();
 				
 				// Compute the dot product.
-				qbVector<double> v = cameraRay.m_lab;
+				qbVector3<double> v = cameraRay.m_lab;
 				v.Normalize();
-				double dotProduct = qbVector<double>::dot(r, v);
+				double dotProduct = qbVector3<double>::dot(r, v);
 				
 				// Only proceed if the dot product is positive.
 				if (dotProduct > 0.0)

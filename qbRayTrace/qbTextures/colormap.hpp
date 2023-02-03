@@ -34,6 +34,9 @@
 #define COLORMAP_H
 
 #include "../qbLinAlg/qbVector.h"
+#include "../qbLinAlg/qbVector2.hpp"
+#include "../qbLinAlg/qbVector3.hpp"
+#include "../qbLinAlg/qbVector4.hpp"
 
 namespace qbRT
 {
@@ -47,14 +50,14 @@ namespace qbRT
 				~ColorMap();
 				
 				// Function to set a stop as a color.
-				void SetStop(double position, const qbVector<double> &value);
+				void SetStop(double position, const qbVector4<double> &value);
 				
 				// Function to get the color at a particular position.
-				qbVector<double> GetColor(double position);
+				qbVector4<double> GetColor(double position);
 				
 			private:
 				std::vector<double> m_stopPositions;
-				std::vector<qbVector<double>> m_stopValues;
+				std::vector<qbVector4<double>> m_stopValues;
 		};
 	}
 }

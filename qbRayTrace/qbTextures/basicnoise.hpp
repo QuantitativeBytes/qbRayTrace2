@@ -50,7 +50,7 @@ namespace qbRT
 				virtual ~BasicNoise() override;
 				
 				// Function to return the color.
-				virtual qbVector<double> GetColor(const qbVector<double> &uvCoords) override;
+				virtual qbVector4<double> GetColor(const qbVector2<double> &uvCoords) override;
 				
 				// Function to set the color map.
 				void SetColorMap(const std::shared_ptr<qbRT::Texture::ColorMap> &colorMap);

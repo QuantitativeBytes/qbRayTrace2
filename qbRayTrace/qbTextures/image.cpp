@@ -47,22 +47,22 @@ qbRT::Texture::Image::~Image()
 	}
 }
 
-qbVector<double> qbRT::Texture::Image::GetColor(const qbVector<double> &uvCoords)
+qbVector4<double> qbRT::Texture::Image::GetColor(const qbVector2<double> &uvCoords)
 {
-	qbVector<double> outputColor {4};
+	qbVector4<double> outputColor;
 	
 	if (!m_imageLoaded)
 	{
 		/* If no image has been loaded yet,
 			set the color to the default purple 
 			regardless of the (u,v) position. */
-		outputColor = qbVector<double>{std::vector<double>{1.0, 0.0, 1.0, 1.0}};
+		outputColor = qbVector4<double>{std::vector<double>{1.0, 0.0, 1.0, 1.0}};
 	}
 	else
 	{
 		// Apply the local transform to the (u,v) coordinates.
-		qbVector<double> inputLoc = uvCoords;
-		qbVector<double> newLoc = ApplyTransform(inputLoc);		
+		qbVector2<double> inputLoc = uvCoords;
+		qbVector2<double> newLoc = ApplyTransform(inputLoc);		
 		double u = newLoc.GetElement(0);
 		double v = newLoc.GetElement(1);
 		

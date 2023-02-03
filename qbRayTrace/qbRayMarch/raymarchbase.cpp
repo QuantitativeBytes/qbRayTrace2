@@ -70,10 +70,10 @@ bool qbRT::RM::RayMarchBase::TestIntersection(	const qbRT::Ray &castRay, qbRT::D
 		if (m_boundingBox.TestIntersection(bckRay))
 		{
 			// Extract ray direction.
-			qbVector<double> vhat = bckRay.m_lab;
+			qbVector3<double> vhat = bckRay.m_lab;
 			vhat.Normalize();		
 		
-			qbVector<double> currentLoc = bckRay.m_point1;
+			qbVector3<double> currentLoc = bckRay.m_point1;
 			int stepCount = 0;
 			double dist = EvaluateSDF(&currentLoc, &m_parms);
 			
@@ -103,7 +103,7 @@ bool qbRT::RM::RayMarchBase::TestIntersection(	const qbRT::Ray &castRay, qbRT::D
 			hitData.poi = m_transformMatrix.Apply(currentLoc, qbRT::FWDTFORM);
 			
 			// Compute the local normal.
-			qbVector<double> surfaceNormal {3};
+			qbVector3<double> surfaceNormal {3};
 
 			/*
 			 Note the extra code here to compute an offset location from which
@@ -116,14 +116,14 @@ bool qbRT::RM::RayMarchBase::TestIntersection(	const qbRT::Ray &castRay, qbRT::D
 			*/
 
 			// Determine an offset point.
-			qbVector<double> normalLoc = currentLoc - (vhat * 0.01);
+			qbVector3<double> normalLoc = currentLoc - (vhat * 0.01);
 
-			qbVector<double> x1 = normalLoc - m_xDisp;
-			qbVector<double> x2 = normalLoc + m_xDisp;
-			qbVector<double> y1 = normalLoc - m_yDisp;
-			qbVector<double> y2 = normalLoc + m_yDisp;
-			qbVector<double> z1 = normalLoc - m_zDisp;
-			qbVector<double> z2 = normalLoc + m_zDisp;
+			qbVector3<double> x1 = normalLoc - m_xDisp;
+			qbVector3<double> x2 = normalLoc + m_xDisp;
+			qbVector3<double> y1 = normalLoc - m_yDisp;
+			qbVector3<double> y2 = normalLoc + m_yDisp;
+			qbVector3<double> z1 = normalLoc - m_zDisp;
+			qbVector3<double> z2 = normalLoc + m_zDisp;
 			surfaceNormal.SetElement(0, EvaluateSDF(&x2, &m_parms) - EvaluateSDF(&x1, &m_parms));
 			surfaceNormal.SetElement(1, EvaluateSDF(&y2, &m_parms) - EvaluateSDF(&y1, &m_parms));
 			surfaceNormal.SetElement(2, EvaluateSDF(&z2, &m_parms) - EvaluateSDF(&z1, &m_parms));
@@ -156,14 +156,14 @@ bool qbRT::RM::RayMarchBase::TestIntersection(	const qbRT::Ray &castRay, qbRT::D
 }
 
 // Function to set the object function.
-void qbRT::RM::RayMarchBase::SetObjectFcn( std::function<double(qbVector<double>*, qbVector<double>*)> objectFcn )
+void qbRT::RM::RayMarchBase::SetObjectFcn( std::function<double(qbVector3<double>*, qbVector3<double>*)> objectFcn )
 {
 	m_objectFcn = objectFcn;
 	m_haveObjectFcn = true;
 }
 
 // Function to evaluate the Signed Distance Function (SDF) at the given coordinates.
-double qbRT::RM::RayMarchBase::EvaluateSDF(	qbVector<double> *location, qbVector<double> *parms )
+double qbRT::RM::RayMarchBase::EvaluateSDF(	qbVector3<double> *location, qbVector3<double> *parms )
 {
 	return m_objectFcn(location, parms);
 }

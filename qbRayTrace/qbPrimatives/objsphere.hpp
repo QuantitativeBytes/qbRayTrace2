@@ -56,7 +56,7 @@ namespace qbRT
 			virtual ~ObjSphere() override;
 			
 			// Override the function to test for intersections.
-			//virtual bool TestIntersection(const qbRT::Ray &castRay, qbVector<double> &intPoint, qbVector<double> &localNormal, qbVector<double> &localColor) override;
+			//virtual bool TestIntersection(const qbRT::Ray &castRay, qbVector3<double> &intPoint, qbVector3<double> &localNormal, qbVector3<double> &localColor) override;
 			virtual bool TestIntersection(const qbRT::Ray &castRay, qbRT::DATA::hitData &hitData) override;
 			
 		private:

@@ -49,11 +49,11 @@ qbRT::Texture::qbStone1::qbStone1()
 	
 	// Configure the color map.
 	auto stoneMap = std::make_shared<qbRT::Texture::ColorMap> (qbRT::Texture::ColorMap());
-	stoneMap -> SetStop(0.0, qbVector<double>{std::vector<double>{0.2, 0.2, 0.2, 1.0}});
-	stoneMap -> SetStop(0.25, qbVector<double>{std::vector<double>{0.8, 0.8, 0.8, 1.0}});
-	stoneMap -> SetStop(0.5, qbVector<double>{std::vector<double>{0.5, 0.5, 0.5, 1.0}});
-	stoneMap -> SetStop(0.75, qbVector<double>{std::vector<double>{0.1, 0.1, 0.1, 1.0}});
-	stoneMap -> SetStop(1.0, qbVector<double>{std::vector<double>{0.2, 0.2, 0.2, 1.0}});
+	stoneMap -> SetStop(0.0, qbVector4<double>{std::vector<double>{0.2, 0.2, 0.2, 1.0}});
+	stoneMap -> SetStop(0.25, qbVector4<double>{std::vector<double>{0.8, 0.8, 0.8, 1.0}});
+	stoneMap -> SetStop(0.5, qbVector4<double>{std::vector<double>{0.5, 0.5, 0.5, 1.0}});
+	stoneMap -> SetStop(0.75, qbVector4<double>{std::vector<double>{0.1, 0.1, 0.1, 1.0}});
+	stoneMap -> SetStop(1.0, qbVector4<double>{std::vector<double>{0.2, 0.2, 0.2, 1.0}});
 	SetColorMap(stoneMap);	
 	
 }
@@ -64,20 +64,20 @@ qbRT::Texture::qbStone1::~qbStone1()
 }
 
 // Function to return the color.
-qbVector<double> qbRT::Texture::qbStone1::GetColor(const qbVector<double> &uvCoords)
+qbVector4<double> qbRT::Texture::qbStone1::GetColor(const qbVector2<double> &uvCoords)
 {
 	// Apply the local transform to the (u,v) coordinates.
-	qbVector<double> inputLoc = uvCoords;
-	qbVector<double> newLoc = ApplyTransform(inputLoc);
+	qbVector2<double> inputLoc = uvCoords;
+	qbVector2<double> newLoc = ApplyTransform(inputLoc);
 	double newU = newLoc.GetElement(0);
 	double newV = newLoc.GetElement(1);
 	
-	qbVector<double> localColor {4};
+	qbVector4<double> localColor;
 	/* If no color map has been provided, then output purple. This should be
 		easily recognizable in the scene, indicating that something is wrong. */
 	if (!m_haveColorMap)
 	{
-		localColor = qbVector<double>{std::vector<double>{1.0, 0.0, 1.0, 1.0}};
+		localColor = qbVector4<double>{std::vector<double>{1.0, 0.0, 1.0, 1.0}};
 	}
 	else
 	{
@@ -93,11 +93,11 @@ qbVector<double> qbRT::Texture::qbStone1::GetColor(const qbVector<double> &uvCoo
 }
 
 // Function to return the value.
-double qbRT::Texture::qbStone1::GetValue(const qbVector<double> &uvCoords)
+double qbRT::Texture::qbStone1::GetValue(const qbVector2<double> &uvCoords)
 {
 	// Apply the local transform to the (u,v) coordinates.
-	qbVector<double> inputLoc = uvCoords;
-	qbVector<double> newLoc = ApplyTransform(inputLoc);
+	qbVector2<double> inputLoc = uvCoords;
+	qbVector2<double> newLoc = ApplyTransform(inputLoc);
 	double newU = newLoc.GetElement(0);
 	double newV = newLoc.GetElement(1);
 	

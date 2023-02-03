@@ -66,10 +66,10 @@ qbRT::GTform qbRT::ObjectBase::GetTransformMatrix()
 }
 
 // Function to compute the extents of the object.
-void qbRT::ObjectBase::GetExtents(qbVector<double> &xLim, qbVector<double> &yLim, qbVector<double> &zLim)
+void qbRT::ObjectBase::GetExtents(qbVector2<double> &xLim, qbVector2<double> &yLim, qbVector2<double> &zLim)
 {
 	// Construct an array of corner points for a unit cube.
-	std::vector<qbVector<double>> cornerPoints = ConstructCube(-1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
+	std::vector<qbVector3<double>> cornerPoints = ConstructCube(-1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
 	
 	// Form the combined object and bounding box transform matrix.
 	qbRT::GTform combinedTransform = m_transformMatrix * m_boundingBoxTransform;
@@ -111,10 +111,10 @@ void qbRT::ObjectBase::GetExtents(qbVector<double> &xLim, qbVector<double> &yLim
 }
 
 // Function to compute the extents of the object, accepting an additional transform matrix as input.
-void qbRT::ObjectBase::GetExtents(const qbRT::GTform &parentTransform, qbVector<double> &xLim, qbVector<double> &yLim, qbVector<double> &zLim)
+void qbRT::ObjectBase::GetExtents(const qbRT::GTform &parentTransform, qbVector2<double> &xLim, qbVector2<double> &yLim, qbVector2<double> &zLim)
 {
 	// Construct an array of corner points for a unit cube.
-	std::vector<qbVector<double>> cornerPoints = ConstructCube(-1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
+	std::vector<qbVector3<double>> cornerPoints = ConstructCube(-1.0, 1.0, -1.0, 1.0, -1.0, 1.0);
 	
 	// Form the combined object and bounding box transform matrix.
 	qbRT::GTform combinedTransform = parentTransform * m_transformMatrix * m_boundingBoxTransform;
@@ -156,10 +156,10 @@ void qbRT::ObjectBase::GetExtents(const qbRT::GTform &parentTransform, qbVector<
 }
 
 // Function to construct a unit cube.
-std::vector<qbVector<double>> qbRT::ObjectBase::ConstructCube(double xMin, double xMax, double yMin, double yMax, double zMin, double zMax)
+std::vector<qbVector3<double>> qbRT::ObjectBase::ConstructCube(double xMin, double xMax, double yMin, double yMax, double zMin, double zMax)
 {
 	// Construct an array of corner points for a unit cube.
-	std::vector<qbVector<double>> cornerPoints (8);
+	std::vector<qbVector3<double>> cornerPoints (8);
 	cornerPoints.at(0) = std::vector<double> {xMin - m_boundingBoxPadding, yMin - m_boundingBoxPadding, zMin - m_boundingBoxPadding};
 	cornerPoints.at(1) = std::vector<double> {xMin - m_boundingBoxPadding, yMin - m_boundingBoxPadding, zMax + m_boundingBoxPadding};
 	cornerPoints.at(2) = std::vector<double> {xMax + m_boundingBoxPadding, yMin - m_boundingBoxPadding, zMax + m_boundingBoxPadding};
@@ -186,7 +186,7 @@ bool qbRT::ObjectBase::CloseEnough(const double f1, const double f2)
 }
 
 // Function to perform UV mapping.
-void qbRT::ObjectBase::ComputeUV(const qbVector<double> &localPOI, qbVector<double> &uvCoords)
+void qbRT::ObjectBase::ComputeUV(const qbVector3<double> &localPOI, qbVector2<double> &uvCoords)
 {
 	switch (m_uvMapType)
 	{

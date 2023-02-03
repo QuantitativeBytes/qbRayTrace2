@@ -45,6 +45,9 @@
 #include "./qbRayTrace/qbTextures/flat.hpp"
 #include "./qbRayTrace/qbTextures/checker.hpp"
 #include "./qbRayTrace/qbTextures/image.hpp"
+#include "./qbRayTrace/qbLinAlg/qbVector2.hpp"
+#include "./qbRayTrace/qbLinAlg/qbVector3.hpp"
+#include "./qbRayTrace/qbLinAlg/qbVector4.hpp"
 
 class CApp
 {
@@ -59,7 +62,7 @@ class CApp
 		void OnExit();
 		
 	private:
-		void PrintVector(const qbVector<double> &inputVector);
+		void PrintVector(const qbVector3<double> &inputVector);
 		
 	private:
 		// An instance of the qbImage class to store the image.

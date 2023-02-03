@@ -44,9 +44,9 @@ qbRT::Cylinder::Cylinder()
 	m_uvMapType = qbRT::uvCYLINDER;
 	
 	// Construct the default bounding box.
-	m_boundingBoxTransform.SetTransform(	qbVector<double>{std::vector<double>{0.0, 0.0, 0.0}},
-																				qbVector<double>{std::vector<double>{0.0, 0.0, 0.0}},
-																				qbVector<double>{std::vector<double>{1.0, 1.0, 1.0}});
+	m_boundingBoxTransform.SetTransform(	qbVector3<double>{std::vector<double>{0.0, 0.0, 0.0}},
+																				qbVector3<double>{std::vector<double>{0.0, 0.0, 0.0}},
+																				qbVector3<double>{std::vector<double>{1.0, 1.0, 1.0}});
 }
 
 // The destructor.
@@ -65,11 +65,11 @@ bool qbRT::Cylinder::TestIntersection(	const qbRT::Ray &castRay, qbRT::DATA::hit
 	qbRT::Ray bckRay = m_transformMatrix.Apply(castRay, qbRT::BCKTFORM);
 	
 	// Copy the m_lab vector from bckRay and normalize it.
-	qbVector<double> v = bckRay.m_lab;
+	qbVector3<double> v = bckRay.m_lab;
 	v.Normalize();
 	
 	// Get the start point of the line.
-	qbVector<double> p = bckRay.m_point1;
+	qbVector3<double> p = bckRay.m_point1;
 	
 	// Compute a, b and c.
 	double a = std::pow(v.GetElement(0), 2.0) + std::pow(v.GetElement(1), 2.0);
@@ -81,7 +81,7 @@ bool qbRT::Cylinder::TestIntersection(	const qbRT::Ray &castRay, qbRT::DATA::hit
 	
 	// Test for intersections.
 	// First with the cylinder itself.
-	std::array<qbVector<double>, 4> poi;
+	std::array<qbVector3<double>, 4> poi;
 	std::array<double, 4> t;
 	bool t1Valid, t2Valid, t3Valid, t4Valid;
 	if (numSQRT > 0.0)
@@ -182,17 +182,17 @@ bool qbRT::Cylinder::TestIntersection(	const qbRT::Ray &castRay, qbRT::DATA::hit
 	
 	/* If minIndex is either 0 or 1, then we have a valid intersection
 		with the cylinder itself. */
-	qbVector<double> validPOI = poi.at(minIndex);
+	qbVector3<double> validPOI = poi.at(minIndex);
 	if (minIndex < 2)
 	{
 		// Transform the intersection point back into world coordinates.
 		hitData.poi = m_transformMatrix.Apply(validPOI, qbRT::FWDTFORM);
 		
 		// Compute the local normal.
-		qbVector<double> orgNormal {3};
-		qbVector<double> newNormal {3};
-		qbVector<double> localOrigin {std::vector<double> {0.0, 0.0, 0.0}};
-		qbVector<double> globalOrigin = m_transformMatrix.Apply(localOrigin, qbRT::FWDTFORM);
+		qbVector3<double> orgNormal {3};
+		qbVector3<double> newNormal {3};
+		qbVector3<double> localOrigin {std::vector<double> {0.0, 0.0, 0.0}};
+		qbVector3<double> globalOrigin = m_transformMatrix.Apply(localOrigin, qbRT::FWDTFORM);
 		orgNormal.SetElement(0, validPOI.GetElement(0));
 		orgNormal.SetElement(1, validPOI.GetElement(1));
 		orgNormal.SetElement(2, 0.0);
@@ -235,12 +235,12 @@ bool qbRT::Cylinder::TestIntersection(	const qbRT::Ray &castRay, qbRT::DATA::hit
 				hitData.poi = m_transformMatrix.Apply(validPOI, qbRT::FWDTFORM);
 				
 				// Compute the local normal.
-				//qbVector<double> localOrigin {std::vector<double> {0.0, 0.0, 0.0}};
-				//qbVector<double> globalOrigin = m_transformMatrix.Apply(localOrigin, qbRT::FWDTFORM);
+				//qbVector3<double> localOrigin {std::vector<double> {0.0, 0.0, 0.0}};
+				//qbVector3<double> globalOrigin = m_transformMatrix.Apply(localOrigin, qbRT::FWDTFORM);
 				//localNormal = m_transformMatrix.Apply(normalVector, qbRT::FWDTFORM) - globalOrigin;
 				//localNormal.Normalize();
 				
-				qbVector<double> normalVector {std::vector<double> {0.0, 0.0, 0.0 + validPOI.GetElement(2)}};
+				qbVector3<double> normalVector {std::vector<double> {0.0, 0.0, 0.0 + validPOI.GetElement(2)}};
 				hitData.normal = m_transformMatrix.ApplyNorm(normalVector);
 				hitData.normal.Normalize();
 				

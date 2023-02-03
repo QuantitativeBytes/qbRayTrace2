@@ -3,6 +3,9 @@
 
 #include <memory>
 #include "./qbLinAlg/qbVector.h"
+#include "./qbLinAlg/qbVector2.hpp"
+#include "./qbLinAlg/qbVector3.hpp"
+#include "./qbLinAlg/qbVector4.hpp"
 
 namespace qbRT
 {
@@ -13,18 +16,18 @@ namespace qbRT
 	{
 		struct hitData
 		{
-			qbVector<double> poi			{3};
-			qbVector<double> normal		{3};
-			qbVector<double> color		{3};
-			qbVector<double> localPOI	{3};
-			qbVector<double> uvCoords	{2};
+			qbVector3<double> poi;
+			qbVector3<double> normal;
+			qbVector3<double> color;
+			qbVector3<double> localPOI;
+			qbVector2<double> uvCoords;
 			std::shared_ptr<qbRT::ObjectBase> hitObject;
 		};
 	}
 
 	namespace UTILS
 	{
-		void PrintVector(const qbVector<double> &inputVector);
+		void PrintVector(const qbVector3<double> &inputVector);
 	}
 }
 

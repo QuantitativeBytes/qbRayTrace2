@@ -1,6 +1,6 @@
 #include "qbutils.hpp"
 
-void qbRT::UTILS::PrintVector(const qbVector<double> &inputVector)
+void qbRT::UTILS::PrintVector(const qbVector3<double> &inputVector)
 {
 	int nRows = inputVector.GetNumDims();
 	for (int row=0; row<nRows; ++row)

@@ -36,6 +36,9 @@
 #include <memory>
 #include "../qbLinAlg/qbMatrix.h"
 #include "../qbLinAlg/qbVector.h"
+#include "../qbLinAlg/qbVector2.hpp"
+#include "../qbLinAlg/qbVector3.hpp"
+#include "../qbLinAlg/qbVector4.hpp"
 #include "../ray.hpp"
 #include "../qbTextures/texturebase.hpp"
 
@@ -51,22 +54,22 @@ namespace qbRT
 				virtual ~NormalBase();
 				
 				// Function to compute the perturbation.
-				virtual qbVector<double> ComputePerturbation(const qbVector<double> &normal, const qbVector<double> &uvCoords);
+				virtual qbVector3<double> ComputePerturbation(const qbVector3<double> &normal, const qbVector2<double> &uvCoords);
 				
 				// Function to perturb the given normal.
-				qbVector<double> PerturbNormal(const qbVector<double> &normal, const qbVector<double> &perturbation);
+				qbVector3<double> PerturbNormal(const qbVector3<double> &normal, const qbVector3<double> &perturbation);
 				
 				// *** Function to perform numerical differentiation of a texture in UV space.
-				qbVector<double> TextureDiff(const std::shared_ptr<qbRT::Texture::TextureBase> &inputTexture, const qbVector<double> &uvCoords);				
+				qbVector2<double> TextureDiff(const std::shared_ptr<qbRT::Texture::TextureBase> &inputTexture, const qbVector2<double> &uvCoords);				
 				
 				// Function to set the amplitude scale.
 				void SetAmplitude(double amplitude);
 				
 				// Function to set transform.
-				void SetTransform(const qbVector<double> &translation, const double &rotation, const qbVector<double> &scale);				
+				void SetTransform(const qbVector2<double> &translation, const double &rotation, const qbVector2<double> &scale);				
 				
 				// Function to apply the local transform to the given input vector.
-				qbVector<double> ApplyTransform(const qbVector<double> &inputVector);				
+				qbVector2<double> ApplyTransform(const qbVector2<double> &inputVector);				
 				
 			public:
 				// Store the amplitude scale factor.

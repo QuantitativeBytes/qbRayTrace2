@@ -33,13 +33,13 @@
 #include "sdfunc.hpp"
 
 // Sphere
-double qbRT::RM::SDF::Sphere(const qbVector<double> &p, const qbVector<double> &center, const qbVector<double> &parms)
+double qbRT::RM::SDF::Sphere(const qbVector3<double> &p, const qbVector3<double> &center, const qbVector3<double> &parms)
 {
 	return (p - center).norm() - parms.GetElement(0);
 }
 
 // Torus
-double qbRT::RM::SDF::Torus(const qbVector<double> &p, const qbVector<double> &center, const qbVector<double> &parms)
+double qbRT::RM::SDF::Torus(const qbVector3<double> &p, const qbVector3<double> &center, const qbVector3<double> &parms)
 {
 	double x = p.GetElement(0) - center.GetElement(0);
 	double y = p.GetElement(1) - center.GetElement(1);
@@ -52,9 +52,9 @@ double qbRT::RM::SDF::Torus(const qbVector<double> &p, const qbVector<double> &c
 }
 
 // Box
-double qbRT::RM::SDF::Box(const qbVector<double> &p, const qbVector<double> &center, const qbVector<double> &parms)
+double qbRT::RM::SDF::Box(const qbVector3<double> &p, const qbVector3<double> &center, const qbVector3<double> &parms)
 {
-	qbVector<double> location = (p - center);
+	qbVector3<double> location = (p - center);
 	double ax = fabs(location.GetElement(0)) - parms.GetElement(0);
 	double ay = fabs(location.GetElement(1)) - parms.GetElement(1);
 	double az = fabs(location.GetElement(2)) - parms.GetElement(2);

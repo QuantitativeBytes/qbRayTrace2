@@ -48,7 +48,7 @@ namespace qbRT
 				virtual ~TextureNormal() override;
 			
 				// Function to compute the perturbation.
-				virtual qbVector<double> ComputePerturbation(const qbVector<double> &normal, const qbVector<double> &uvCoords) override;
+				virtual qbVector3<double> ComputePerturbation(const qbVector3<double> &normal, const qbVector2<double> &uvCoords) override;
 				
 				// Function to assign the base texture.
 				void AssignBaseTexture(const std::shared_ptr<qbRT::Texture::TextureBase> &inputTexture);

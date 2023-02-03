@@ -48,13 +48,13 @@ namespace qbRT
 				virtual ~Gradient() override;
 				
 				// Function to return the color.
-				virtual qbVector<double> GetColor(const qbVector<double> &uvCoords) override;
+				virtual qbVector4<double> GetColor(const qbVector2<double> &uvCoords) override;
 				
 				// *** Function to return the value.
-				virtual double GetValue(const qbVector<double> &uvCoords) override;				
+				virtual double GetValue(const qbVector2<double> &uvCoords) override;				
 				
 				// Function to set stops for the color map.
-				void SetStop(double position, const qbVector<double> &value);
+				void SetStop(double position, const qbVector4<double> &value);
 				
 			private:
 				qbRT::Texture::ColorMap m_colorMap;

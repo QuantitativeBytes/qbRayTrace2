@@ -41,6 +41,9 @@
 #include "../qbPrimatives/objectbase.hpp"
 #include "../qbLights/lightbase.hpp"
 #include "../qbLinAlg/qbVector.h"
+#include "../qbLinAlg/qbVector2.hpp"
+#include "../qbLinAlg/qbVector3.hpp"
+#include "../qbLinAlg/qbVector4.hpp"
 #include "../ray.hpp"
 
 namespace qbRT
@@ -52,33 +55,33 @@ namespace qbRT
 			virtual ~MaterialBase();
 			
 			// Function to return the color of the material.
-			virtual qbVector<double> ComputeColor(	const std::vector<std::shared_ptr<qbRT::ObjectBase>> &objectList,
+			virtual qbVector3<double> ComputeColor(	const std::vector<std::shared_ptr<qbRT::ObjectBase>> &objectList,
 																							const std::vector<std::shared_ptr<qbRT::LightBase>> &lightList,
 																							const std::shared_ptr<qbRT::ObjectBase> &currentObject,
-																							const qbVector<double> &intPoint, const qbVector<double> &localNormal,
+																							const qbVector3<double> &intPoint, const qbVector3<double> &localNormal,
 																							const qbRT::Ray &cameraRay);
 																							
 			// Function to compute diffuse color.
-			static qbVector<double> ComputeDiffuseColor(	const std::vector<std::shared_ptr<qbRT::ObjectBase>> &objectList,
+			static qbVector3<double> ComputeDiffuseColor(	const std::vector<std::shared_ptr<qbRT::ObjectBase>> &objectList,
 																										const std::vector<std::shared_ptr<qbRT::LightBase>> &lightList,
 																										const std::shared_ptr<qbRT::ObjectBase> &currentObject,
-																										const qbVector<double> &intPoint, const qbVector<double> &localNormal,
-																										const qbVector<double> &baseColor);
+																										const qbVector3<double> &intPoint, const qbVector3<double> &localNormal,
+																										const qbVector3<double> &baseColor);
 																										
 			// Function to compute the reflection color.
-			qbVector<double> ComputeReflectionColor(	const std::vector<std::shared_ptr<qbRT::ObjectBase>> &objectList,
+			qbVector3<double> ComputeReflectionColor(	const std::vector<std::shared_ptr<qbRT::ObjectBase>> &objectList,
 																								const std::vector<std::shared_ptr<qbRT::LightBase>> &lightList,
 																								const std::shared_ptr<qbRT::ObjectBase> &currentObject,
-																								const qbVector<double> &intPoint, const qbVector<double> &localNormal,
+																								const qbVector3<double> &intPoint, const qbVector3<double> &localNormal,
 																								const qbRT::Ray &incidentRay);
 															
 			// *************************************************************************************																								
 			// Function that combines the computation of diffuse and specular components (faster).
-			qbVector<double> ComputeSpecAndDiffuse(	const std::vector<std::shared_ptr<qbRT::ObjectBase>> &objectList,
+			qbVector3<double> ComputeSpecAndDiffuse(	const std::vector<std::shared_ptr<qbRT::ObjectBase>> &objectList,
 																							const std::vector<std::shared_ptr<qbRT::LightBase>> &lightList,
 																							const std::shared_ptr<qbRT::ObjectBase> &currentObject,
-																							const qbVector<double> &intPoint, const qbVector<double> &localNormal,
-																							const qbVector<double> &baseColor, const qbRT::Ray &cameraRay);																								
+																							const qbVector3<double> &intPoint, const qbVector3<double> &localNormal,
+																							const qbVector3<double> &baseColor, const qbRT::Ray &cameraRay);																								
 																										
 			// Function to cast a ray into the scene.
 			bool CastRay(	const qbRT::Ray &castRay, const std::vector<std::shared_ptr<qbRT::ObjectBase>> &objectList,
@@ -93,13 +96,13 @@ namespace qbRT
 			void AssignNormalMap(const std::shared_ptr<qbRT::Normal::NormalBase> &inputNormalMap);			
 			
 			// Function to return the color due to the textures at the given (u,v) coordinate.
-			qbVector<double> GetTextureColor(const qbVector<double> &uvCoords);
+			qbVector3<double> GetTextureColor(const qbVector2<double> &uvCoords);
 
 			// *** Function to perturb the object normal to give the material normal.
-			qbVector<double> PerturbNormal(const qbVector<double> &normal, const qbVector<double> &uvCoords, const qbVector<double> &upVector);			
+			qbVector3<double> PerturbNormal(const qbVector3<double> &normal, const qbVector2<double> &uvCoords, const qbVector3<double> &upVector);			
 			
 			// Function to blend RGBA colors (blends into color1).
-			void BlendColors(qbVector<double> &color1, const qbVector<double> &color2);			
+			void BlendColors(qbVector4<double> &color1, const qbVector4<double> &color2);			
 										
 		public:
 			// Counter for the number of relection rays.
@@ -107,7 +110,7 @@ namespace qbRT
 			inline static int m_reflectionRayCount;
 			
 			// The ambient lighting conditions.
-			inline static qbVector<double> m_ambientColor {std::vector<double> {1.0, 1.0, 1.0}};
+			inline static qbVector3<double> m_ambientColor {std::vector<double> {1.0, 1.0, 1.0}};
 			inline static double m_ambientIntensity = 0.2;
 			
 			// List of texures assigned to this material.
@@ -123,7 +126,7 @@ namespace qbRT
 			bool m_hasNormalMap = false;
 		
 			// *** Store the material normal at the current point.
-			qbVector<double> m_localNormal;		
+			qbVector3<double> m_localNormal;		
 			
 			// ***
 			// Values for specular hightlights.

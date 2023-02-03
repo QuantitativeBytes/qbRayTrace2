@@ -49,24 +49,24 @@ qbRT::Texture::TextureBase::~TextureBase()
 }
 
 // Function to return the color at a given (U,V) location.
-qbVector<double> qbRT::Texture::TextureBase::GetColor(const qbVector<double> &uvCoords)
+qbVector4<double> qbRT::Texture::TextureBase::GetColor(const qbVector2<double> &uvCoords)
 {
 	// Setup the output vector.
-	qbVector<double> outputColor {4};
+	qbVector4<double> outputColor;
 	
 	// Return the output.
 	return outputColor;
 }
 
 // *** Function to return the actual texture value at a given (u,v) location.
-double qbRT::Texture::TextureBase::GetValue(const qbVector<double> &uvCoords)
+double qbRT::Texture::TextureBase::GetValue(const qbVector2<double> &uvCoords)
 {
 	// Return a default value.
 	return 0.0;
 }
 
 // Function to set the transform matrix.
-void qbRT::Texture::TextureBase::SetTransform(const qbVector<double> &translation, const double &rotation, const qbVector<double> &scale)
+void qbRT::Texture::TextureBase::SetTransform(const qbVector2<double> &translation, const double &rotation, const qbVector2<double> &scale)
 {
 	// Build the transform matrix.
 	qbMatrix2<double> rotationMatrix = {3, 3, std::vector<double> {
@@ -89,28 +89,28 @@ void qbRT::Texture::TextureBase::SetTransform(const qbVector<double> &translatio
 }
 
 // Function to blend colors.
-qbVector<double> qbRT::Texture::TextureBase::BlendColors(const std::vector<qbVector<double>> &inputColorList)
+qbVector3<double> qbRT::Texture::TextureBase::BlendColors(const std::vector<qbVector3<double>> &inputColorList)
 {
 	// Setup the output color.
-	qbVector<double> outputColor {3};
+	qbVector3<double> outputColor;
 	
 	// Return the output.
 	return outputColor;
 }
 
 // Function to apply the transform.
-qbVector<double> qbRT::Texture::TextureBase::ApplyTransform(const qbVector<double> &inputVector)
+qbVector2<double> qbRT::Texture::TextureBase::ApplyTransform(const qbVector2<double> &inputVector)
 {
 	// Copy the input vector and modify to have three elements.
-	qbVector<double> newInput {3};
+	qbVector3<double> newInput;
 	newInput.SetElement(0, inputVector.GetElement(0));
 	newInput.SetElement(1, inputVector.GetElement(1));
 	
 	// Apply the transform.
-	qbVector<double> result = m_transformMatrix * newInput;
+	qbVector3<double> result = m_transformMatrix * newInput;
 	
 	// Produce the output.
-	qbVector<double> output {2};
+	qbVector2<double> output;
 	output.SetElement(0, result.GetElement(0));
 	output.SetElement(1, result.GetElement(1));
 	

@@ -54,20 +54,20 @@ qbRT::Texture::Marble::~Marble()
 }
 
 // Function to return the color.
-qbVector<double> qbRT::Texture::Marble::GetColor(const qbVector<double> &uvCoords)
+qbVector4<double> qbRT::Texture::Marble::GetColor(const qbVector2<double> &uvCoords)
 {
 	// Apply the local transform to the (u,v) coordinates.
-	qbVector<double> inputLoc = uvCoords;
-	qbVector<double> newLoc = ApplyTransform(inputLoc);
+	qbVector2<double> inputLoc = uvCoords;
+	qbVector2<double> newLoc = ApplyTransform(inputLoc);
 	double newU = newLoc.GetElement(0);
 	double newV = newLoc.GetElement(1);
 	
-	qbVector<double> localColor {4};
+	qbVector4<double> localColor;
 	/* If no color map has been provided, then output purple. This should be
 		easily recognizable in the scene, indicating that something is wrong. */
 	if (!m_haveColorMap)
 	{
-		localColor = qbVector<double>{std::vector<double>{1.0, 0.0, 1.0, 1.0}};
+		localColor = qbVector4<double>{std::vector<double>{1.0, 0.0, 1.0, 1.0}};
 	}
 	else
 	{

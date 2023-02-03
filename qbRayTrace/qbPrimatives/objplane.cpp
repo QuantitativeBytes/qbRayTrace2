@@ -47,9 +47,9 @@ qbRT::ObjPlane::ObjPlane()
 	m_uvMapType = qbRT::uvPLANE;
 	
 	// Construct the default bounding box.
-	m_boundingBoxTransform.SetTransform(	qbVector<double>{std::vector<double>{0.0, 0.0, 0.0}},
-																				qbVector<double>{std::vector<double>{0.0, 0.0, 0.0}},
-																				qbVector<double>{std::vector<double>{1.0, 1.0, 0.01}});
+	m_boundingBoxTransform.SetTransform(	qbVector3<double>{std::vector<double>{0.0, 0.0, 0.0}},
+																				qbVector3<double>{std::vector<double>{0.0, 0.0, 0.0}},
+																				qbVector3<double>{std::vector<double>{1.0, 1.0, 0.01}});
 }
 
 // The destructor.
@@ -68,7 +68,7 @@ bool qbRT::ObjPlane::TestIntersection(	const qbRT::Ray &castRay, qbRT::DATA::hit
 	qbRT::Ray bckRay = m_transformMatrix.Apply(castRay, qbRT::BCKTFORM);
 	
 	// Copy the m_lab vector from bckRay and normalize it.
-	qbVector<double> k = bckRay.m_lab;
+	qbVector3<double> k = bckRay.m_lab;
 	// ****
 	//k.Normalize();
 	
@@ -92,18 +92,18 @@ bool qbRT::ObjPlane::TestIntersection(	const qbRT::Ray &castRay, qbRT::DATA::hit
 			if ((abs(u) < 1.0) && (abs(v) < 1.0))
 			{
 				// Compute the point of intersection.
-				qbVector<double> poi = bckRay.m_point1 + t * k;
+				qbVector3<double> poi = bckRay.m_point1 + t * k;
 				
 				// Transform the intersection point back into world coordinates.
 				hitData.poi = m_transformMatrix.Apply(poi, qbRT::FWDTFORM);
 				
 				// Compute the local normal.
-				//qbVector<double> localOrigin {std::vector<double> {0.0, 0.0, 0.0}};
-				//qbVector<double> globalOrigin = m_transformMatrix.Apply(localOrigin, qbRT::FWDTFORM);
+				//qbVector3<double> localOrigin {std::vector<double> {0.0, 0.0, 0.0}};
+				//qbVector3<double> globalOrigin = m_transformMatrix.Apply(localOrigin, qbRT::FWDTFORM);
 				//localNormal = m_transformMatrix.Apply(normalVector, qbRT::FWDTFORM) - globalOrigin;
 				//localNormal.Normalize();
 								
-				qbVector<double> normalVector {std::vector<double> {0.0, 0.0, -1.0}};
+				qbVector3<double> normalVector {std::vector<double> {0.0, 0.0, -1.0}};
 				hitData.normal = m_transformMatrix.ApplyNorm(normalVector);
 				hitData.normal.Normalize();
 				

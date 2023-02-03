@@ -45,23 +45,23 @@ qbRT::SimpleMaterial::~SimpleMaterial()
 }
 
 // Function to return the color.
-qbVector<double> qbRT::SimpleMaterial::ComputeColor(	const std::vector<std::shared_ptr<qbRT::ObjectBase>> &objectList,
+qbVector3<double> qbRT::SimpleMaterial::ComputeColor(	const std::vector<std::shared_ptr<qbRT::ObjectBase>> &objectList,
 																											const std::vector<std::shared_ptr<qbRT::LightBase>> &lightList,
 																											const std::shared_ptr<qbRT::ObjectBase> &currentObject,
-																											const qbVector<double> &intPoint, const qbVector<double> &localNormal,
+																											const qbVector3<double> &intPoint, const qbVector3<double> &localNormal,
 																											const qbRT::Ray &cameraRay)
 {
 	// Define the initial material colors.
-	qbVector<double> matColor	{3};
-	qbVector<double> refColor {3};
-	qbVector<double> difColor	{3};
-	qbVector<double> spcColor	{3};
+	qbVector3<double> matColor;
+	qbVector3<double> refColor;
+	qbVector3<double> difColor;
+	qbVector3<double> spcColor;
 	
 	// *** Apply any normals maps that may have been assigned.
-	qbVector<double> newNormal = localNormal;
+	qbVector3<double> newNormal = localNormal;
 	if (m_hasNormalMap)
 	{
-		qbVector<double> upVector = std::vector<double> {0.0, 0.0, -1.0};
+		qbVector3<double> upVector = std::vector<double> {0.0, 0.0, -1.0};
 		newNormal = PerturbNormal(newNormal, currentObject -> m_uvCoords, upVector);
 	}
 	
@@ -80,7 +80,7 @@ qbVector<double> qbRT::SimpleMaterial::ComputeColor(	const std::vector<std::shar
 	else
 	{
 		//difColor = ComputeDiffuseColor(objectList, lightList, currentObject, intPoint, newNormal, GetTextureColor(currentObject->m_uvCoords));
-		qbVector<double> textureColor = GetTextureColor(currentObject->m_uvCoords);
+		qbVector3<double> textureColor = GetTextureColor(currentObject->m_uvCoords);
 		difColor = ComputeSpecAndDiffuse(objectList, lightList, currentObject, intPoint, newNormal, textureColor, cameraRay);		
 	}
 	
@@ -104,12 +104,12 @@ qbVector<double> qbRT::SimpleMaterial::ComputeColor(	const std::vector<std::shar
 }
 
 // Function to compute the specular highlights.
-qbVector<double> qbRT::SimpleMaterial::ComputeSpecular(	const std::vector<std::shared_ptr<qbRT::ObjectBase>> &objectList,
+qbVector3<double> qbRT::SimpleMaterial::ComputeSpecular(	const std::vector<std::shared_ptr<qbRT::ObjectBase>> &objectList,
 																												const std::vector<std::shared_ptr<qbRT::LightBase>> &lightList,
-																												const qbVector<double> &intPoint, const qbVector<double> &localNormal,
+																												const qbVector3<double> &intPoint, const qbVector3<double> &localNormal,
 																												const qbRT::Ray &cameraRay)
 {
-	qbVector<double> spcColor	{3};
+	qbVector3<double> spcColor	{3};
 	double red = 0.0;
 	double green = 0.0;
 	double blue = 0.0;
@@ -121,19 +121,19 @@ qbVector<double> qbRT::SimpleMaterial::ComputeSpecular(	const std::vector<std::s
 		double intensity = 0.0;
 		
 		// Construct a vector pointing from the intersection point to the light.
-		qbVector<double> lightDir = (currentLight->m_location - intPoint).Normalized();
+		qbVector3<double> lightDir = (currentLight->m_location - intPoint).Normalized();
 		
 		// Compute a start point.
-		qbVector<double> startPoint = intPoint + (lightDir * 0.001);
+		qbVector3<double> startPoint = intPoint + (lightDir * 0.001);
 		
 		// Construct a ray from the point of intersection to the light.
 		qbRT::Ray lightRay (startPoint, startPoint + lightDir);
 		
 		/* Loop through all objects in the scene to check if any
 			obstruct light from this source. */
-		//qbVector<double> poi				{3};
-		//qbVector<double> poiNormal	{3};
-		//qbVector<double> poiColor		{3};
+		//qbVector3<double> poi				{3};
+		//qbVector3<double> poiNormal	{3};
+		//qbVector3<double> poiColor		{3};
 		qbRT::DATA::hitData hitData;
 		bool validInt = false;
 		for (auto sceneObject : objectList)
@@ -148,14 +148,14 @@ qbVector<double> qbRT::SimpleMaterial::ComputeSpecular(	const std::vector<std::s
 		if (!validInt)
 		{
 			// Compute the reflection vector.
-			qbVector<double> d = lightRay.m_lab;
-			qbVector<double> r = d - (2 * qbVector<double>::dot(d, localNormal) * localNormal);
+			qbVector3<double> d = lightRay.m_lab;
+			qbVector3<double> r = d - (2 * qbVector3<double>::dot(d, localNormal) * localNormal);
 			r.Normalize();
 			
 			// Compute the dot product.
-			qbVector<double> v = cameraRay.m_lab;
+			qbVector3<double> v = cameraRay.m_lab;
 			v.Normalize();
-			double dotProduct = qbVector<double>::dot(r, v);
+			double dotProduct = qbVector3<double>::dot(r, v);
 			
 			// Only proceed if the dot product is positive.
 			if (dotProduct > 0.0)

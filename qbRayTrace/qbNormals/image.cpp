@@ -45,7 +45,7 @@ qbRT::Normal::Image::~Image()
 // ************************************************************************
 // Function to compute the actual perturbation to the surface normal.
 // ************************************************************************
-qbVector<double> qbRT::Normal::Image::ComputePerturbation(const qbVector<double> &normal, const qbVector<double> &uvCoords)
+qbVector3<double> qbRT::Normal::Image::ComputePerturbation(const qbVector3<double> &normal, const qbVector2<double> &uvCoords)
 {
 	double xD = 0.0;
 	double yD = 0.0;
@@ -53,8 +53,8 @@ qbVector<double> qbRT::Normal::Image::ComputePerturbation(const qbVector<double>
 	if (m_imageLoaded)
 	{	
 		// Apply the local transform to the (u,v) coordinates.
-		qbVector<double> inputLoc = uvCoords;
-		qbVector<double> newLoc = ApplyTransform(inputLoc);		
+		qbVector2<double> inputLoc = uvCoords;
+		qbVector2<double> newLoc = ApplyTransform(inputLoc);		
 		double u = newLoc.GetElement(0);
 		double v = newLoc.GetElement(1);
 		
@@ -99,7 +99,7 @@ qbVector<double> qbRT::Normal::Image::ComputePerturbation(const qbVector<double>
 		yD = -yD;
 	}	
 		
-	qbVector<double> perturbation = std::vector<double> {xD, yD, zD};	
+	qbVector3<double> perturbation = std::vector<double> {xD, yD, zD};	
 	return PerturbNormal(normal, perturbation);
 }
 

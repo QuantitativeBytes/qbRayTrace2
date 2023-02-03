@@ -34,6 +34,9 @@
 #define SDFFUNC_H
 
 #include "../qbLinAlg/qbVector.h"
+#include "../qbLinAlg/qbVector2.hpp"
+#include "../qbLinAlg/qbVector3.hpp"
+#include "../qbLinAlg/qbVector4.hpp"
 
 namespace qbRT
 {
@@ -41,9 +44,9 @@ namespace qbRT
 	{
 		namespace SDF
 		{
-			double Sphere(const qbVector<double> &p, const qbVector<double> &center, const qbVector<double> &parms);
-			double Torus(const qbVector<double> &p, const qbVector<double> &center, const qbVector<double> &parms);
-			double Box(const qbVector<double> &p, const qbVector<double> &center, const qbVector<double> &parms);
+			double Sphere(const qbVector3<double> &p, const qbVector3<double> &center, const qbVector3<double> &parms);
+			double Torus(const qbVector3<double> &p, const qbVector3<double> &center, const qbVector3<double> &parms);
+			double Box(const qbVector3<double> &p, const qbVector3<double> &center, const qbVector3<double> &parms);
 		}
 	}
 }

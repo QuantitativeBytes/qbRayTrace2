@@ -37,6 +37,9 @@
 
 #include "CApp.h"
 #include "./qbRayTrace/qbLinAlg/qbVector.h"
+#include "./qbRayTrace/qbLinAlg/qbVector2.hpp"
+#include "./qbRayTrace/qbLinAlg/qbVector3.hpp"
+#include "./qbRayTrace/qbLinAlg/qbVector4.hpp"
 
 // The constructor (default)
 CApp::CApp()
@@ -75,9 +78,9 @@ bool CApp::OnInit()
 		// Setup a texture.
 		/*qbRT::Texture::Image testTexture;
 		testTexture.LoadImage("testImage.bmp");
-		testTexture.SetTransform(	qbVector<double>{std::vector<double>{0.0, 0.0}},
+		testTexture.SetTransform(	qbVector3<double>{std::vector<double>{0.0, 0.0}},
 															0.0,
-															qbVector<double>{std::vector<double>{4.0, 4.0}}	);
+															qbVector3<double>{std::vector<double>{4.0, 4.0}}	);
 															
 		// Render the texture.
 		for (int y=0; y<ySize; ++y)
@@ -87,10 +90,10 @@ bool CApp::OnInit()
 				// Compute u,v
 				double u = (static_cast<double>(x) / (static_cast<double>(xSize) / 2.0)) - 1.0;
 				double v = (static_cast<double>(y) / (static_cast<double>(ySize) / 2.0)) - 1.0;
-				qbVector<double> uvCoords {std::vector<double> {u, v}};
+				qbVector3<double> uvCoords {std::vector<double> {u, v}};
 				
 				// Get the color from the texture.
-				qbVector<double> pixelColor = testTexture.GetColor(uvCoords);
+				qbVector3<double> pixelColor = testTexture.GetColor(uvCoords);
 				
 				// Update this pixel of the image.
 				m_image.SetPixel(x, y, pixelColor.GetElement(0), pixelColor.GetElement(1), pixelColor.GetElement(2));
@@ -175,7 +178,7 @@ void CApp::OnExit()
 }
 
 // PRIVATE FUNCTIONS.
-void CApp::PrintVector(const qbVector<double> &inputVector)
+void CApp::PrintVector(const qbVector3<double> &inputVector)
 {
 	int nRows = inputVector.GetNumDims();
 	for (int row=0; row<nRows; ++row)

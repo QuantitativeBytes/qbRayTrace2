@@ -41,9 +41,9 @@ qbRT::Box::Box()
 	m_uvMapType = qbRT::uvBOX;
 	
 	// Construct the default bounding box.
-	m_boundingBoxTransform.SetTransform(	qbVector<double>{std::vector<double>{0.0, 0.0, 0.0}},
-																				qbVector<double>{std::vector<double>{0.0, 0.0, 0.0}},
-																				qbVector<double>{std::vector<double>{1.0, 1.0, 1.0}});
+	m_boundingBoxTransform.SetTransform(	qbVector3<double>{std::vector<double>{0.0, 0.0, 0.0}},
+																				qbVector3<double>{std::vector<double>{0.0, 0.0, 0.0}},
+																				qbVector3<double>{std::vector<double>{1.0, 1.0, 1.0}});
 }
 
 // The destructor.
@@ -72,7 +72,7 @@ bool qbRT::Box::TestIntersection(const qbRT::Ray &castRay, qbRT::DATA::hitData &
 	double az = bckRay.m_point1.GetElement(2);
 	
 	// Extract the value of k.
-	qbVector<double> k = bckRay.m_lab;
+	qbVector3<double> k = bckRay.m_lab;
 	//k.Normalize();
 	double kx = k.GetElement(0);
 	double ky = k.GetElement(1);
@@ -160,10 +160,10 @@ bool qbRT::Box::TestIntersection(const qbRT::Ray &castRay, qbRT::DATA::hitData &
 	if (validIntersection)
 	{
 		// Compute the point of intersection.
-		qbVector<double> poi = bckRay.m_point1 + finalT * k;	
+		qbVector3<double> poi = bckRay.m_point1 + finalT * k;	
 	
 		// Compute the normal vector
-		qbVector<double> normalVector	{3};
+		qbVector3<double> normalVector	{3};
 		switch (finalIndex)
 		{
 			case 0:
@@ -236,7 +236,7 @@ bool qbRT::Box::TestIntersection(const qbRT::Ray &castRay)
 	double az = bckRay.m_point1.GetElement(2);
 	
 	// Extract the value of k.
-	qbVector<double> k = bckRay.m_lab;
+	qbVector3<double> k = bckRay.m_lab;
 	double kx = k.GetElement(0);
 	double ky = k.GetElement(1);
 	double kz = k.GetElement(2);

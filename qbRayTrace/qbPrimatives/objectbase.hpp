@@ -38,6 +38,9 @@
 #include <memory>
 #include "../qbutils.hpp"
 #include "../qbLinAlg/qbVector.h"
+#include "../qbLinAlg/qbVector2.hpp"
+#include "../qbLinAlg/qbVector3.hpp"
+#include "../qbLinAlg/qbVector4.hpp"
 #include "../ray.hpp"
 #include "../gtfm.hpp"
 
@@ -65,9 +68,9 @@ namespace qbRT
 			
 			// ***
 			// Function to get the extents of the object.
-			virtual void GetExtents(qbVector<double> &xLim, qbVector<double> &yLim, qbVector<double> &zLim);
-			virtual void GetExtents(const qbRT::GTform &parentTransformMatrix, qbVector<double> &xLim, qbVector<double> &yLim, qbVector<double> &zLim);
-			std::vector<qbVector<double>> ConstructCube(double xMin, double xMax, double yMin, double yMax, double zMin, double zMax);			
+			virtual void GetExtents(qbVector2<double> &xLim, qbVector2<double> &yLim, qbVector2<double> &zLim);
+			virtual void GetExtents(const qbRT::GTform &parentTransformMatrix, qbVector2<double> &xLim, qbVector2<double> &yLim, qbVector2<double> &zLim);
+			std::vector<qbVector3<double>> ConstructCube(double xMin, double xMax, double yMin, double yMax, double zMin, double zMax);			
 			
 			// Function to set the transform matrix.
 			void SetTransformMatrix(const qbRT::GTform &transformMatrix);
@@ -80,7 +83,7 @@ namespace qbRT
 			bool AssignMaterial(const std::shared_ptr<qbRT::MaterialBase> &objectMaterial);
 			
 			// Function to compute UV space.
-			void ComputeUV(const qbVector<double> &localPOI, qbVector<double> &uvCoords);			
+			void ComputeUV(const qbVector3<double> &localPOI, qbVector2<double> &uvCoords);			
 			
 		// Public member variables.
 		public:
@@ -88,7 +91,7 @@ namespace qbRT
 			std::string m_tag;
 		
 			// The base colour of the object.
-			qbVector<double> m_baseColor {3};
+			qbVector3<double> m_baseColor {3};
 			
 			// The geometric transform applied to the object.
 			qbRT::GTform m_transformMatrix;
@@ -103,7 +106,7 @@ namespace qbRT
 			bool m_isVisible = true;
 			
 			// Store the (u,v) coordinates from a detected intersection.
-			qbVector<double> m_uvCoords {2};
+			qbVector2<double> m_uvCoords;
 			
 			// Control what type of UV mapping to apply to this object.
 			int m_uvMapType = qbRT::uvSPHERE;			

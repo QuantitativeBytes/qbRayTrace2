@@ -34,6 +34,9 @@
 
 #include <vector>
 #include <random>
+#include "../qbLinAlg/qbVector2.hpp"
+#include "../qbLinAlg/qbVector3.hpp"
+#include "../qbLinAlg/qbVector4.hpp"
 
 namespace qbRT
 {

@@ -45,14 +45,14 @@ qbRT::Texture::ColorMap::~ColorMap()
 }
 
 // Function to set a stop.
-void qbRT::Texture::ColorMap::SetStop(double position, const qbVector<double> &value)
+void qbRT::Texture::ColorMap::SetStop(double position, const qbVector4<double> &value)
 {
 	m_stopPositions.push_back(position);
 	m_stopValues.push_back(value);
 }
 
 // Function to get the color at a specified position.
-qbVector<double> qbRT::Texture::ColorMap::GetColor(double position)
+qbVector4<double> qbRT::Texture::ColorMap::GetColor(double position)
 {
 	// Find the closest stops to the current position.
 	int numStops = m_stopPositions.size();

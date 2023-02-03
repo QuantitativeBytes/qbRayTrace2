@@ -56,9 +56,9 @@ qbRT::SHAPES::CompositeBase::~CompositeBase()
 void qbRT::SHAPES::CompositeBase::AddSubShape(std::shared_ptr<qbRT::ObjectBase> subShape)
 {
 	// Modify the extents of this shape to accomodate the new sub-shape.
-	qbVector<double> xLim (2);
-	qbVector<double> yLim (2);
-	qbVector<double> zLim (2);
+	qbVector2<double> xLim;
+	qbVector2<double> yLim;
+	qbVector2<double> zLim;
 	subShape -> GetExtents(xLim, yLim, zLim);
 	if (xLim.GetElement(0) < m_xLim.GetElement(0))
 		m_xLim.SetElement(0, xLim.GetElement(0));
@@ -87,9 +87,9 @@ void qbRT::SHAPES::CompositeBase::AddSubShape(std::shared_ptr<qbRT::ObjectBase> 
 	double zCentre = m_zLim.GetElement(0) + (zSize / 2.0);
 	
 	// Update the transform matrix.
-	m_boundingBoxTransform.SetTransform(	qbVector<double>{std::vector<double>{xCentre, yCentre, zCentre}},
-																				qbVector<double>{std::vector<double>{0.0, 0.0, 0.0}},
-																				qbVector<double>{std::vector<double>{xSize/2.0, ySize/2.0, zSize/2.0}});
+	m_boundingBoxTransform.SetTransform(	qbVector3<double>{std::vector<double>{xCentre, yCentre, zCentre}},
+																				qbVector3<double>{std::vector<double>{0.0, 0.0, 0.0}},
+																				qbVector3<double>{std::vector<double>{xSize/2.0, ySize/2.0, zSize/2.0}});
 																				
 	// And modify the bounding box.
 	m_boundingBox.SetTransformMatrix(m_boundingBoxTransform);
@@ -106,9 +106,9 @@ void qbRT::SHAPES::CompositeBase::UpdateBounds()
 	m_yLim = std::vector<double>{1e6, -1e6};
 	m_zLim = std::vector<double>{1e6, -1e6};
 	
-	qbVector<double> xLim (2);
-	qbVector<double> yLim (2);
-	qbVector<double> zLim (2);
+	qbVector2<double> xLim;
+	qbVector2<double> yLim;
+	qbVector2<double> zLim;
 	for (auto shape : m_shapeList)
 	{
 		shape -> GetExtents(xLim, yLim, zLim);
@@ -140,9 +140,9 @@ void qbRT::SHAPES::CompositeBase::UpdateBounds()
 	double zCentre = m_zLim.GetElement(0) + (zSize / 2.0);
 	
 	// Update the transform matrix.
-	m_boundingBoxTransform.SetTransform(	qbVector<double>{std::vector<double>{xCentre, yCentre, zCentre}},
-																				qbVector<double>{std::vector<double>{0.0, 0.0, 0.0}},
-																				qbVector<double>{std::vector<double>{xSize/2.0, ySize/2.0, zSize/2.0}});
+	m_boundingBoxTransform.SetTransform(	qbVector3<double>{std::vector<double>{xCentre, yCentre, zCentre}},
+																				qbVector3<double>{std::vector<double>{0.0, 0.0, 0.0}},
+																				qbVector3<double>{std::vector<double>{xSize/2.0, ySize/2.0, zSize/2.0}});
 																				
 	// And modify the bounding box.
 	m_boundingBox.SetTransformMatrix(m_boundingBoxTransform);	
@@ -150,10 +150,10 @@ void qbRT::SHAPES::CompositeBase::UpdateBounds()
 }
 
 // Override the function to return the extents.
-void qbRT::SHAPES::CompositeBase::GetExtents(qbVector<double> &xLim, qbVector<double> &yLim, qbVector<double> &zLim)
+void qbRT::SHAPES::CompositeBase::GetExtents(qbVector2<double> &xLim, qbVector2<double> &yLim, qbVector2<double> &zLim)
 {
 	// Construct corners of a cube based on the current limits.
-	std::vector<qbVector<double>> cornerPoints = ConstructCube(	m_xLim.GetElement(0), m_xLim.GetElement(1), 
+	std::vector<qbVector3<double>> cornerPoints = ConstructCube(	m_xLim.GetElement(0), m_xLim.GetElement(1), 
 																															m_yLim.GetElement(0), m_yLim.GetElement(1), 
 																															m_zLim.GetElement(0), m_zLim.GetElement(1));
 	
@@ -207,14 +207,14 @@ bool qbRT::SHAPES::CompositeBase::TestIntersection(	const qbRT::Ray &castRay, qb
 	if (!m_useBoundingBox || m_boundingBox.TestIntersection(bckRay))
 	{
 		// We intersected with the bounding box, so check everything else.
-		qbVector<double> worldIntPoint	{3};
+		qbVector3<double> worldIntPoint;
 		double currentDist = 100e6;
 		qbRT::DATA::hitData tempHitData;
 		int validShapeIndex = TestIntersections(castRay, bckRay, worldIntPoint, currentDist, tempHitData);
 		if (validShapeIndex > -1)
 		{
 			// An intersection with an internal sub-shape.
-			qbVector<double> newNormal = m_transformMatrix.ApplyNorm(tempHitData.normal);
+			qbVector3<double> newNormal = m_transformMatrix.ApplyNorm(tempHitData.normal);
 			newNormal.Normalize();
 			tempHitData.hitObject -> ComputeUV(tempHitData.localPOI, hitData.uvCoords);
 			m_uvCoords = hitData.uvCoords;
@@ -246,7 +246,7 @@ bool qbRT::SHAPES::CompositeBase::TestIntersection(	const qbRT::Ray &castRay, qb
 // Test for intersections with the sub-object list.
 int qbRT::SHAPES::CompositeBase::TestIntersections(	const qbRT::Ray &castRay,
 																										const qbRT::Ray &bckRay,
-																										qbVector<double> &worldIntPoint,
+																										qbVector3<double> &worldIntPoint,
 																										double &currentDist,
 																										qbRT::DATA::hitData &tempHitData	)
 {
@@ -262,7 +262,7 @@ int qbRT::SHAPES::CompositeBase::TestIntersections(	const qbRT::Ray &castRay,
 			if (shapeTest)
 			{
 				// Transform the intersection point back into world coordinates.
-				qbVector<double> intPoint = m_transformMatrix.Apply(hitData.poi, qbRT::FWDTFORM);
+				qbVector3<double> intPoint = m_transformMatrix.Apply(hitData.poi, qbRT::FWDTFORM);
 				
 				// Compute the distance.
 				double dist = (intPoint - castRay.m_point1).norm();

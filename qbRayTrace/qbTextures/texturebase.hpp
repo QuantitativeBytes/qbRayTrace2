@@ -39,6 +39,9 @@
 #include <memory>
 #include "../qbLinAlg/qbMatrix.h"
 #include "../qbLinAlg/qbVector.h"
+#include "../qbLinAlg/qbVector2.hpp"
+#include "../qbLinAlg/qbVector3.hpp"
+#include "../qbLinAlg/qbVector4.hpp"
 #include "../ray.hpp"
 
 namespace qbRT
@@ -54,19 +57,19 @@ namespace qbRT
 				
 				// Function to retrun the color at a given point in the (u,v) coordinate system.
 				// Note that the color is returned as a 4-dimensional vector (RGBA).
-				virtual qbVector<double> GetColor(const qbVector<double> &uvCoords);
+				virtual qbVector4<double> GetColor(const qbVector2<double> &uvCoords);
 				
 				// *** Function to return the actual texture value at a given point in the (u,v) coordinate system.
-				virtual double GetValue(const qbVector<double> &uvCoords);				
+				virtual double GetValue(const qbVector2<double> &uvCoords);				
 				
 				// Function to set transform.
-				void SetTransform(const qbVector<double> &translation, const double &rotation, const qbVector<double> &scale);
+				void SetTransform(const qbVector2<double> &translation, const double &rotation, const qbVector2<double> &scale);
 				
 				// Function to blend RGBA colors, returning a 3-dimensional (RGB) result.
-				static qbVector<double> BlendColors(const std::vector<qbVector<double>> &inputColorList);
+				static qbVector3<double> BlendColors(const std::vector<qbVector3<double>> &inputColorList);
 				
 				// Function to apply the local transform to the given input vector.
-				qbVector<double> ApplyTransform(const qbVector<double> &inputVector);
+				qbVector2<double> ApplyTransform(const qbVector2<double> &inputVector);
 				
 			private:
 			

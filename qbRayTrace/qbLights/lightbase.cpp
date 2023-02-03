@@ -49,10 +49,10 @@ qbRT::LightBase::~LightBase()
 }
 
 // Function to compute illumination.
-bool qbRT::LightBase::ComputeIllumination(	const qbVector<double> &intPoint, const qbVector<double> &localNormal,
+bool qbRT::LightBase::ComputeIllumination(	const qbVector3<double> &intPoint, const qbVector3<double> &localNormal,
 																						const std::vector<std::shared_ptr<qbRT::ObjectBase>> &objectList,
 																						const std::shared_ptr<qbRT::ObjectBase> &currentObject,
-																						qbVector<double> &color, double &intensity)
+																						qbVector3<double> &color, double &intensity)
 {
 	return false;
 }

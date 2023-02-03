@@ -38,6 +38,9 @@
 #define GTFM_H
 
 #include "./qbLinAlg/qbVector.h"
+#include "./qbLinAlg/qbVector2.hpp"
+#include "./qbLinAlg/qbVector3.hpp"
+#include "./qbLinAlg/qbVector4.hpp"
 #include "./qbLinAlg/qbMatrix.h"
 #include "ray.hpp"
 
@@ -55,15 +58,15 @@ namespace qbRT
 			~GTform();
 			
 			// Construct from three vectors.
-			GTform(const qbVector<double> &translation, const qbVector<double> &rotation, const qbVector<double> &scale);
+			GTform(const qbVector3<double> &translation, const qbVector3<double> &rotation, const qbVector3<double> &scale);
 			
 			// Construct from a pair of matrices.
 			GTform(const qbMatrix2<double> &fwd, const qbMatrix2<double> &bck);
 			
 			// Function to set translation, rotation and scale components.
-			void SetTransform(	const qbVector<double> &translation,
-													const qbVector<double> &rotation,
-													const qbVector<double> &scale);
+			void SetTransform(	const qbVector3<double> &translation,
+													const qbVector3<double> &rotation,
+													const qbVector3<double> &scale);
 													
 			void SetTransform(	const qbMatrix2<double> &fwd, const qbMatrix2<double> &bck);
 													
@@ -73,8 +76,8 @@ namespace qbRT
 			
 			// Function to apply the transform.
 			qbRT::Ray Apply(const qbRT::Ray &inputRay, bool dirFlag);
-			qbVector<double> Apply(const qbVector<double> &inputVector, bool dirFlag);
-			qbVector<double> ApplyNorm(const qbVector<double> &inputVector);
+			qbVector3<double> Apply(const qbVector3<double> &inputVector, bool dirFlag);
+			qbVector3<double> ApplyNorm(const qbVector3<double> &inputVector);
 			
 			// Function to return the normal transform matrix.
 			qbMatrix2<double> GetNormalTransform();
@@ -89,7 +92,7 @@ namespace qbRT
 			void PrintMatrix(bool dirFlag);
 			
 			// Function to allow printing of vectors.
-			static void PrintVector(const qbVector<double> &vector);
+			static void PrintVector(const qbVector3<double> &vector);
 			
 		private:
 			void Print(const qbMatrix2<double> &matrix);

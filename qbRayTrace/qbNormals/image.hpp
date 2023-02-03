@@ -52,7 +52,7 @@ namespace qbRT
 				bool LoadImage(std::string fileName);
 			
 				// Function to compute the perturbation.
-				virtual qbVector<double> ComputePerturbation(const qbVector<double> &normal, const qbVector<double> &uvCoords) override;
+				virtual qbVector3<double> ComputePerturbation(const qbVector3<double> &normal, const qbVector2<double> &uvCoords) override;
 				
 			private:
 				// Functions to handle interpolation.

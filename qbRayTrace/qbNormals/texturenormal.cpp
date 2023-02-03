@@ -50,14 +50,14 @@ void qbRT::Normal::TextureNormal::AssignBaseTexture(const std::shared_ptr<qbRT::
 	m_haveTexture = true;
 }
 
-qbVector<double> qbRT::Normal::TextureNormal::ComputePerturbation(const qbVector<double> &normal, const qbVector<double> &uvCoords)
+qbVector3<double> qbRT::Normal::TextureNormal::ComputePerturbation(const qbVector3<double> &normal, const qbVector2<double> &uvCoords)
 {
 	double x = 0.0;
 	double y = 0.0;
 	double z = 0.0;
 	if (m_haveTexture)
 	{
-		qbVector<double> uvGrad = TextureDiff(m_p_baseTexture, uvCoords);
+		qbVector2<double> uvGrad = TextureDiff(m_p_baseTexture, uvCoords);
 		if (!m_reverse)
 		{
 			x = -uvGrad.GetElement(0) * m_scale;
@@ -70,6 +70,6 @@ qbVector<double> qbRT::Normal::TextureNormal::ComputePerturbation(const qbVector
 		}
 	}
 	
-	qbVector<double> perturbation = std::vector<double> {x, y, z};
+	qbVector3<double> perturbation = std::vector<double> {x, y, z};
 	return PerturbNormal(normal, perturbation);
 }

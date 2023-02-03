@@ -40,6 +40,9 @@
 #define CAMERA_H
 
 #include "./qbLinAlg/qbVector.h"
+#include "./qbLinAlg/qbVector2.hpp"
+#include "./qbLinAlg/qbVector3.hpp"
+#include "./qbLinAlg/qbVector4.hpp"
 #include "ray.hpp"
 
 namespace qbRT
@@ -51,20 +54,20 @@ namespace qbRT
 			Camera();
 			
 			// Functions to set camera parameters.
-			void SetPosition	(const qbVector<double> &newPosition);
-			void SetLookAt		(const qbVector<double> &newLookAt);
-			void SetUp				(const qbVector<double> &upVector);
+			void SetPosition	(const qbVector3<double> &newPosition);
+			void SetLookAt		(const qbVector3<double> &newLookAt);
+			void SetUp				(const qbVector3<double> &upVector);
 			void SetLength		(double newLength);
 			void SetHorzSize	(double newSize);
 			void SetAspect		(double newAspect);
 			
 			// Functions to return camera parameters.
-			qbVector<double>	GetPosition();
-			qbVector<double>	GetLookAt();
-			qbVector<double>	GetUp();
-			qbVector<double>	GetU();
-			qbVector<double>	GetV();
-			qbVector<double>	GetScreenCentre();
+			qbVector3<double>	GetPosition();
+			qbVector3<double>	GetLookAt();
+			qbVector3<double>	GetUp();
+			qbVector3<double>	GetU();
+			qbVector3<double>	GetV();
+			qbVector3<double>	GetScreenCentre();
 			double						GetLength();
 			double						GetHorzSize();
 			double						GetAspect();
@@ -76,17 +79,17 @@ namespace qbRT
 			void UpdateCameraGeometry();
 			
 		private:
-			qbVector<double> m_cameraPosition	{3};
-			qbVector<double> m_cameraLookAt		{3};
-			qbVector<double> m_cameraUp				{3};
+			qbVector3<double> m_cameraPosition	{3};
+			qbVector3<double> m_cameraLookAt		{3};
+			qbVector3<double> m_cameraUp				{3};
 			double m_cameraLength;
 			double m_cameraHorzSize;
 			double m_cameraAspectRatio;
 			
-			qbVector<double> m_alignmentVector				{3};
-			qbVector<double> m_projectionScreenU			{3};
-			qbVector<double> m_projectionScreenV			{3};
-			qbVector<double> m_projectionScreenCentre	{3};
+			qbVector3<double> m_alignmentVector				{3};
+			qbVector3<double> m_projectionScreenU			{3};
+			qbVector3<double> m_projectionScreenV			{3};
+			qbVector3<double> m_projectionScreenCentre	{3};
 			
 	};
 }

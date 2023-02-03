@@ -53,7 +53,7 @@ qbRT::GTform::~GTform()
 }
 
 // Construct from three vectors.
-qbRT::GTform::GTform(const qbVector<double> &translation, const qbVector<double> &rotation, const qbVector<double> &scale)
+qbRT::GTform::GTform(const qbVector3<double> &translation, const qbVector3<double> &rotation, const qbVector3<double> &scale)
 {
 	SetTransform(translation, rotation, scale);
 	ExtractLinearTransform();
@@ -75,9 +75,9 @@ qbRT::GTform::GTform(const qbMatrix2<double> &fwd, const qbMatrix2<double> &bck)
 }
 
 // Function to set the transform.
-void qbRT::GTform::SetTransform(	const qbVector<double> &translation,
-																	const qbVector<double> &rotation,
-																	const qbVector<double> &scale)
+void qbRT::GTform::SetTransform(	const qbVector3<double> &translation,
+																	const qbVector3<double> &rotation,
+																	const qbVector3<double> &scale)
 {
 	// Define a matrix for each component of the transform.
 	qbMatrix2<double> translationMatrix	{4, 4};
@@ -173,17 +173,17 @@ qbRT::Ray qbRT::GTform::Apply(const qbRT::Ray &inputRay, bool dirFlag)
 	return outputRay;
 }
 
-qbVector<double> qbRT::GTform::Apply(const qbVector<double> &inputVector, bool dirFlag)
+qbVector3<double> qbRT::GTform::Apply(const qbVector3<double> &inputVector, bool dirFlag)
 {
 	// Convert inputVector to a 4-element vector.
 	std::vector<double> tempData {	inputVector.GetElement(0),
 																	inputVector.GetElement(1),
 																	inputVector.GetElement(2),
 																	1.0 };
-	qbVector<double> tempVector {tempData};
+	qbVector4<double> tempVector {tempData};
 	
 	// Create a vector for the result.
-	qbVector<double> resultVector;
+	qbVector4<double> resultVector;
 	
 	if (dirFlag)
 	{
@@ -197,18 +197,18 @@ qbVector<double> qbRT::GTform::Apply(const qbVector<double> &inputVector, bool d
 	}
 	
 	// Reform the output as a 3-element vector.
-	qbVector<double> outputVector {std::vector<double> {	resultVector.GetElement(0),
+	qbVector3<double> outputVector {std::vector<double> {	resultVector.GetElement(0),
 																												resultVector.GetElement(1),
 																												resultVector.GetElement(2) }};
 																					
 	return outputVector;
 }
 
-qbVector<double> qbRT::GTform::ApplyNorm(const qbVector<double> &inputVector)
+qbVector3<double> qbRT::GTform::ApplyNorm(const qbVector3<double> &inputVector)
 {
 
 	// Apply the transform and return the result.
-	qbVector<double> result = m_lintfm * inputVector;
+	qbVector3<double> result = m_lintfm * inputVector;
 	return result;
 	
 }
@@ -274,7 +274,7 @@ void qbRT::GTform::Print(const qbMatrix2<double> &matrix)
 }
 
 // Function to print vectors.
-void qbRT::GTform::PrintVector(const qbVector<double> &inputVector)
+void qbRT::GTform::PrintVector(const qbVector3<double> &inputVector)
 {
 	int nRows = inputVector.GetNumDims();
 	for (int row = 0; row < nRows; ++row)

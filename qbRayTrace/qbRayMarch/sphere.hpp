@@ -49,7 +49,7 @@ namespace qbRT
 				
 			private:
 				// Private object function.
-				double ObjectFcn(qbVector<double> *location, qbVector<double> *parms);
+				double ObjectFcn(qbVector3<double> *location, qbVector3<double> *parms);
 				
 		};
 	}
