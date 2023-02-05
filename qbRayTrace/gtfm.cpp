@@ -176,11 +176,12 @@ qbRT::Ray qbRT::GTform::Apply(const qbRT::Ray &inputRay, bool dirFlag)
 qbVector3<double> qbRT::GTform::Apply(const qbVector3<double> &inputVector, bool dirFlag)
 {
 	// Convert inputVector to a 4-element vector.
-	std::vector<double> tempData {	inputVector.GetElement(0),
-																	inputVector.GetElement(1),
-																	inputVector.GetElement(2),
-																	1.0 };
-	qbVector4<double> tempVector {tempData};
+	//std::vector<double> tempData {	inputVector.GetElement(0),
+	//																inputVector.GetElement(1),
+	//																inputVector.GetElement(2),
+	//																1.0 };
+	//qbVector4<double> tempVector {tempData};
+	qbVector4<double> tempVector {inputVector.GetElement(0), inputVector.GetElement(1), inputVector.GetElement(2), 1.0};
 	
 	// Create a vector for the result.
 	qbVector4<double> resultVector;
@@ -197,10 +198,10 @@ qbVector3<double> qbRT::GTform::Apply(const qbVector3<double> &inputVector, bool
 	}
 	
 	// Reform the output as a 3-element vector.
-	qbVector3<double> outputVector {std::vector<double> {	resultVector.GetElement(0),
-																												resultVector.GetElement(1),
-																												resultVector.GetElement(2) }};
-																					
+	//qbVector3<double> outputVector {std::vector<double> {	resultVector.GetElement(0),
+	//																											resultVector.GetElement(1),
+	//																											resultVector.GetElement(2) }};
+	qbVector3<double> outputVector {resultVector.GetElement(0), resultVector.GetElement(1), resultVector.GetElement(2)};
 	return outputVector;
 }
 
