@@ -5,7 +5,7 @@ linkTarget = qbRay
 LIBS = -lSDL2
 
 # Define any flags.
-CFLAGS = -std=c++17 -Ofast -g
+CFLAGS = -std=c++17 -Ofast
 
 # Define the object files that we need to use.
 objects =	main.o \
