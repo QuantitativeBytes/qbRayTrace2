@@ -103,7 +103,7 @@ bool qbRT::RM::RayMarchBase::TestIntersection(	const qbRT::Ray &castRay, qbRT::D
 			hitData.poi = m_transformMatrix.Apply(currentLoc, qbRT::FWDTFORM);
 			
 			// Compute the local normal.
-			qbVector3<double> surfaceNormal {3};
+			qbVector3<double> surfaceNormal;
 
 			/*
 			 Note the extra code here to compute an offset location from which
