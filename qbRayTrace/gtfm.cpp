@@ -60,14 +60,16 @@ qbRT::GTform::GTform(const qbVector3<double> &translation, const qbVector3<doubl
 }
 
 // Construct from a pair of matrices.
-qbRT::GTform::GTform(const qbMatrix2<double> &fwd, const qbMatrix2<double> &bck)
+qbRT::GTform::GTform(const qbMatrix44<double> &fwd, const qbMatrix44<double> &bck)
 {
+	/*
 	// Verify that the inputs are 4x4.
 	if (	(fwd.GetNumRows() != 4) || (fwd.GetNumCols() != 4) ||
 				(bck.GetNumRows() != 4) || (bck.GetNumCols() != 4))
 	{
 		throw std::invalid_argument("Cannot construct GTform, inputs are not all 4x4.");
 	}
+	*/
 	
 	m_fwdtfm = fwd;
 	m_bcktfm = bck;
@@ -80,11 +82,11 @@ void qbRT::GTform::SetTransform(	const qbVector3<double> &translation,
 																	const qbVector3<double> &scale)
 {
 	// Define a matrix for each component of the transform.
-	qbMatrix2<double> translationMatrix	{4, 4};
-	qbMatrix2<double> rotationMatrixX		{4, 4};
-	qbMatrix2<double>	rotationMatrixY		{4, 4};
-	qbMatrix2<double> rotationMatrixZ		{4, 4};
-	qbMatrix2<double>	scaleMatrix				{4, 4};
+	qbMatrix44<double> translationMatrix;
+	qbMatrix44<double> rotationMatrixX;
+	qbMatrix44<double>	rotationMatrixY;
+	qbMatrix44<double> rotationMatrixZ;
+	qbMatrix44<double>	scaleMatrix;
 	
 	// Set these to identity.
 	translationMatrix.SetToIdentity();
@@ -132,7 +134,7 @@ void qbRT::GTform::SetTransform(	const qbVector3<double> &translation,
 	m_bcktfm.Inverse();		
 }
 
-void qbRT::GTform::SetTransform(const qbMatrix2<double> &fwd, const qbMatrix2<double> &bck)
+void qbRT::GTform::SetTransform(const qbMatrix44<double> &fwd, const qbMatrix44<double> &bck)
 {
 	m_fwdtfm = fwd;
 	m_bcktfm = bck;
@@ -140,11 +142,11 @@ void qbRT::GTform::SetTransform(const qbMatrix2<double> &fwd, const qbMatrix2<do
 }
 
 // Functions to return the transform matrices.
-qbMatrix2<double> qbRT::GTform::GetForward()
+qbMatrix44<double> qbRT::GTform::GetForward()
 {
 	return m_fwdtfm;
 }
-qbMatrix2<double> qbRT::GTform::GetBackward()
+qbMatrix44<double> qbRT::GTform::GetBackward()
 {
 	return m_bcktfm;
 }
@@ -220,10 +222,10 @@ namespace qbRT
 	qbRT::GTform operator* (const qbRT::GTform &lhs, const qbRT::GTform &rhs)
 	{
 		// Form the product of the two forward transforms.
-		qbMatrix2<double> fwdResult = lhs.m_fwdtfm * rhs.m_fwdtfm;
+		qbMatrix44<double> fwdResult = lhs.m_fwdtfm * rhs.m_fwdtfm;
 		
 		// Compute the backward transform as the inverse of the forward transform.
-		qbMatrix2<double> bckResult = fwdResult;
+		qbMatrix44<double> bckResult = fwdResult;
 		bckResult.Inverse();
 		
 		// Form the final result.
@@ -260,7 +262,7 @@ void qbRT::GTform::PrintMatrix(bool dirFlag)
 	}
 }
 
-void qbRT::GTform::Print(const qbMatrix2<double> &matrix)
+void qbRT::GTform::Print(const qbMatrix44<double> &matrix)
 {
 	int nRows = matrix.GetNumRows();
 	int nCols = matrix.GetNumCols();
@@ -303,7 +305,7 @@ void qbRT::GTform::ExtractLinearTransform()
 }
 
 // Function to return the normal transform.
-qbMatrix2<double> qbRT::GTform::GetNormalTransform()
+qbMatrix33<double> qbRT::GTform::GetNormalTransform()
 {
 	return m_lintfm;
 }
