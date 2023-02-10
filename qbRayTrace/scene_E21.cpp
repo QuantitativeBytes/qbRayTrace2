@@ -43,6 +43,8 @@
 #include "./qbTextures/basicnoise.hpp"
 #include "./qbTextures/marble.hpp"
 #include "./qbTextures/qbStone1.hpp"
+#include "./qbLinAlg/qbMatrix33.hpp"
+#include "./qbLinAlg/qbMatrix44.hpp"
 
 // The constructor.
 qbRT::Scene_E21::Scene_E21()
@@ -334,6 +336,29 @@ qbRT::Scene_E21::Scene_E21()
 	m_lightList.push_back(rightLight);
 	m_lightList.push_back(topLight);
 
+	// Testing...
+	qbMatrix33<double> testMatrix {std::vector<double>{-3, 2, -5, -1, 0, -2, 3, -4, 1}};
+	std::cout << "A test matrix:" << std::endl;
+	qbRT::UTILS::PrintMatrix(testMatrix);
+	std::cout << "\nThe determinant is: " << testMatrix.Determinant() << std::endl;
+	testMatrix.Inverse();
+	std::cout << "\nAnd it's inverse:" << std::endl;
+	qbRT::UTILS::PrintMatrix(testMatrix);
+	
+	std::cout << "\n\nTesting 4x4 matrix:" << std::endl;
+	qbMatrix44<double> testMatrix2 {std::vector<double>{	5, -7, 2, 2, 
+																												0, 3, 0, -4,
+																												-5, -8, 0, 3,
+																												0, 5, 0, -6}};
+	qbRT::UTILS::PrintMatrix(testMatrix2);
+	
+	std::cout << "\nThe submatrix for element(0,0) is:" << std::endl;
+	qbRT::UTILS::PrintMatrix(testMatrix2.FindSubMatrix(0,0));
+	std::cout << "\nAnd the determinant is: " << testMatrix2.Determinant() << std::endl;
+	
+	testMatrix2.Inverse();
+	std::cout << "\nAnd the inverse is: " << std::endl;
+	qbRT::UTILS::PrintMatrix(testMatrix2);
 }
 
 // Function to perform the rendering.
