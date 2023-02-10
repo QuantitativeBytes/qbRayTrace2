@@ -79,9 +79,9 @@ namespace qbRT
 				int m_maxSteps;
 				
 				const double m_h = 0.001;
-				qbVector3<double> m_xDisp {std::vector<double>{m_h, 0.0, 0.0}};
-				qbVector3<double> m_yDisp {std::vector<double>{0.0, m_h, 0.0}};
-				qbVector3<double> m_zDisp {std::vector<double>{0.0, 0.0, m_h}};
+				qbVector3<double> m_xDisp {m_h, 0.0, 0.0};
+				qbVector3<double> m_yDisp {0.0, m_h, 0.0};
+				qbVector3<double> m_zDisp {0.0, 0.0, m_h};
 																						
 		};
 	}
