@@ -46,7 +46,7 @@ qbRT::Normal::NormalBase::~NormalBase()
 qbVector3<double> qbRT::Normal::NormalBase::ComputePerturbation(const qbVector3<double> &normal, const qbVector2<double> &uvCoords)
 {
 	// The default response.
-	return qbVector3<double>{std::vector<double>{0.0, 0.0, 0.0}};
+	return qbVector3<double>{0.0, 0.0, 0.0};
 }
 
 qbVector3<double> qbRT::Normal::NormalBase::PerturbNormal(const qbVector3<double> &normal, const qbVector3<double> &perturbation)
@@ -85,8 +85,8 @@ qbVector2<double> qbRT::Normal::NormalBase::TextureDiff(const std::shared_ptr<qb
 	// uGrad = f(u+h, v) - f(u-h, v) / 2h
 	// vGrad = f(u, v+h) - f(u, v-h) / 2h
 	double h = 0.001;
-	qbVector2<double> uDisp = std::vector<double> {h, 0.0};
-	qbVector2<double> vDisp = std::vector<double> {0.0, h};
+	qbVector2<double> uDisp {h, 0.0};
+	qbVector2<double> vDisp {0.0, h};
 	double uGrad = (inputTexture->GetValue(uvCoords + uDisp) - inputTexture->GetValue(uvCoords - uDisp)) / (2.0 * h);
 	double vGrad = (inputTexture->GetValue(uvCoords + vDisp) - inputTexture->GetValue(uvCoords - vDisp)) / (2.0 * h);
 	
@@ -119,17 +119,17 @@ qbVector2<double> qbRT::Normal::NormalBase::ApplyTransform(const qbVector2<doubl
 void qbRT::Normal::NormalBase::SetTransform(const qbVector2<double> &translation, const double &rotation, const qbVector2<double> &scale)
 {
 	// Build the transform matrix.
-	qbMatrix2<double> rotationMatrix = {3, 3, std::vector<double> {
+	qbMatrix33<double> rotationMatrix = {std::vector<double> {
 																			cos(rotation), -sin(rotation), 0.0,
 																			sin(rotation), cos(rotation), 0.0,
 																			0.0, 0.0, 1.0}};
 																			
-	qbMatrix2<double> scaleMatrix = {	3, 3, std::vector<double> {
+	qbMatrix33<double> scaleMatrix = {std::vector<double> {
 																		scale.GetElement(0), 0.0, 0.0,
 																		0.0, scale.GetElement(1), 0.0,
 																		0.0, 0.0, 1.0}};
 																		
-	qbMatrix2<double> translationMatrix = {	3, 3, std::vector<double> {
+	qbMatrix33<double> translationMatrix = {std::vector<double> {
 																					1.0, 0.0, translation.GetElement(0),
 																					0.0, 1.0, translation.GetElement(1),
 																					0.0, 0.0, 1.0}};
