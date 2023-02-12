@@ -18,8 +18,7 @@
 	www.youtube.com/c/QuantitativeBytes
 	
 	GPLv3 LICENSE
-	Copyright (c) 2022 Michael Bennett
-	
+
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
@@ -69,16 +68,12 @@ bool qbRT::PointLight::ComputeIllumination(	const qbVector3<double> &intPoint, c
 	
 	/* Check for intersections with all of the objects
 		in the scene, except for the current one. */
-	//qbVector3<double> poi				{3};
-	//qbVector3<double> poiNormal	{3};
-	//qbVector3<double> poiColor		{3};
 	qbRT::DATA::hitData hitData;
 	bool validInt = false;
 	for (auto sceneObject : objectList)
 	{
 		if (sceneObject != currentObject)
 		{
-			//validInt = sceneObject -> TestIntersection(lightRay, poi, poiNormal, poiColor);
 			validInt = sceneObject -> TestIntersection(lightRay, hitData);
 			if (validInt)
 			{
