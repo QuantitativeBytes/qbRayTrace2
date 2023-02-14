@@ -71,3 +71,28 @@ https://youtu.be/4gVQJWmMeSQ
 ### UV Projection
 A look at UV projection and how this differs from the UV mapping techniques that we have already implemented in Episode 9.
 https://youtu.be/1nJwteZIOBI
+
+## Episode 22
+### Bounding boxes and composite shapes
+Composite shapes offer us a way to combine multiple primitive shapes together and make it a lot easier to model complex geometries with multiple transforms.
+
+Bounding boxes offer a simple and effective way to improve ray tracing performance by allowing us to test for intersections only with rays that are likely to intersect with a particular part of the scene, determined by which rays intersect with the bounding box.
+
+Combined together, bounding boxes and composite shapes offer an effective way to model complex shapes and shorten the time required to render complex scenes.
+https://youtu.be/1D9j60E27XI
+
+## Episode 23
+### Performance
+The first of a three part mini-series looking at improving the performance of qbRAY.
+https://youtu.be/-5kLk7_bs0U
+
+## Epsiode 24
+### Performance (Part 2)  - Profiling and Debugging
+Using a profiler to investigate what is causing the code to be slow.
+https://youtu.be/EQlXfCIBpdg
+
+## Episode 25
+### Performance (Part 3) - Faster linear algebra
+Implementing a new matrix class to complete the work on making the linear algebra library faster for fixed size vectors and matrices.
+https://youtu.be/sr1OA7NPwcI
+

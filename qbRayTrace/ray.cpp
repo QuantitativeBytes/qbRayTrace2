@@ -17,7 +17,7 @@
 	www.youtube.com/c/QuantitativeBytes
 	
 	GPLv3 LICENSE
-	Copyright (c) 2021 Michael Bennett
+	Copyright (c) 2023 Michael Bennett	
 	
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -40,9 +40,12 @@
 
 qbRT::Ray::Ray()
 {
-	m_point1 = qbVector3<double>{std::vector<double>{0.0, 0.0, 0.0}};
-	m_point2 = qbVector3<double>{std::vector<double>{0.0, 0.0, 1.0}};
-	m_lab = m_point2 - m_point1;
+	//m_point1 = qbVector3<double>{std::vector<double>{0.0, 0.0, 0.0}};
+	//m_point2 = qbVector3<double>{std::vector<double>{0.0, 0.0, 1.0}};
+	//m_lab = m_point2 - m_point1;
+	m_point1 = qbVector3<double>{0.0, 0.0, 0.0};
+	m_point2 = qbVector3<double>{0.0, 0.0, 1.0};
+	m_lab = qbVector3<double>{0.0, 0.0, 1.0};
 }
 
 qbRT::Ray::Ray(const qbVector3<double> &point1, const qbVector3<double> &point2)

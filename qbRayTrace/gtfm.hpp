@@ -17,7 +17,7 @@
 	www.youtube.com/c/QuantitativeBytes
 	
 	GPLv3 LICENSE
-	Copyright (c) 2021 Michael Bennett
+	Copyright (c) 2023 Michael Bennett	
 	
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -42,6 +42,8 @@
 #include "./qbLinAlg/qbVector3.hpp"
 #include "./qbLinAlg/qbVector4.hpp"
 #include "./qbLinAlg/qbMatrix.h"
+#include "./qbLinAlg/qbMatrix33.hpp"
+#include "./qbLinAlg/qbMatrix44.hpp"
 #include "ray.hpp"
 
 namespace qbRT
@@ -61,18 +63,18 @@ namespace qbRT
 			GTform(const qbVector3<double> &translation, const qbVector3<double> &rotation, const qbVector3<double> &scale);
 			
 			// Construct from a pair of matrices.
-			GTform(const qbMatrix2<double> &fwd, const qbMatrix2<double> &bck);
+			GTform(const qbMatrix44<double> &fwd, const qbMatrix44<double> &bck);
 			
 			// Function to set translation, rotation and scale components.
 			void SetTransform(	const qbVector3<double> &translation,
 													const qbVector3<double> &rotation,
 													const qbVector3<double> &scale);
 													
-			void SetTransform(	const qbMatrix2<double> &fwd, const qbMatrix2<double> &bck);
+			void SetTransform(	const qbMatrix44<double> &fwd, const qbMatrix44<double> &bck);
 													
 			// Functions to return the transform matrices.
-			qbMatrix2<double> GetForward();
-			qbMatrix2<double> GetBackward();
+			qbMatrix44<double> GetForward();
+			qbMatrix44<double> GetBackward();
 			
 			// Function to apply the transform.
 			qbRT::Ray Apply(const qbRT::Ray &inputRay, bool dirFlag);
@@ -80,7 +82,7 @@ namespace qbRT
 			qbVector3<double> ApplyNorm(const qbVector3<double> &inputVector);
 			
 			// Function to return the normal transform matrix.
-			qbMatrix2<double> GetNormalTransform();
+			qbMatrix33<double> GetNormalTransform();
 			
 			// Overload operators.
 			friend GTform operator* (const qbRT::GTform &lhs, const qbRT::GTform &rhs);
@@ -95,13 +97,16 @@ namespace qbRT
 			static void PrintVector(const qbVector3<double> &vector);
 			
 		private:
-			void Print(const qbMatrix2<double> &matrix);
+			void Print(const qbMatrix44<double> &matrix);
 			void ExtractLinearTransform();
 			
 		private:
-			qbMatrix2<double> m_fwdtfm {4, 4};
-			qbMatrix2<double> m_bcktfm {4, 4};
-			qbMatrix2<double> m_lintfm {3, 3};
+			qbMatrix44<double> m_fwdtfm;
+			qbMatrix44<double> m_bcktfm;
+			qbMatrix33<double> m_lintfm;
+			//qbMatrix2<double> m_fwdtfm {4, 4};
+			//qbMatrix2<double> m_bcktfm {4, 4};
+			//qbMatrix2<double> m_lintfm {3, 3};
 	};
 }
 

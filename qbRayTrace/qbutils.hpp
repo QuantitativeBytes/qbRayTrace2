@@ -6,6 +6,8 @@
 #include "./qbLinAlg/qbVector2.hpp"
 #include "./qbLinAlg/qbVector3.hpp"
 #include "./qbLinAlg/qbVector4.hpp"
+#include "./qbLinAlg/qbMatrix33.hpp"
+#include "./qbLinAlg/qbMatrix44.hpp"
 
 namespace qbRT
 {
@@ -28,6 +30,8 @@ namespace qbRT
 	namespace UTILS
 	{
 		void PrintVector(const qbVector3<double> &inputVector);
+		void PrintMatrix(const qbMatrix33<double> &inputMatrix);
+		void PrintMatrix(const qbMatrix44<double> &inputMatrix);
 	}
 }
 

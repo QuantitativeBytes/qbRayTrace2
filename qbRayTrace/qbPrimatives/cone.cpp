@@ -17,7 +17,7 @@
 	www.youtube.com/c/QuantitativeBytes
 	
 	GPLv3 LICENSE
-	Copyright (c) 2022 Michael Bennett
+	Copyright (c) 2023 Michael Bennett	
 	
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -44,9 +44,9 @@ qbRT::Cone::Cone()
 	m_uvMapType = qbRT::uvCYLINDER;
 	
 	// Construct the default bounding box.
-	m_boundingBoxTransform.SetTransform(	qbVector3<double>{std::vector<double>{0.0, 0.0, 0.5}},
-																				qbVector3<double>{std::vector<double>{0.0, 0.0, 0.0}},
-																				qbVector3<double>{std::vector<double>{1.0, 1.0, 0.5}});
+	m_boundingBoxTransform.SetTransform(	qbVector3<double>{0.0, 0.0, 0.5},
+																				qbVector3<double>{0.0, 0.0, 0.0},
+																				qbVector3<double>{1.0, 1.0, 0.5});
 }
 
 // The destructor.
@@ -69,15 +69,19 @@ bool qbRT::Cone::TestIntersection(	const qbRT::Ray &castRay, qbRT::DATA::hitData
 	v.Normalize();
 	
 	// Get the start point of the line.
-	qbVector3<double> p = bckRay.m_point1;
+	//qbVector3<double> p = bckRay.m_point1;
 	
 	// Compute a, b and c.
-	double a = std::pow(v.GetElement(0), 2.0) + std::pow(v.GetElement(1), 2.0) - std::pow(v.GetElement(2), 2.0);
-	double b = 2 * (p.GetElement(0)*v.GetElement(0) + p.GetElement(1)*v.GetElement(1) - p.GetElement(2)*v.GetElement(2));
-	double c = std::pow(p.GetElement(0), 2.0) + std::pow(p.GetElement(1), 2.0) - std::pow(p.GetElement(2), 2.0);
+	double a = (v.m_x * v.m_x) + (v.m_y * v.m_y) - (v.m_z * v.m_z);
+	double b = 2.0 * (bckRay.m_point1.m_x * v.m_x + bckRay.m_point1.m_y * v.m_y - bckRay.m_point1.m_z * v.m_z);
+	double c = (bckRay.m_point1.m_x * bckRay.m_point1.m_x) + (bckRay.m_point1.m_y * bckRay.m_point1.m_y) - (bckRay.m_point1.m_z * bckRay.m_point1.m_z);
+	//double a = std::pow(v.GetElement(0), 2.0) + std::pow(v.GetElement(1), 2.0) - std::pow(v.GetElement(2), 2.0);
+	//double b = 2 * (p.GetElement(0)*v.GetElement(0) + p.GetElement(1)*v.GetElement(1) - p.GetElement(2)*v.GetElement(2));
+	//double c = std::pow(p.GetElement(0), 2.0) + std::pow(p.GetElement(1), 2.0) - std::pow(p.GetElement(2), 2.0);
 	
 	// Compute b^2 - 4ac.
-	double numSQRT = sqrtf(std::pow(b, 2.0) - 4 * a * c);
+	//double numSQRT = sqrtf(std::pow(b, 2.0) - 4 * a * c);
+	double numSQRT = sqrt((b*b) - 4.0 * a * c);
 	
 	std::array<qbVector3<double>, 3> poi;
 	std::array<double, 3> t;
@@ -171,14 +175,15 @@ bool qbRT::Cone::TestIntersection(	const qbRT::Ray &castRay, qbRT::DATA::hitData
 		hitData.poi = m_transformMatrix.Apply(validPOI, qbRT::FWDTFORM);		
 			
 		// Compute the local normal.
-		qbVector3<double> orgNormal {3};
-		qbVector3<double> newNormal {3};
-		qbVector3<double> localOrigin {std::vector<double> {0.0, 0.0, 0.0}};
-		qbVector3<double> globalOrigin = m_transformMatrix.Apply(localOrigin, qbRT::FWDTFORM);		
+		qbVector3<double> orgNormal;
+		//qbVector3<double> newNormal {3};
+		//qbVector3<double> localOrigin {std::vector<double> {0.0, 0.0, 0.0}};
+		//qbVector3<double> globalOrigin = m_transformMatrix.Apply(localOrigin, qbRT::FWDTFORM);		
 		
 		double tX = validPOI.GetElement(0);
 		double tY = validPOI.GetElement(1);
-		double tZ = -sqrtf(pow(tX, 2.0) + pow(tY, 2.0));
+		//double tZ = -sqrtf(pow(tX, 2.0) + pow(tY, 2.0));
+		double tZ = -sqrt((tX*tX) + (tY*tY));
 		
 		orgNormal.SetElement(0, tX);
 		orgNormal.SetElement(1, tY);
@@ -227,8 +232,8 @@ bool qbRT::Cone::TestIntersection(	const qbRT::Ray &castRay, qbRT::DATA::hitData
 				hitData.poi = m_transformMatrix.Apply(validPOI, qbRT::FWDTFORM);				
 				
 				// Compute the local normal.
-				qbVector3<double> localOrigin {std::vector<double> {0.0, 0.0, 0.0}};
-				qbVector3<double> normalVector {std::vector<double> {0.0, 0.0, 1.0}};
+				//qbVector3<double> localOrigin {std::vector<double> {0.0, 0.0, 0.0}};
+				qbVector3<double> normalVector {0.0, 0.0, 1.0};
 				hitData.normal = m_transformMatrix.ApplyNorm(normalVector);
 				hitData.normal.Normalize();
 				

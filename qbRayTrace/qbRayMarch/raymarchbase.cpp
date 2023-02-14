@@ -13,7 +13,7 @@
 	www.youtube.com/c/QuantitativeBytes
 	
 	GPLv3 LICENSE
-
+	Copyright (c) 2023 Michael Bennett	
 	
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -62,11 +62,7 @@ bool qbRT::RM::RayMarchBase::TestIntersection(	const qbRT::Ray &castRay, qbRT::D
 		// Copy the ray and apply the backwards transform.
 		qbRT::Ray bckRay = m_transformMatrix.Apply(castRay, qbRT::BCKTFORM);
 		
-		// The original code...
-		//qbRT::DATA::hitData boundHit;
-		//if (m_boundingBox.TestIntersection(bckRay, boundHit))
-		
-		// The new code (Episode 22).
+		// Test for intersections with the bounding box.
 		if (m_boundingBox.TestIntersection(bckRay))
 		{
 			// Extract ray direction.
@@ -103,7 +99,7 @@ bool qbRT::RM::RayMarchBase::TestIntersection(	const qbRT::Ray &castRay, qbRT::D
 			hitData.poi = m_transformMatrix.Apply(currentLoc, qbRT::FWDTFORM);
 			
 			// Compute the local normal.
-			qbVector3<double> surfaceNormal {3};
+			qbVector3<double> surfaceNormal;
 
 			/*
 			 Note the extra code here to compute an offset location from which
@@ -131,7 +127,6 @@ bool qbRT::RM::RayMarchBase::TestIntersection(	const qbRT::Ray &castRay, qbRT::D
 			// Transform the local normal.
 			surfaceNormal.Normalize();
 			hitData.normal = m_transformMatrix.ApplyNorm(surfaceNormal);
-			//hitData.normal.Normalize();
 			
 			// Return the base color.
 			hitData.color = m_baseColor;

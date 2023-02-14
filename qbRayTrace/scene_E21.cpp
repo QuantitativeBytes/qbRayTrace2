@@ -43,6 +43,8 @@
 #include "./qbTextures/basicnoise.hpp"
 #include "./qbTextures/marble.hpp"
 #include "./qbTextures/qbStone1.hpp"
+#include "./qbLinAlg/qbMatrix33.hpp"
+#include "./qbLinAlg/qbMatrix44.hpp"
 
 // The constructor.
 qbRT::Scene_E21::Scene_E21()
@@ -333,7 +335,6 @@ qbRT::Scene_E21::Scene_E21()
 	m_lightList.push_back(leftLight);
 	m_lightList.push_back(rightLight);
 	m_lightList.push_back(topLight);
-
 }
 
 // Function to perform the rendering.

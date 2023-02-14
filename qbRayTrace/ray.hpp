@@ -17,7 +17,7 @@
 	www.youtube.com/c/QuantitativeBytes
 	
 	GPLv3 LICENSE
-	Copyright (c) 2021 Michael Bennett
+	Copyright (c) 2023 Michael Bennett	
 	
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -39,10 +39,7 @@
 #ifndef RAY_H
 #define RAY_H
 
-#include "./qbLinAlg/qbVector.h"
-#include "./qbLinAlg/qbVector2.hpp"
 #include "./qbLinAlg/qbVector3.hpp"
-#include "./qbLinAlg/qbVector4.hpp"
 
 namespace qbRT
 {
@@ -56,9 +53,9 @@ namespace qbRT
 			qbVector3<double> GetPoint2() const;
 			
 		public:
-			qbVector3<double> m_point1	{3};
-			qbVector3<double> m_point2 {3};
-			qbVector3<double> m_lab		{3};
+			qbVector3<double> m_point1;
+			qbVector3<double> m_point2;
+			qbVector3<double> m_lab;
 			
 	};
 }

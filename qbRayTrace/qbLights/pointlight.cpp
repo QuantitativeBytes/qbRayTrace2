@@ -18,8 +18,8 @@
 	www.youtube.com/c/QuantitativeBytes
 	
 	GPLv3 LICENSE
-	Copyright (c) 2022 Michael Bennett
-	
+	Copyright (c) 2023 Michael Bennett	
+
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
@@ -40,7 +40,8 @@
 // Default constructor.
 qbRT::PointLight::PointLight()
 {
-	m_color = qbVector3<double> {std::vector<double> {1.0, 1.0, 1.0}};
+	//m_color = qbVector3<double> {std::vector<double> {1.0, 1.0, 1.0}};
+	m_color = qbVector3<double> {1.0, 1.0, 1.0};
 	m_intensity = 1.0;
 }
 
@@ -68,16 +69,12 @@ bool qbRT::PointLight::ComputeIllumination(	const qbVector3<double> &intPoint, c
 	
 	/* Check for intersections with all of the objects
 		in the scene, except for the current one. */
-	//qbVector3<double> poi				{3};
-	//qbVector3<double> poiNormal	{3};
-	//qbVector3<double> poiColor		{3};
 	qbRT::DATA::hitData hitData;
 	bool validInt = false;
 	for (auto sceneObject : objectList)
 	{
 		if (sceneObject != currentObject)
 		{
-			//validInt = sceneObject -> TestIntersection(lightRay, poi, poiNormal, poiColor);
 			validInt = sceneObject -> TestIntersection(lightRay, hitData);
 			if (validInt)
 			{
@@ -104,7 +101,7 @@ bool qbRT::PointLight::ComputeIllumination(	const qbVector3<double> &intPoint, c
 		double angle = acos(qbVector3<double>::dot(localNormal, lightDir));
 		
 		// If the normal is pointing away from the light, then we have no illumination.
-		if (angle > 1.5708)
+		if (angle > (M_PI/2.0))
 		{
 			// No illumination.
 			color = m_color;
@@ -115,7 +112,7 @@ bool qbRT::PointLight::ComputeIllumination(	const qbVector3<double> &intPoint, c
 		{
 			// We do have illumination.
 			color = m_color;
-			intensity = m_intensity * (1.0 - (angle / 1.5708));
+			intensity = m_intensity * (1.0 - (2.0 * angle / M_PI));
 			return true;
 		}
 	}
