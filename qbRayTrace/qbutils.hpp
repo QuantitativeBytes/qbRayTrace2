@@ -2,6 +2,7 @@
 #define QBRT_UTILS_H
 
 #include <memory>
+#include <SDL2/SDL.h>
 #include "./qbLinAlg/qbVector.h"
 #include "./qbLinAlg/qbVector2.hpp"
 #include "./qbLinAlg/qbVector3.hpp"
