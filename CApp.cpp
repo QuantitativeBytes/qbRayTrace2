@@ -56,17 +56,17 @@ bool CApp::OnInit()
 		return false;
 	}
 	
-	int xSize = 1280;
-	int ySize = 720;	
+	m_xSize = 1280;
+	m_ySize = 720;	
 	
-	pWindow = SDL_CreateWindow("qbRayTracer - Don't forget to subscribe!", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, xSize, ySize, SDL_WINDOW_SHOWN);
+	pWindow = SDL_CreateWindow("qbRayTracer - Don't forget to subscribe!", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, m_xSize, m_ySize, SDL_WINDOW_SHOWN);
 	
 	if (pWindow != NULL)
 	{
 		pRenderer = SDL_CreateRenderer(pWindow, -1, 0);
 		
 		// Intialize the qbImage instance.
-		m_image.Initialize(xSize, ySize, pRenderer);
+		m_image.Initialize(m_xSize, m_ySize, pRenderer);
 		
 		// Set the background color to white.
 		SDL_SetRenderDrawColor(pRenderer, 255, 255, 255, 255);
@@ -74,31 +74,6 @@ bool CApp::OnInit()
 		
 		// Render the scene.
 		m_scene.Render(m_image);
-		
-		// Setup a texture.
-		/*qbRT::Texture::Image testTexture;
-		testTexture.LoadImage("testImage.bmp");
-		testTexture.SetTransform(	qbVector3<double>{std::vector<double>{0.0, 0.0}},
-															0.0,
-															qbVector3<double>{std::vector<double>{4.0, 4.0}}	);
-															
-		// Render the texture.
-		for (int y=0; y<ySize; ++y)
-		{
-			for (int x=0; x<xSize; ++x)
-			{
-				// Compute u,v
-				double u = (static_cast<double>(x) / (static_cast<double>(xSize) / 2.0)) - 1.0;
-				double v = (static_cast<double>(y) / (static_cast<double>(ySize) / 2.0)) - 1.0;
-				qbVector3<double> uvCoords {std::vector<double> {u, v}};
-				
-				// Get the color from the texture.
-				qbVector3<double> pixelColor = testTexture.GetColor(uvCoords);
-				
-				// Update this pixel of the image.
-				m_image.SetPixel(x, y, pixelColor.GetElement(0), pixelColor.GetElement(1), pixelColor.GetElement(2));
-			}
-		} */
 		
 		// Display the image.
 		m_image.Display();
@@ -187,6 +162,20 @@ void CApp::PrintVector(const qbVector3<double> &inputVector)
 	}
 }
 
+// Function to generate the tile grid.
+
+
+// Function to destroy the tile grid.
+bool CApp::DestroyTileGrid()
+{
+	for (int i=0; i<m_tiles.size(); ++i)
+	{
+		if (m_tiles.at(i).pTexture != NULL)
+			SDL_DestroyTexture(m_tiles.at(i).pTexture);
+	
+	}
+	return true;
+}
 
 
 

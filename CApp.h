@@ -64,9 +64,19 @@ class CApp
 	private:
 		void PrintVector(const qbVector3<double> &inputVector);
 		
+		// Function to generate the tile grid.
+		bool GenerateTileGrid(int tileSizeX, int tileSizeY);
+		
+		// Function to handle destroying the tile grid.
+		bool DestroyTileGrid();
+		
 	private:
 		// An instance of the qbImage class to store the image.
 		qbImage m_image;
+		
+		// Array to store tiles.
+		std::vector<qbRT::DATA::tile> m_tiles;
+		int m_numTilesX, m_numTilesY;
 		
 		// An instance of the scene class.
 		qbRT::Scene_E21 m_scene;
@@ -76,6 +86,9 @@ class CApp
 		bool isRunning;
 		SDL_Window *pWindow;
 		SDL_Renderer *pRenderer;
+		
+		// Display configuration.
+		int m_xSize, m_ySize;
 		
 };
 
