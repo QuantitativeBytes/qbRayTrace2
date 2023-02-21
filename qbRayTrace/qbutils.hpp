@@ -25,6 +25,19 @@ namespace qbRT
 			qbVector2<double> uvCoords;
 			std::shared_ptr<qbRT::ObjectBase> hitObject;
 		};
+		
+		// Structure for handling rendering tiles.
+		struct tile
+		{
+			int x;
+			int y;
+			int xSize;
+			int ySize;
+			int renderComplete = 0;
+			bool textureComplete = false;
+			SDL_Texture *pTexture;
+			std::vector<qbVector3<double>> rgbData;
+		};			
 	}
 
 	namespace UTILS
