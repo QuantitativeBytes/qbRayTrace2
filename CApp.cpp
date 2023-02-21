@@ -131,23 +131,66 @@ void CApp::OnEvent(SDL_Event *event)
 
 void CApp::OnLoop()
 {
-
+	// Loop through all tiles and find the first one that hasn't been rendered yet.
+	for (int i=0; i<m_tiles.size(); ++i)
+	{
+		if (m_tileFlags.at(i) == 0)
+		{
+			// This tile has not been rendered, so render it now.
+			// m_scene.RenderTile(tile);
+			
+			// Set the tile flag to indicate that this tile has been rendered.
+			m_tileFlags.at(i) == 2;
+			
+			// Once complete, break out of the loop.
+			// This is tempory and will be removed once we implement multi-threading.
+			break;
+		}
+	}
 }
 
 void CApp::OnRender()
 {
-	// Set the background color to white.
-	//SDL_SetRenderDrawColor(pRenderer, 255, 255, 255, 255);
-	//SDL_RenderClear(pRenderer);
+	// Converstion factors from screen width/height to window width/height.
+	// For future versions.
+	double widthFactor = 1.0;
+	double heightFactor = 1.0;
 	
-	// Render the scene.
-	//m_scene.Render(m_image);
+	// Render the tiles.
+	for (int i=0; i<m_tiles.size(); ++i)
+	{
+		// Only render the tile if it is complete.
+		if (m_tileFlags.at(i) == 2)
+		{
+			SDL_Rect srcRect, dstRect;
+			srcRect.x = 0;
+			srcRect.y = 0;
+			srcRect.w = m_tiles.at(i).xSize;
+			srcRect.h = m_tiles.at(i).ySize;
+			dstRect.x = static_cast<int>(std::round(static_cast<double>(m_tiles.at(i).x) * widthFactor));
+			dstRect.y = static_cast<int>(std::round(static_cast<double>(m_tiles.at(i).y) * heightFactor));
+			dstRect.w = static_cast<int>(std::round(static_cast<double>(m_tiles.at(i).xSize) * widthFactor));
+			dstRect.h = static_cast<int>(std::round(static_cast<double>(m_tiles.at(i).ySize) * heightFactor));
+			
+			/*
+				If the textureComplete flag for this tile is not set, then it means that the tile
+				has been rendered, but not yet converted to a texture. So we do that here and
+				then set the textureComplete flag and blit the texture into the renderer.
+				Note that once this is done, we don't do this again for this tile meaning
+				that we don't keep updating each tile every time we go through this loop.
+				This helps to keep things as efficient as possible.
+			*/
+			/*
+			if (!m_tiles.at(i).textureComplete)
+			{
+				ConvertImageToTexture(m_tiles.at(i));
+				m_tiles.at(i).textureComplete = true;
+				SDL_RenderCopy(pRenderer, m_tiles.at(i).pTexture, &srcRect, &dstRect);			
+			}	
+			*/				
+		}
+	}
 	
-	// Display the image.
-	//m_image.Display();
-	
-	// Show the result.
-	//SDL_RenderPresent(pRenderer);
 }
 
 void CApp::OnExit()
@@ -255,6 +298,12 @@ bool CApp::GenerateTileGrid(int tileSizeX, int tileSizeY)
 		}
 		SDL_FreeSurface(eocX);
 	}	
+				
+	// Set all the tile flags to zero.
+	for (int i=0; i<m_tiles.size(); ++i)
+	{
+		m_tileFlags.push_back(0);
+	}
 				
 	// Tidy up before returning.
 	SDL_FreeSurface(tempSurface);	

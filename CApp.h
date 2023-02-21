@@ -76,6 +76,7 @@ class CApp
 		
 		// Array to store tiles.
 		std::vector<qbRT::DATA::tile> m_tiles;
+		std::vector<int> m_tileFlags;
 		int m_numTilesX, m_numTilesY;
 		
 		// An instance of the scene class.
