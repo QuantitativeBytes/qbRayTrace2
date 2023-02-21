@@ -68,6 +68,13 @@ bool CApp::OnInit()
 		// Intialize the qbImage instance.
 		m_image.Initialize(m_xSize, m_ySize, pRenderer);
 		
+		// Initialize the tile grid.
+		if (!GenerateTileGrid(128, 128))
+		{
+			std::cout << "Failed to generate tile grid." << std::endl;
+			return false;
+		}
+		
 		// Set the background color to white.
 		SDL_SetRenderDrawColor(pRenderer, 255, 255, 255, 255);
 		SDL_RenderClear(pRenderer);
@@ -145,6 +152,9 @@ void CApp::OnRender()
 
 void CApp::OnExit()
 {
+	// Tidy up the tile grid.
+	bool result = DestroyTileGrid();
+
 	// Tidy up SDL2 stuff.
 	SDL_DestroyRenderer(pRenderer);
 	SDL_DestroyWindow(pWindow);
@@ -163,7 +173,93 @@ void CApp::PrintVector(const qbVector3<double> &inputVector)
 }
 
 // Function to generate the tile grid.
-
+bool CApp::GenerateTileGrid(int tileSizeX, int tileSizeY)
+{
+	// How many tiles will fit horizontally?
+	int numTilesX = std::floor(m_xSize / tileSizeX);
+	m_numTilesX = numTilesX;
+	
+	// How many tiles will fit vertically?
+	int numTilesY = std::floor(m_ySize / tileSizeY);
+	m_numTilesY = numTilesY;
+	
+	// Setup an SDL surface from which we can generate the textures for each tile.
+	Uint32 rmask, gmask, bmask, amask;
+	#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+    rmask = 0xff000000;
+    gmask = 0x00ff0000;
+    bmask = 0x0000ff00;
+    amask = 0x000000ff;
+	#else
+    rmask = 0x000000ff;
+    gmask = 0x0000ff00;
+    bmask = 0x00ff0000;
+    amask = 0xff000000;
+	#endif	
+	SDL_Surface *tempSurface = SDL_CreateRGBSurface(0, tileSizeX, tileSizeY, 32, rmask, gmask, bmask, amask);
+	
+	// Generate the actual tiles.
+	for (int y=0; y<numTilesY; ++y)
+	{
+		for (int x=0; x<numTilesX; ++x)
+		{
+			qbRT::DATA::tile tempTile;
+			tempTile.x = x * tileSizeX;
+			tempTile.y = y * tileSizeY;
+			tempTile.xSize = tileSizeX;
+			tempTile.ySize = tileSizeY;
+			tempTile.renderComplete = 0;
+			tempTile.pTexture = SDL_CreateTextureFromSurface(pRenderer, tempSurface);
+			tempTile.rgbData.resize(tempTile.xSize * tempTile.ySize);
+			m_tiles.push_back(tempTile);		
+		}
+	}
+	
+	// Add end-of-row and end-of-column tiles that might be smaller.
+	// First end-of-column.
+	if ((numTilesY * tileSizeY) < m_ySize)
+	{
+		int newTileSizeY = m_ySize - (numTilesY * tileSizeY);
+		SDL_Surface *eocY = SDL_CreateRGBSurface(0, tileSizeX, newTileSizeY, 32, rmask, gmask, bmask, amask);
+		for (int x=0; x<numTilesX; ++x)
+		{
+			qbRT::DATA::tile tempTile;
+			tempTile.x = x*tileSizeX;
+			tempTile.y = numTilesY * tileSizeY;
+			tempTile.xSize = tileSizeX;
+			tempTile.ySize = newTileSizeY;
+			tempTile.renderComplete = 0;
+			tempTile.pTexture = SDL_CreateTextureFromSurface(pRenderer, eocY);
+			tempTile.rgbData.resize(tempTile.xSize * tempTile.ySize);			
+			m_tiles.push_back(tempTile);				
+		}
+		SDL_FreeSurface(eocY);
+	}
+	
+	// And then end-of-row.
+	if ((numTilesX * tileSizeX) < m_xSize)
+	{
+		int newTileSizeX = m_xSize - (numTilesX * tileSizeX);
+		SDL_Surface *eocX = SDL_CreateRGBSurface(0, newTileSizeX, tileSizeY, 32, rmask, gmask, bmask, amask);
+		for (int y=0; y<numTilesY; ++y)
+		{
+			qbRT::DATA::tile tempTile;
+			tempTile.x = numTilesX * tileSizeX;
+			tempTile.y = y*tileSizeY;
+			tempTile.xSize = newTileSizeX;
+			tempTile.ySize = tileSizeY;
+			tempTile.renderComplete = 0;
+			tempTile.pTexture = SDL_CreateTextureFromSurface(pRenderer, eocX);
+			tempTile.rgbData.resize(tempTile.xSize * tempTile.ySize);			
+			m_tiles.push_back(tempTile);				
+		}
+		SDL_FreeSurface(eocX);
+	}	
+				
+	// Tidy up before returning.
+	SDL_FreeSurface(tempSurface);	
+	return true;				
+}
 
 // Function to destroy the tile grid.
 bool CApp::DestroyTileGrid()
