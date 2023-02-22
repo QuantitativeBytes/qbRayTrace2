@@ -38,6 +38,7 @@
 #include <memory>
 #include <vector>
 #include <SDL2/SDL.h>
+#include "scene.hpp"
 #include "qbImage.hpp"
 #include "camera.hpp"
 #include "./qbPrimatives/objsphere.hpp"
@@ -56,32 +57,17 @@
 
 namespace qbRT
 {
-	class Scene_E21
+	class Scene_E21 : public Scene
 	{
 		public:
 			// The default constructor.
 			Scene_E21();
 			
-			// Function to perform the rendering.
-			bool Render(qbImage &outputImage);
+			// Destructor.
+			virtual ~Scene_E21() override;
 			
-			// Function to cast a ray into the Scene_E21.
-			bool CastRay(	qbRT::Ray &castRay, std::shared_ptr<qbRT::ObjectBase> &closestObject,
-										qbRT::DATA::hitData &closestHitData);
-			
-		// Private functions.
-		private:
-		
-		// Private members.
-		private:
-			// The camera that we will use.
-			qbRT::Camera m_camera;
-			
-			// The list of objects in the Scene_E21.
-			std::vector<std::shared_ptr<qbRT::ObjectBase>> m_objectList;
-	
-			// The list of lights in the Scene_E21.
-			std::vector<std::shared_ptr<qbRT::LightBase>> m_lightList;
+			// Function to setup the scene.
+			virtual void SetupSceneObjects() override;
 	};
 }
 

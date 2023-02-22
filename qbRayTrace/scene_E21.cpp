@@ -49,6 +49,18 @@
 // The constructor.
 qbRT::Scene_E21::Scene_E21()
 {
+	SetupSceneObjects();
+}
+
+// Destructor.
+qbRT::Scene_E21::~Scene_E21()
+{
+
+}
+
+// Function to setup the scene.
+void qbRT::Scene_E21::SetupSceneObjects()
+{
 	// **************************************************************************************
 	// Configure the camera.
 	// **************************************************************************************	
@@ -320,134 +332,22 @@ qbRT::Scene_E21::Scene_E21()
 	auto leftLight = std::make_shared<qbRT::PointLight> (qbRT::PointLight());
 	leftLight -> m_location = qbVector3<double> {std::vector<double> {0.0, -20.0, -20.0}};
 	leftLight -> m_color = qbVector3<double> {std::vector<double> {1.0, 1.0, 1.0}};
-	leftLight -> m_intensity = 4.0;
+	leftLight -> m_intensity = 0.33;
 	
 	auto rightLight = std::make_shared<qbRT::PointLight> (qbRT::PointLight());
 	rightLight -> m_location = qbVector3<double> {std::vector<double> {8.0, -20.0, -20.0}};
 	rightLight -> m_color = qbVector3<double> {std::vector<double> {1.0, 1.0, 1.0}};
-	rightLight -> m_intensity = 6.0;
+	rightLight -> m_intensity = 0.33;
 	
 	auto topLight = std::make_shared<qbRT::PointLight> (qbRT::PointLight());
 	topLight -> m_location = qbVector3<double> {std::vector<double> {0.0, 3.0, -20.0}};
 	topLight -> m_color = qbVector3<double> {std::vector<double> {1.0, 1.0, 1.0}};
-	topLight -> m_intensity = 1.0;
+	topLight -> m_intensity = 0.33;
 	
 	m_lightList.push_back(leftLight);
 	m_lightList.push_back(rightLight);
 	m_lightList.push_back(topLight);
 }
-
-// Function to perform the rendering.
-bool qbRT::Scene_E21::Render(qbImage &outputImage)
-{
-	// Record the start time.
-	auto startTime = std::chrono::steady_clock::now();
-	
-	// Get the dimensions of the output image.
-	int xSize = outputImage.GetXSize();
-	int ySize = outputImage.GetYSize();
-	
-	// Loop over each pixel in our image.
-	qbRT::Ray cameraRay;
-	qbVector3<double> intPoint			(3);
-	qbVector3<double> localNormal	(3);
-	qbVector3<double> localColor		(3);
-	double xFact = 1.0 / (static_cast<double>(xSize) / 2.0);
-	double yFact = 1.0 / (static_cast<double>(ySize) / 2.0);
-	double minDist = 1e6;
-	double maxDist = 0.0;
-	for (int y=0; y<ySize; ++y)
-	{
-		// Display progress.
-		std::cout << "Processing line " << y << " of " << ySize << "." << " \r";
-		std::cout.flush();
-		
-		for (int x=0; x<xSize; ++x)
-		{
-			// Normalize the x and y coordinates.
-			double normX = (static_cast<double>(x) * xFact) - 1.0;
-			double normY = (static_cast<double>(y) * yFact) - 1.0;
-			
-			// Generate the ray for this pixel.
-			m_camera.GenerateRay(normX, normY, cameraRay);
-			
-			// Test for intersections with all objects in the Scene_E21.
-			std::shared_ptr<qbRT::ObjectBase> closestObject;
-			qbRT::DATA::hitData closestHitData;
-			bool intersectionFound = CastRay(cameraRay, closestObject, closestHitData);
-			
-			/* Compute the illumination for the closest object, assuming that there
-				was a valid intersection. */
-			if (intersectionFound)
-			{
-				// Check if the object has a material.
-				if (closestHitData.hitObject -> m_hasMaterial)
-				{
-					// Use the material to compute the color.
-					qbRT::MaterialBase::m_reflectionRayCount = 0;
-					qbVector3<double> color = closestHitData.hitObject -> m_pMaterial -> ComputeColor(	m_objectList, m_lightList,
-																																														closestHitData.hitObject, closestHitData.poi,
-																																														closestHitData.normal, cameraRay);
-					outputImage.SetPixel(x, y, color.GetElement(0), color.GetElement(1), color.GetElement(2));
-				}
-				else
-				{
-					// Use the basic method to compute the color.
-					qbVector3<double> matColor = qbRT::MaterialBase::ComputeDiffuseColor(m_objectList, m_lightList,
-																																							closestHitData.hitObject, closestHitData.poi,
-																																							closestHitData.normal, closestObject->m_baseColor);
-					outputImage.SetPixel(x, y, matColor.GetElement(0), matColor.GetElement(1), matColor.GetElement(2));
-				}
-			}
-		}
-	}
-	
-	// Record the end time.
-	auto endTime = std::chrono::steady_clock::now();
-	
-	// Compute the time it took to render.
-	std::chrono::duration<double> renderTime = endTime - startTime;
-	std::cout.flush();
-	std::cout << "\n\nRendering time: " << renderTime.count() << "s" << std::endl;	
-	
-	std::cout << std::endl;
-	return true;
-}
-
-// Function to cast a ray into the Scene_E21.
-bool qbRT::Scene_E21::CastRay(	qbRT::Ray &castRay, std::shared_ptr<qbRT::ObjectBase> &closestObject,
-														qbRT::DATA::hitData &closestHitData)
-{
-	qbRT::DATA::hitData hitData;
-	double minDist = 1e6;
-	bool intersectionFound = false;
-	for (auto currentObject : m_objectList)
-	{
-		bool validInt = currentObject -> TestIntersection(castRay, hitData);
-		
-		// If we have a valid intersection.
-		if (validInt)
-		{
-			// Set the flag to indicate that we found an intersection.
-			intersectionFound = true;
-					
-			// Compute the distance between the camera and the point of intersection.
-			double dist = (hitData.poi - castRay.m_point1).norm();
-					
-			/* If this object is closer to the camera than any one that we have
-				seen before, then store a reference to it. */
-			if (dist < minDist)
-			{
-				minDist = dist;
-				closestObject = currentObject;
-				closestHitData = hitData;
-			}
-		}
-	}
-	
-	return intersectionFound;
-}
-
 
 
 

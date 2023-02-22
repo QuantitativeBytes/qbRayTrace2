@@ -37,6 +37,7 @@
 #include <memory>
 #include <vector>
 #include <SDL2/SDL.h>
+#include "qbutils.hpp"
 #include "qbImage.hpp"
 #include "camera.hpp"
 #include "./qbPrimatives/objsphere.hpp"
@@ -60,18 +61,33 @@ namespace qbRT
 			// The default constructor.
 			Scene();
 			
+			// ***
+			// Destructor.
+			virtual ~Scene();
+			
 			// Function to perform the rendering.
 			bool Render(qbImage &outputImage);
+			
+			// Function to handle rendering a tile.
+			void RenderTile(qbRT::DATA::tile *tile);
 			
 			// Function to cast a ray into the scene.
 			bool CastRay(	qbRT::Ray &castRay, std::shared_ptr<qbRT::ObjectBase> &closestObject,
 										qbRT::DATA::hitData &closestHitData);
+										
+			// Function to handle setting up the scene (to be overriden).
+			virtual void SetupSceneObjects();
 			
 		// Private functions.
 		private:
+			// Function to handle rendering a pixel.
+			qbVector3<double> RenderPixel(int x, int y, int xSize, int ySize);
+			
+			// Function to convert coordinates to a linear index.
+			int Sub2Ind(int x, int y, int xSize, int ySize);
 		
-		// Private members.
-		private:
+		
+		public:
 			// The camera that we will use.
 			qbRT::Camera m_camera;
 			
@@ -80,6 +96,9 @@ namespace qbRT
 	
 			// The list of lights in the scene.
 			std::vector<std::shared_ptr<qbRT::LightBase>> m_lightList;
+			
+			// Scene parameters.
+			int m_xSize, m_ySize;
 	};
 }
 
