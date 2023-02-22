@@ -68,6 +68,9 @@ namespace qbRT
 			// Function to perform the rendering.
 			bool Render(qbImage &outputImage);
 			
+			/*
+				New function to handle rendering a specified tile.
+			*/
 			// Function to handle rendering a tile.
 			void RenderTile(qbRT::DATA::tile *tile);
 			

@@ -16,7 +16,7 @@
 	www.youtube.com/c/QuantitativeBytes
 	
 	GPLv3 LICENSE
-	Copyright (c) 2021 Michael Bennett
+	Copyright (c) 2023 Michael Bennett
 	
     This program is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -66,8 +66,12 @@ bool CApp::OnInit()
 		pRenderer = SDL_CreateRenderer(pWindow, -1, 0);
 		
 		// Initialize the qbImage instance.
-		m_image.Initialize(m_xSize, m_ySize, pRenderer);
+		//m_image.Initialize(m_xSize, m_ySize, pRenderer);
 		
+		/*
+			We now initialize the scene with the window dimensions and
+			then generate a tile grid with tiles of the specified size.
+		*/
 		// Initialize the scene.
 		m_scene.m_xSize = m_xSize;
 		m_scene.m_ySize = m_ySize;
@@ -78,6 +82,14 @@ bool CApp::OnInit()
 			std::cout << "Failed to generate tile grid." << std::endl;
 			return false;
 		}
+		
+		/*
+			Following the introduction of tile-based rendering, the code
+			to actual rendering the image has moved from here. In 
+			general it doesn't make sense to have the code in the
+			OnInit() function in any case.
+			22/02/23
+		*/
 		
 		// Set the background color to white.
 		SDL_SetRenderDrawColor(pRenderer, 255, 255, 255, 255);
@@ -141,6 +153,18 @@ void CApp::OnEvent(SDL_Event *event)
 
 void CApp::OnLoop()
 {
+	/*
+		The actual rendering is now handled here, each time we come through
+		this loop. At the moment, before implementing multi-threading, we
+		proceed by looping through all of the tiles and finding the first
+		one that has not been rendered yet (as indicated by m_tileFlags).
+		We then call the RenderTile function from the scene base class and
+		pass a reference to the relevent tile as the only parameter. Finally,
+		we update m_tileFlags for this tile to indicate that it has now been
+		rendered and then break out of the loop. We don't want to end up
+		rendering every tile all at once, we want to one tile each time
+		we come through the OnLoop() function.
+	*/
 	// Loop through all tiles and find the first one that hasn't been rendered yet.
 	for (int i=0; i<m_tiles.size(); ++i)
 	{
@@ -165,6 +189,18 @@ void CApp::OnRender()
 	// For future versions.
 	double widthFactor = 1.0;
 	double heightFactor = 1.0;
+	
+	/*
+		The actual display is now generated here. We loop over all of the tiles
+		and wherever we find one that has been rendered (tileFlags == 2), then
+		we check if we have already display this tile (textureComplete) and if
+		not we convert the image data to an SDL texture and then use SDL_RenderCopy
+		to copy that texture to the right place in the window.
+		
+		In a single-thread implementation, this approach doesn't necessarily make
+		much sense, but it forms the foundation on which we can build our multi-threaded
+		version.
+	*/
 	
 	// Render the tiles.
 	for (int i=0; i<m_tiles.size(); ++i)

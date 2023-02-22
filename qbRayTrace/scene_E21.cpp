@@ -2,7 +2,7 @@
 	Scene_E21.cpp
 	
 	The Scene_E21 class implementation - A class to handle information
-	about the Scene_E21 and rendering to an image.
+	about the Scene_E21.
 	
 	This file forms part of the qbRayTrace project as described
 	in the series of videos on the QuantitativeBytes YouTube
@@ -315,9 +315,6 @@ void qbRT::Scene_E21::SetupSceneObjects()
 	// **************************************************************************************
 	// Put the objects into the scene.	
 	// **************************************************************************************
-	//m_objectList.push_back(sprayBody);
-	//m_objectList.push_back(sprayTopCone);
-	//m_objectList.push_back(sprayTop);
 	m_objectList.push_back(sprayCan);
 	m_objectList.push_back(box);
 	m_objectList.push_back(box2);	

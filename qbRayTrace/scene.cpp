@@ -50,6 +50,13 @@ qbRT::Scene::Scene()
 	// Setup the scene.
 	SetupSceneObjects();
 
+	/*
+		This is now a base class that is intended to be inherited
+		by a specific scene class that implements the
+		SetupSceneObjects() function to define all of the objects,
+		lights and camera configuration for the scene.
+	*/
+
 }
 
 // Destructor.

@@ -64,6 +64,12 @@ class CApp
 	private:
 		void PrintVector(const qbVector3<double> &inputVector);
 		
+		/*
+			New functions here to handle tile based rendering. This isn't much use
+			right now, but forms the basis for the multi-threading implementation
+			that we will look at later.
+			22/02/23
+		*/
 		// Function to generate the tile grid.
 		bool GenerateTileGrid(int tileSizeX, int tileSizeY);
 		
@@ -74,6 +80,10 @@ class CApp
 		// An instance of the qbImage class to store the image.
 		qbImage m_image;
 		
+		/*
+			New code here to support tiles.
+			22/02/23
+		*/
 		// Array to store tiles.
 		std::vector<qbRT::DATA::tile> m_tiles;
 		std::vector<int> m_tileFlags;
@@ -87,6 +97,12 @@ class CApp
 		SDL_Window *pWindow;
 		SDL_Renderer *pRenderer;
 		
+		/*
+			New functions here to handle tile based rendering. This isn't much use
+			right now, but forms the basis for the multi-threading implementation
+			that we will look at later.
+			22/02/23
+		*/		
 		// Display configuration.
 		int m_xSize, m_ySize;
 		
