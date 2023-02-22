@@ -85,7 +85,7 @@ bool CApp::OnInit()
 		
 		/*
 			Following the introduction of tile-based rendering, the code
-			to actual rendering the image has moved from here. In 
+			to actual render the image has moved from here. In 
 			general it doesn't make sense to have the code in the
 			OnInit() function in any case.
 			22/02/23
@@ -128,12 +128,12 @@ int CApp::OnExecute()
 		
 		/*
 			The delay here seems counterintuitive, but it actually makes the
-			rendering faster. The reason for this, I think, is that it
-			reduces the load imposed by looping through this code allowing
-			more of the CPU time to be used for actual rendering. I have
-			tried different values, reducing it below 1 seems to slow
-			things down and increasing it above 4 also slows things
-			down. It would seem that somewhere between 1 and 4 is the
+			rendering faster (with multi-threading). The reason for this, 
+			I think, is that it reduces the load imposed by looping through 
+			this code allowing more of the CPU time to be used for actual 
+			rendering. I have tried different values, reducing it below 1 
+			seems to slow things down and increasing it above 4 also slows 
+			things down. It would seem that somewhere between 1 and 4 is the
 			'sweet spot', so I have left it at 1.
 		*/
 		SDL_Delay(1);		
