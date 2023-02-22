@@ -81,7 +81,6 @@ class CApp
 		
 		// An instance of the scene class.
 		qbRT::Scene_E21 m_scene;
-		//qbRT::Scene m_scene;
 		
 		// SDL2 stuff.
 		bool isRunning;
@@ -90,6 +89,15 @@ class CApp
 		
 		// Display configuration.
 		int m_xSize, m_ySize;
+		
+		// Function to convert tile image to texture.
+		void ConvertImageToTexture(qbRT::DATA::tile &tile);
+		
+		// Function to handle converting colors from RGB to UINT32.
+		Uint32 ConvertColor(const double red, const double green, const double blue);
+		
+		// The value to be used for gamma-correction.
+		double m_maxLevel = 0.8;
 		
 };
 

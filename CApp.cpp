@@ -65,8 +65,12 @@ bool CApp::OnInit()
 	{
 		pRenderer = SDL_CreateRenderer(pWindow, -1, 0);
 		
-		// Intialize the qbImage instance.
+		// Initialize the qbImage instance.
 		m_image.Initialize(m_xSize, m_ySize, pRenderer);
+		
+		// Initialize the scene.
+		m_scene.m_xSize = m_xSize;
+		m_scene.m_ySize = m_ySize;
 		
 		// Initialize the tile grid.
 		if (!GenerateTileGrid(128, 128))
@@ -78,12 +82,6 @@ bool CApp::OnInit()
 		// Set the background color to white.
 		SDL_SetRenderDrawColor(pRenderer, 255, 255, 255, 255);
 		SDL_RenderClear(pRenderer);
-		
-		// Render the scene.
-		m_scene.Render(m_image);
-		
-		// Display the image.
-		m_image.Display();
 		
 		// Show the result.
 		SDL_RenderPresent(pRenderer);
@@ -115,6 +113,18 @@ int CApp::OnExecute()
 		
 		OnLoop();
 		OnRender();
+		
+		/*
+			The delay here seems counterintuitive, but it actually makes the
+			rendering faster. The reason for this, I think, is that it
+			reduces the load imposed by looping through this code allowing
+			more of the CPU time to be used for actual rendering. I have
+			tried different values, reducing it below 1 seems to slow
+			things down and increasing it above 4 also slows things
+			down. It would seem that somewhere between 1 and 4 is the
+			'sweet spot', so I have left it at 1.
+		*/
+		SDL_Delay(1);		
 	}
 	
 	OnExit();
@@ -137,10 +147,10 @@ void CApp::OnLoop()
 		if (m_tileFlags.at(i) == 0)
 		{
 			// This tile has not been rendered, so render it now.
-			// m_scene.RenderTile(tile);
+			m_scene.RenderTile(&m_tiles.at(i));
 			
 			// Set the tile flag to indicate that this tile has been rendered.
-			m_tileFlags.at(i) == 2;
+			m_tileFlags.at(i) = 2;
 			
 			// Once complete, break out of the loop.
 			// This is tempory and will be removed once we implement multi-threading.
@@ -180,16 +190,17 @@ void CApp::OnRender()
 				that we don't keep updating each tile every time we go through this loop.
 				This helps to keep things as efficient as possible.
 			*/
-			/*
 			if (!m_tiles.at(i).textureComplete)
 			{
 				ConvertImageToTexture(m_tiles.at(i));
 				m_tiles.at(i).textureComplete = true;
 				SDL_RenderCopy(pRenderer, m_tiles.at(i).pTexture, &srcRect, &dstRect);			
-			}	
-			*/				
+			}					
 		}
 	}
+	
+	// Show the result.
+	SDL_RenderPresent(pRenderer);		
 	
 }
 
@@ -322,9 +333,48 @@ bool CApp::DestroyTileGrid()
 	return true;
 }
 
+// Function to convert an RGB image to a texture.
+void CApp::ConvertImageToTexture(qbRT::DATA::tile &tile)
+{
+	// Allocate memory for a pixel buffer.
+	Uint32 *tempPixels = new Uint32[tile.xSize * tile.ySize];
+	
+	// Clear the pixel buffer.
+	memset(tempPixels, 0, tile.xSize * tile.ySize * sizeof(Uint32));
+	
+	// Copy the image into tempPixels.
+	for (int i=0; i<tile.xSize * tile.ySize; ++i)
+	{
+		tempPixels[i] = ConvertColor(tile.rgbData.at(i).m_x, tile.rgbData.at(i).m_y, tile.rgbData.at(i).m_z);
+	}
+	
+	// Update the texture with the pixel buffer.
+	SDL_UpdateTexture(tile.pTexture, NULL, tempPixels, tile.xSize * sizeof(Uint32));	
+	
+	// Delete the pixel buffer.
+	delete[] tempPixels;
+}
 
-
-
+// Function to convert colours to Uint32
+Uint32 CApp::ConvertColor(const double red, const double green, const double blue)
+{
+	// Convert the colours to unsigned integers.
+	double newRed = std::max(std::min(std::pow(red, m_maxLevel), 1.0), 0.0);
+	double newGreen = std::max(std::min(std::pow(green, m_maxLevel), 1.0), 0.0);
+	double newBlue = std::max(std::min(std::pow(blue, m_maxLevel), 1.0), 0.0);
+	
+	unsigned char r = static_cast<unsigned char>(newRed * 255.0);
+	unsigned char g = static_cast<unsigned char>(newGreen * 255.0);
+	unsigned char b = static_cast<unsigned char>(newBlue * 255.0);
+	
+	#if SDL_BYTEORDER == SDL_BIG_ENDIAN
+		Uint32 pixelColor = (r << 24) + (g << 16) + (b << 8) + 255;
+	#else
+		Uint32 pixelColor = (255 << 24) + (b << 16) + (g << 8) + r;
+	#endif
+	
+	return pixelColor;
+}
 
 
 
