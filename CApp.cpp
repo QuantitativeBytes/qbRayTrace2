@@ -77,7 +77,7 @@ bool CApp::OnInit()
 		m_scene.m_ySize = m_ySize;
 		
 		// Initialize the tile grid.
-		if (!GenerateTileGrid(128, 128))
+		if (!GenerateTileGrid(128, 90))
 		{
 			std::cout << "Failed to generate tile grid." << std::endl;
 			return false;
@@ -304,47 +304,6 @@ bool CApp::GenerateTileGrid(int tileSizeX, int tileSizeY)
 			m_tiles.push_back(tempTile);		
 		}
 	}
-	
-	// Add end-of-row and end-of-column tiles that might be smaller.
-	// First end-of-column.
-	if ((numTilesY * tileSizeY) < m_ySize)
-	{
-		int newTileSizeY = m_ySize - (numTilesY * tileSizeY);
-		SDL_Surface *eocY = SDL_CreateRGBSurface(0, tileSizeX, newTileSizeY, 32, rmask, gmask, bmask, amask);
-		for (int x=0; x<numTilesX; ++x)
-		{
-			qbRT::DATA::tile tempTile;
-			tempTile.x = x*tileSizeX;
-			tempTile.y = numTilesY * tileSizeY;
-			tempTile.xSize = tileSizeX;
-			tempTile.ySize = newTileSizeY;
-			tempTile.renderComplete = 0;
-			tempTile.pTexture = SDL_CreateTextureFromSurface(pRenderer, eocY);
-			tempTile.rgbData.resize(tempTile.xSize * tempTile.ySize);			
-			m_tiles.push_back(tempTile);				
-		}
-		SDL_FreeSurface(eocY);
-	}
-	
-	// And then end-of-row.
-	if ((numTilesX * tileSizeX) < m_xSize)
-	{
-		int newTileSizeX = m_xSize - (numTilesX * tileSizeX);
-		SDL_Surface *eocX = SDL_CreateRGBSurface(0, newTileSizeX, tileSizeY, 32, rmask, gmask, bmask, amask);
-		for (int y=0; y<numTilesY; ++y)
-		{
-			qbRT::DATA::tile tempTile;
-			tempTile.x = numTilesX * tileSizeX;
-			tempTile.y = y*tileSizeY;
-			tempTile.xSize = newTileSizeX;
-			tempTile.ySize = tileSizeY;
-			tempTile.renderComplete = 0;
-			tempTile.pTexture = SDL_CreateTextureFromSurface(pRenderer, eocX);
-			tempTile.rgbData.resize(tempTile.xSize * tempTile.ySize);			
-			m_tiles.push_back(tempTile);				
-		}
-		SDL_FreeSurface(eocX);
-	}	
 				
 	// Set all the tile flags to zero.
 	for (int i=0; i<m_tiles.size(); ++i)
