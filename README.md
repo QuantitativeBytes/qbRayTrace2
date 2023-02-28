@@ -8,7 +8,7 @@ You will also need to make sure that you clone this repository recursively to in
 
 git clone --recurse-submodules https://www.github.com/QuantitativeBytes/qbRayTrace2.git
 
-The code for the first 10 episodes is in a separate repository "qbRayTrace", where the code for each episode is in a different sub-folder. I did it this way to make it easier for people to follow the series. The code for episodes 11 and onwards will be here, in the "qbRayTrace2" repository and I will not be using seperate sub-folders for each episode. As the project gets more complex, I thought that duplicating the code over and over again in each sub-folder would be too inefficient.
+The code for the first 10 episodes is in a separate repository "qbRayTrace", where the code for each episode is in a different sub-folder. I did it this way to make it easier for people to follow the series. The code for episodes 11 and onwards will be here, in the "qbRayTrace2" repository and I will not be using separate sub-folders for each episode. As the project gets more complex, I thought that duplicating the code over and over again in each sub-folder would be too inefficient.
 
 This code is intended to be primarily for educational purposes and to be studied alongside the corresponding videos on the QuantitativeBytes YouTube channel.
 
@@ -25,7 +25,7 @@ https://youtu.be/5lDRXL5zQDo
 
 ## Episode 12
 ### Boxes
-A basic implementation of a box primative. Creates a unit cube at the origin that can then be transformed at will using the standard geometric transforms.
+A basic implementation of a box primitive. Creates a unit cube at the origin that can then be transformed at will using the standard geometric transforms.
 https://youtu.be/Fg-_f1L-6dI
 
 ## Episode 13
@@ -86,7 +86,7 @@ https://youtu.be/1D9j60E27XI
 The first of a three part mini-series looking at improving the performance of qbRAY.
 https://youtu.be/-5kLk7_bs0U
 
-## Epsiode 24
+## Episode 24
 ### Performance (Part 2)  - Profiling and Debugging
 Using a profiler to investigate what is causing the code to be slow.
 https://youtu.be/EQlXfCIBpdg
@@ -94,5 +94,12 @@ https://youtu.be/EQlXfCIBpdg
 ## Episode 25
 ### Performance (Part 3) - Faster linear algebra
 Implementing a new matrix class to complete the work on making the linear algebra library faster for fixed size vectors and matrices.
+
 https://youtu.be/sr1OA7NPwcI
+
+## Episode 26
+### Multi-threading (Part 1 of 2) - Tile based rendering
+In the first of a 2 part mini-series on multi-threading, we take a look at implementing a tile based rendering system. On it's own, this isn't very useful, but it will form the foundation of the multi-threading implementation that we will look at in the next episode.
+
+https://youtu.be/2bMUtPt3Ya0
 
