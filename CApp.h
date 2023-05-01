@@ -37,6 +37,9 @@
 #ifndef CAPP_H
 #define CAPP_H
 
+#include <thread>
+#include <atomic>
+
 #include <SDL2/SDL.h>
 #include "./qbRayTrace/qbImage.hpp"
 #include "./qbRayTrace/scene.hpp"
@@ -61,6 +64,10 @@ class CApp
 		void OnRender();
 		void OnExit();
 		
+		// **************
+		// Function to handle rendering a tile.
+		void RenderTile(qbRT::DATA::tile *tile, std::atomic<int> *threadCounter, std::atomic<int> *tileFlag);
+		
 	private:
 		void PrintVector(const qbVector3<double> &inputVector);
 		
@@ -76,6 +83,10 @@ class CApp
 		// Function to handle destroying the tile grid.
 		bool DestroyTileGrid();
 		
+		// *************************************
+		// Function to reset the tile flags.
+		void ResetTileFlags();		
+		
 	private:
 		// An instance of the qbImage class to store the image.
 		qbImage m_image;
@@ -86,8 +97,19 @@ class CApp
 		*/
 		// Array to store tiles.
 		std::vector<qbRT::DATA::tile> m_tiles;
-		std::vector<int> m_tileFlags;
+		
+		//std::vector<int> m_tileFlags;
+		std::vector<std::atomic<int> *> m_tileFlags;
+		
 		int m_numTilesX, m_numTilesY;
+		
+		// *****************************************
+		// Thread stuff.
+		int m_maxThreads = 6;
+		int m_numCurrentThreads = 0;
+		std::vector<int> m_tilesCurrentlyRendering;
+		std::vector<std::thread> m_threads;
+		std::atomic<int> *m_threadCounter;		
 		
 		// An instance of the scene class.
 		qbRT::Scene_E21 m_scene;

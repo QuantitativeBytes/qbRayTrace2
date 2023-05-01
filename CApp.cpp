@@ -34,7 +34,6 @@
 **********************************************************/
 
 // CApp.cpp
-
 #include "CApp.h"
 #include "./qbRayTrace/qbLinAlg/qbVector.h"
 #include "./qbRayTrace/qbLinAlg/qbVector2.hpp"
@@ -166,7 +165,7 @@ void CApp::OnLoop()
 		we come through the OnLoop() function.
 	*/
 	// Loop through all tiles and find the first one that hasn't been rendered yet.
-	for (int i=0; i<m_tiles.size(); ++i)
+	/*for (int i=0; i<m_tiles.size(); ++i)
 	{
 		if (m_tileFlags.at(i) == 0)
 		{
@@ -180,6 +179,22 @@ void CApp::OnLoop()
 			// This is tempory and will be removed once we implement multi-threading.
 			break;
 		}
+	}*/
+	for (int i=0; i<m_tiles.size(); ++i)
+	{
+			if (m_tileFlags.at(i) -> load(std::memory_order_acquire) == 0)
+			{
+				// This tile is waiting to be rendered.
+				// Check if any threads are available.
+				if (m_threadCounter -> load(std::memory_order_acquire) < m_maxThreads)
+				{
+					// We have a thread available, so launch it to render this tile.
+					int numActiveThreads = m_threadCounter -> load(std::memory_order_acquire);					
+					m_threadCounter -> store(numActiveThreads+1, std::memory_order_release);
+					std::thread renderThread (&CApp::RenderTile, this, &m_tiles.at(i), m_threadCounter, m_tileFlags.at(i));
+					renderThread.detach();
+				}
+			}	
 	}
 }
 
@@ -206,7 +221,8 @@ void CApp::OnRender()
 	for (int i=0; i<m_tiles.size(); ++i)
 	{
 		// Only render the tile if it is complete.
-		if (m_tileFlags.at(i) == 2)
+		//if (m_tileFlags.at(i) == 2)
+		if (m_tileFlags.at(i) -> load(std::memory_order_acquire) == 2)
 		{
 			SDL_Rect srcRect, dstRect;
 			srcRect.x = 0;
@@ -372,7 +388,26 @@ Uint32 CApp::ConvertColor(const double red, const double green, const double blu
 }
 
 
+// *******************
+// Function to handle rendering a tile.
+void CApp::RenderTile(qbRT::DATA::tile *tile, std::atomic<int> *threadCounter, std::atomic<int> *tileFlag)
+{
+	tileFlag -> store(1, std::memory_order_release);
+	m_scene.RenderTile(tile);
+	int numActiveThreads = threadCounter -> load(std::memory_order_acquire);
+	threadCounter -> store(numActiveThreads-1, std::memory_order_release);
+	tileFlag -> store(2, std::memory_order_release);
+}
 
+// Function to reset the tile flags.
+void CApp::ResetTileFlags()
+{
+	for (int i=0; i<m_tiles.size(); ++i)
+	{
+		m_tileFlags.at(i) -> store(0, std::memory_order_release);
+		m_tiles.at(i).textureComplete = false;
+	}
+}
 
 
 
