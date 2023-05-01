@@ -46,6 +46,10 @@ CApp::CApp()
 	isRunning = true;
 	pWindow = NULL;
 	pRenderer = NULL;
+	
+	// ***********
+	// We have to initialize the thread counter here in the class constructor.
+	m_threadCounter = new std::atomic<int> (0);
 }
 
 bool CApp::OnInit()
@@ -81,6 +85,11 @@ bool CApp::OnInit()
 			std::cout << "Failed to generate tile grid." << std::endl;
 			return false;
 		}
+		
+		// ****
+		// Initialize the thread counter.
+		m_maxThreads = 12;
+		m_threadCounter -> store(0, std::memory_order_release);		
 		
 		/*
 			Following the introduction of tile-based rendering, the code
@@ -324,8 +333,13 @@ bool CApp::GenerateTileGrid(int tileSizeX, int tileSizeY)
 	// Set all the tile flags to zero.
 	for (int i=0; i<m_tiles.size(); ++i)
 	{
+		m_tileFlags.push_back(new std::atomic<int> (0));
+	}	
+	/*
+	for (int i=0; i<m_tiles.size(); ++i)
+	{
 		m_tileFlags.push_back(0);
-	}
+	}*/
 				
 	// Tidy up before returning.
 	SDL_FreeSurface(tempSurface);	
