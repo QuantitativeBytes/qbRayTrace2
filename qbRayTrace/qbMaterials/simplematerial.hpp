@@ -51,10 +51,13 @@ namespace qbRT
 			virtual ~SimpleMaterial() override;
 			
 			// Function to return the color.
+			/* Note the addition of two extra inputs to the ComputeColor function, for the local POI
+			 and the UV coords respectively. */			
 			virtual qbVector3<double> ComputeColor(	const std::vector<std::shared_ptr<qbRT::ObjectBase>> &objectList,
 																							const std::vector<std::shared_ptr<qbRT::LightBase>> &lightList,
 																							const std::shared_ptr<qbRT::ObjectBase> &currentObject,
 																							const qbVector3<double> &intPoint, const qbVector3<double> &localNormal,
+																							const qbVector3<double> &localPOI, const qbVector2<double> &uvCoords,
 																							const qbRT::Ray &cameraRay) override;
 																							
 			// Function to compute specular highlights.

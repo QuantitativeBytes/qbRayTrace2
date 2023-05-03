@@ -45,10 +45,13 @@ qbRT::SimpleMaterial::~SimpleMaterial()
 }
 
 // Function to return the color.
+/* Note the addition of two extra inputs to the ComputeColor function, for the local POI
+ and the UV coords respectively. */
 qbVector3<double> qbRT::SimpleMaterial::ComputeColor(	const std::vector<std::shared_ptr<qbRT::ObjectBase>> &objectList,
 																											const std::vector<std::shared_ptr<qbRT::LightBase>> &lightList,
 																											const std::shared_ptr<qbRT::ObjectBase> &currentObject,
 																											const qbVector3<double> &intPoint, const qbVector3<double> &localNormal,
+																											const qbVector3<double> &localPOI, const qbVector2<double> &uvCoords,
 																											const qbRT::Ray &cameraRay)
 {
 	// Define the initial material colors.
@@ -62,7 +65,11 @@ qbVector3<double> qbRT::SimpleMaterial::ComputeColor(	const std::vector<std::sha
 	if (m_hasNormalMap)
 	{
 		qbVector3<double> upVector = std::vector<double> {0.0, 0.0, -1.0};
-		newNormal = PerturbNormal(newNormal, currentObject -> m_uvCoords, upVector);
+		//newNormal = PerturbNormal(newNormal, currentObject -> m_uvCoords, upVector);
+		/* We modify this code to get the UV coords directly from the hitData structure,
+			as they are no longer stored in the object itself. */
+		newNormal = PerturbNormal(newNormal, uvCoords, upVector);
+		
 	}
 	
 	// *** Store the current local normal, in case it is needed elsewhere.
@@ -74,13 +81,14 @@ qbVector3<double> qbRT::SimpleMaterial::ComputeColor(	const std::vector<std::sha
 	// Compute the diffuse component.
 	if (!m_hasTexture)
 	{
-		//difColor = ComputeDiffuseColor(objectList, lightList, currentObject, intPoint, newNormal, m_baseColor);
 		difColor = ComputeSpecAndDiffuse(objectList, lightList, currentObject, intPoint, newNormal, m_baseColor, cameraRay);
 	}
 	else
 	{
-		//difColor = ComputeDiffuseColor(objectList, lightList, currentObject, intPoint, newNormal, GetTextureColor(currentObject->m_uvCoords));
-		qbVector3<double> textureColor = GetTextureColor(currentObject->m_uvCoords);
+		//qbVector3<double> textureColor = GetTextureColor(currentObject->m_uvCoords);
+		/* We modify this code to get the UV coords directly from the hitData structure,
+			as they are no longer stored in the object itself. */
+		qbVector3<double> textureColor = GetTextureColor(uvCoords);		
 		difColor = ComputeSpecAndDiffuse(objectList, lightList, currentObject, intPoint, newNormal, textureColor, cameraRay);		
 	}
 	
