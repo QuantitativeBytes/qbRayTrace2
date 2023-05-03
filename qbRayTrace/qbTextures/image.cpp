@@ -205,7 +205,7 @@ double qbRT::Texture::Image::LinearInterp(const double &x0, const double &y0, co
 	return output;
 }
 
-double qbRT::Texture::Image::BilinearInterp(	const double &x0, const double &y0, const double &v0,
+double qbRT::Texture::Image::BilinearInterp(const double &x0, const double &y0, const double &v0,
 																						const double &x1, const double &y1, const double &v1,
 																						const double &x2, const double &y2, const double &v2,
 																						const double &x3, const double &y3, const double &v3,
