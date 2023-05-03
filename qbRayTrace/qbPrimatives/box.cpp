@@ -201,13 +201,19 @@ bool qbRT::Box::TestIntersection(const qbRT::Ray &castRay, qbRT::DATA::hitData &
 			
 		// Return the base color.
 		hitData.color = m_baseColor;
+		
+		// Return the local point of intersection.
+		hitData.localPOI = poi;				
 
 		// Compute and return the UV coordinates.
-		ComputeUV(poi, m_uvCoords);
-		hitData.uvCoords = m_uvCoords;
+		//ComputeUV(poi, m_uvCoords);
+		//hitData.uvCoords = m_uvCoords;
+		/* Instead of storing the UV coordinates in the member variable,
+			we now assign the result of ComputeUV directly to the 
+			hitData structure. */
+		ComputeUV(poi, hitData.uvCoords);
 		
 		// Return a reference to this object.
-		//hitData.hitObject = std::make_shared<qbRT::ObjectBase> (*this);	
 		hitData.hitObject = this -> shared_from_this();
 		
 		return true;

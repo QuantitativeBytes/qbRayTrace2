@@ -217,7 +217,8 @@ bool qbRT::SHAPES::CompositeBase::TestIntersection(	const qbRT::Ray &castRay, qb
 			qbVector3<double> newNormal = m_transformMatrix.ApplyNorm(tempHitData.normal);
 			newNormal.Normalize();
 			tempHitData.hitObject -> ComputeUV(tempHitData.localPOI, hitData.uvCoords);
-			m_uvCoords = hitData.uvCoords;
+			//m_uvCoords = hitData.uvCoords;
+			
 			
 			// Return these values.
 			hitData.poi = worldIntPoint;

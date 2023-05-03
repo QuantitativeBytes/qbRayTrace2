@@ -68,16 +68,12 @@ bool qbRT::Cylinder::TestIntersection(	const qbRT::Ray &castRay, qbRT::DATA::hit
 	qbVector3<double> v = bckRay.m_lab;
 	v.Normalize();
 	
-	// Get the start point of the line.
-	//qbVector3<double> p = bckRay.m_point1;
-	
 	// Compute a, b and c.
 	double a = (v.m_x * v.m_x) + (v.m_y * v.m_y);
 	double b = 2.0 * (bckRay.m_point1.m_x * v.m_x + bckRay.m_point1.m_y * v.m_y);
 	double c = ((bckRay.m_point1.m_x * bckRay.m_point1.m_x) + (bckRay.m_point1.m_y * bckRay.m_point1.m_y)) - 1.0;
 	
 	// Compute b^2 - 4ac.
-	//double numSQRT = sqrtf(std::pow(b, 2.0) - 4 * a * c);
 	double numSQRT = sqrt((b*b) - 4.0 * a * c);
 	
 	// Test for intersections.
@@ -191,35 +187,23 @@ bool qbRT::Cylinder::TestIntersection(	const qbRT::Ray &castRay, qbRT::DATA::hit
 		
 		// Compute the local normal.
 		qbVector3<double> orgNormal;
-		//qbVector3<double> newNormal;
-		//qbVector3<double> localOrigin {std::vector<double> {0.0, 0.0, 0.0}};
-		//qbVector3<double> globalOrigin = m_transformMatrix.Apply(localOrigin, qbRT::FWDTFORM);
 		orgNormal.SetElement(0, validPOI.m_x);
 		orgNormal.SetElement(1, validPOI.m_y);
 		orgNormal.SetElement(2, 0.0);
 		hitData.normal = m_transformMatrix.ApplyNorm(orgNormal);
 		hitData.normal.Normalize();
-				
-		//newNormal = m_transformMatrix.Apply(orgNormal, qbRT::FWDTFORM) - globalOrigin;
-		//newNormal.Normalize();
-		//localNormal = newNormal;		
-		
+
 		// Return the base color.
 		hitData.color = m_baseColor;
 		
-		// Compute the (u,v) coordinates and store for possible later use.
-		//double x = validPOI.GetElement(0);
-		//double y = validPOI.GetElement(1);
-		//double z = validPOI.GetElement(2);
-		//double u = atan2(y, x) / M_PI;
-		//double v = z;
-		//m_uvCoords.SetElement(0, u);
-		//m_uvCoords.SetElement(1, v);
-		ComputeUV(validPOI, m_uvCoords);
-		hitData.uvCoords = m_uvCoords;
+		// Return the local POI.
+		hitData.localPOI = validPOI;
+		
+		// Compute the (u,v) coordinates.
+		ComputeUV(validPOI, hitData.uvCoords);
+		//hitData.uvCoords = m_uvCoords;
 		
 		// Return a reference to this object.
-		//hitData.hitObject = std::make_shared<qbRT::ObjectBase> (*this);			
 		hitData.hitObject = this -> shared_from_this();
 		
 		return true;
@@ -235,13 +219,6 @@ bool qbRT::Cylinder::TestIntersection(	const qbRT::Ray &castRay, qbRT::DATA::hit
 				// Transform the intersection point back into world coordinates.
 				hitData.poi = m_transformMatrix.Apply(validPOI, qbRT::FWDTFORM);
 				
-				// Compute the local normal.
-				//qbVector3<double> localOrigin {std::vector<double> {0.0, 0.0, 0.0}};
-				//qbVector3<double> globalOrigin = m_transformMatrix.Apply(localOrigin, qbRT::FWDTFORM);
-				//localNormal = m_transformMatrix.Apply(normalVector, qbRT::FWDTFORM) - globalOrigin;
-				//localNormal.Normalize();
-				
-				//qbVector3<double> normalVector {std::vector<double> {0.0, 0.0, 0.0 + validPOI.GetElement(2)}};
 				qbVector3<double> normalVector {0.0, 0.0, validPOI.m_z};
 				hitData.normal = m_transformMatrix.ApplyNorm(normalVector);
 				hitData.normal.Normalize();
@@ -249,17 +226,14 @@ bool qbRT::Cylinder::TestIntersection(	const qbRT::Ray &castRay, qbRT::DATA::hit
 				// Return the base color.
 				hitData.color = m_baseColor;
 				
-				// Compute and store (u,v) coordinates for possible later use.
-				//double x = validPOI.GetElement(0);
-				//double y = validPOI.GetElement(1);
-				//double z = validPOI.GetElement(2);
-				//m_uvCoords.SetElement(0, x);
-				//m_uvCoords.SetElement(1, y);
-				ComputeUV(validPOI, m_uvCoords);
-				hitData.uvCoords = m_uvCoords;
+				// Return the local POI.
+				hitData.localPOI = validPOI;
+				
+				// Compute the UV coordinates
+				ComputeUV(validPOI, hitData.uvCoords);
+				//hitData.uvCoords = m_uvCoords;
 				
 				// Return a reference to this object.
-				//hitData.hitObject = std::make_shared<qbRT::ObjectBase> (*this);	
 				hitData.hitObject = this -> shared_from_this();
 				
 				return true;
