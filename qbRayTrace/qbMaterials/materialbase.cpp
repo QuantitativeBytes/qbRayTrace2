@@ -51,6 +51,7 @@ qbVector3<double> qbRT::MaterialBase::ComputeColor(	const std::vector<std::share
 																										const std::vector<std::shared_ptr<qbRT::LightBase>> &lightList,
 																										const std::shared_ptr<qbRT::ObjectBase> &currentObject,
 																										const qbVector3<double> &intPoint, const qbVector3<double> &localNormal,
+																										const qbVector3<double> &localPOI, const qbVector2<double> &uvCoords,
 																										const qbRT::Ray &cameraRay)
 {
 	// Define an initial material color.
@@ -141,7 +142,9 @@ qbVector3<double> qbRT::MaterialBase::ComputeReflectionColor(	const std::vector<
 			// Use the material to compute the color.
 			matColor = closestHitData.hitObject -> m_pMaterial -> ComputeColor(	objectList, lightList, 
 																																					closestHitData.hitObject, closestHitData.poi, 
-																																					closestHitData.normal, reflectionRay);
+																																					closestHitData.normal, 
+																																					closestHitData.localPOI,
+																																					closestHitData.uvCoords, reflectionRay);
 		}
 		else
 		{

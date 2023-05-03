@@ -55,10 +55,13 @@ namespace qbRT
 			virtual ~MaterialBase();
 			
 			// Function to return the color of the material.
+			/* Note the addition of two extra inputs to the ComputeColor function, for the local POI
+			 and the UV coords respectively. */
 			virtual qbVector3<double> ComputeColor(	const std::vector<std::shared_ptr<qbRT::ObjectBase>> &objectList,
 																							const std::vector<std::shared_ptr<qbRT::LightBase>> &lightList,
 																							const std::shared_ptr<qbRT::ObjectBase> &currentObject,
 																							const qbVector3<double> &intPoint, const qbVector3<double> &localNormal,
+																							const qbVector3<double> &localPOI, const qbVector2<double> &uvCoords,
 																							const qbRT::Ray &cameraRay);
 																							
 			// Function to compute diffuse color.
@@ -107,7 +110,11 @@ namespace qbRT
 		public:
 			// Counter for the number of relection rays.
 			inline static int m_maxReflectionRays;
-			inline static int m_reflectionRayCount;
+			
+			// ****
+			inline static int thread_local m_reflectionRayCount;
+			//inline static int m_reflectionRayCount;
+			// ****			
 			
 			// The ambient lighting conditions.
 			inline static qbVector3<double> m_ambientColor {std::vector<double> {1.0, 1.0, 1.0}};
