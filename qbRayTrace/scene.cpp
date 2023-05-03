@@ -190,7 +190,9 @@ qbVector3<double> qbRT::Scene::RenderPixel(int x, int y, int xSize, int ySize)
 			qbRT::MaterialBase::m_reflectionRayCount = 0;
 			outputColor = closestHitData.hitObject -> m_pMaterial -> ComputeColor(	m_objectList, m_lightList,
 																																							closestHitData.hitObject, closestHitData.poi,
-																																							closestHitData.normal, cameraRay);
+																																							closestHitData.normal,
+																																							closestHitData.localPOI,
+																																							closestHitData.uvCoords, cameraRay);
 		}
 		else
 		{
