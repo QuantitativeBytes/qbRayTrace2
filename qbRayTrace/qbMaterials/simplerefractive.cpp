@@ -51,6 +51,7 @@ qbVector3<double> qbRT::SimpleRefractive::ComputeColor(	const std::vector<std::s
 																												const std::vector<std::shared_ptr<qbRT::LightBase>> &lightList,
 																												const std::shared_ptr<qbRT::ObjectBase> &currentObject,
 																												const qbVector3<double> &intPoint, const qbVector3<double> &localNormal,
+																												const qbVector3<double> &localPOI, const qbVector2<double> &uvCoords,
 																												const qbRT::Ray &cameraRay)
 {
 	// Define the initial material colors.
@@ -67,7 +68,8 @@ qbVector3<double> qbRT::SimpleRefractive::ComputeColor(	const std::vector<std::s
 	}
 	else
 	{
-		qbVector3<double> textureColor = GetTextureColor(currentObject->m_uvCoords);
+		//qbVector3<double> textureColor = GetTextureColor(currentObject->m_uvCoords);
+		qbVector3<double> textureColor = GetTextureColor(uvCoords);
 		difColor = ComputeDiffuseColor(objectList, lightList, currentObject, intPoint, localNormal, textureColor);
 	}
 		
@@ -123,12 +125,6 @@ qbVector3<double> qbRT::SimpleRefractive::ComputeTranslucency(	const std::vector
 	
 	// Test for secondary intersection with this object.
 	std::shared_ptr<qbRT::ObjectBase> closestObject;
-	//qbVector3<double> closestIntPoint		{3};
-	//qbVector3<double> closestLocalNormal	{3};
-	//qbVector3<double> closestLocalColor	{3};
-	//qbVector3<double> newIntPoint				{3};
-	//qbVector3<double> newLocalNormal			{3};
-	//qbVector3<double> newLocalColor			{3};
 	qbRT::DATA::hitData closestHitData;
 	qbRT::DATA::hitData hitData;	
 	bool test = currentObject -> TestIntersection(refractedRay, hitData);
@@ -173,7 +169,10 @@ qbVector3<double> qbRT::SimpleRefractive::ComputeTranslucency(	const std::vector
 			matColor = closestHitData.hitObject -> m_pMaterial -> ComputeColor(	objectList, lightList, 
 																																					closestHitData.hitObject, 
 																																					closestHitData.poi, 
-																																					closestHitData.normal, finalRay);
+																																					closestHitData.normal, 
+																																					closestHitData.localPOI,
+																																					closestHitData.uvCoords,
+																																					finalRay);
 		}
 		else
 		{
@@ -193,7 +192,7 @@ qbVector3<double> qbRT::SimpleRefractive::ComputeTranslucency(	const std::vector
 }
 
 // Function to compute the specular highlights.
-qbVector3<double> qbRT::SimpleRefractive::ComputeSpecular(	const std::vector<std::shared_ptr<qbRT::ObjectBase>> &objectList,
+qbVector3<double> qbRT::SimpleRefractive::ComputeSpecular(const std::vector<std::shared_ptr<qbRT::ObjectBase>> &objectList,
 																													const std::vector<std::shared_ptr<qbRT::LightBase>> &lightList,
 																													const qbVector3<double> &intPoint, const qbVector3<double> &localNormal,
 																													const qbRT::Ray &cameraRay)

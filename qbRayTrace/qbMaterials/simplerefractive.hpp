@@ -53,6 +53,7 @@ namespace qbRT
 																							const std::vector<std::shared_ptr<qbRT::LightBase>> &lightList,
 																							const std::shared_ptr<qbRT::ObjectBase> &currentObject,
 																							const qbVector3<double> &intPoint, const qbVector3<double> &localNormal,
+																							const qbVector3<double> &localPOI, const qbVector2<double> &uvCoords,
 																							const qbRT::Ray &cameraRay) override;
 																							
 			// Function to compute specular highlights.
