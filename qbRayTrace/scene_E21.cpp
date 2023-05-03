@@ -64,7 +64,7 @@ void qbRT::Scene_E21::SetupSceneObjects()
 	// **************************************************************************************
 	// Configure the camera.
 	// **************************************************************************************	
-	m_camera.SetPosition(	qbVector3<double>{std::vector<double> {4.0, -8.0, -4.0}} );
+	m_camera.SetPosition(	qbVector3<double>{std::vector<double> {6.0, -10.0, -4.0}} );
 	m_camera.SetLookAt	( qbVector3<double>{std::vector<double> {0.0, 0.0, 0.5}} );
 	m_camera.SetUp			( qbVector3<double>{std::vector<double> {0.0, 0.0, 1.0}} );
 	m_camera.SetHorzSize(1.0);
@@ -305,7 +305,7 @@ void qbRT::Scene_E21::SetupSceneObjects()
 	torus -> m_isVisible = true;
 	torus -> SetRadii(0.7, 0.3);
 	torus -> SetTransformMatrix(qbRT::GTform {	qbVector3<double>{std::vector<double>{2.5, -2.0, 0.2}},
-																							qbVector3<double>{std::vector<double>{-M_PI/2.0, 0.0, 0.0}},
+																							qbVector3<double>{std::vector<double>{0.0, 0.0, 0.0}},
 																							qbVector3<double>{std::vector<double>{1.0, 1.0, 1.0}}}	);
 	torus -> AssignMaterial(woodMat);
 	torus -> m_uvMapType = qbRT::uvSPHERE;
